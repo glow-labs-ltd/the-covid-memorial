@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - master
+      - develop
   pull_request:
     branches:
       - main
-      - master
+      - develop
 
 jobs:
   ci:
@@ -42,10 +42,13 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies 👨🏻‍💻
+        working-directory: ./frontend
         run: yarn
 
       - name: Run linter 👀
+        working-directory: ./frontend
         run: yarn lint
 
       - name: Run tests 🧪
+        working-directory: ./frontend
         run: yarn test
