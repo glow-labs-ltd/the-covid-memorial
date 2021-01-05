@@ -12,95 +12,77 @@
 import * as d3 from 'd3'
 export default {
   data() {
-    return {}
+    return {
+      currentWidth: 0,
+      currentHeight: 0,
+    }
   },
   mounted() {
-    // initialize
+    // initialize the chart
     const chart = d3.select('#chart')
-    const container = chart.node().parentNode
-    this.resizeChart(chart, container)
+    this.resizeChart(chart)
     window.addEventListener(
       'resize',
       function () {
-        this.resizeChart(chart, container)
+        this.resizeChart(chart)
       }.bind(this)
     )
 
     // generate the intial dataset
-    const data = this.generateDataset(container)
+    const data = this.generateDataset()
     const nodes = data.map((d) => Object.create(d))
-    console.log(nodes)
+    const simulation = this.setupCollision(data)
 
-    // setup the collision
-    const simulation = d3
-      .forceSimulation(data)
-      .force('charge', d3.forceManyBody())
-      .force(
-        'center',
-        d3.forceCenter(
-          container.getBoundingClientRect().width / 2,
-          container.getBoundingClientRect().height / 2
-        )
-      )
-
-    // create the chart
+    // create the chart and append the initial dots
     const svg = chart
       .call(
-        d3.zoom().on('zoom', function (event) {
-          svg.attr('transform', event.transform)
-        })
+        d3
+          .zoom()
+          .scaleExtent([1, 1])
+          .on('zoom', function (event) {
+            svg.attr('transform', event.transform)
+          })
       )
       .append('g')
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('r', 10)
+      .attr('r', 4)
       .attr('x', (d, i) => d.x)
       .attr('y', (d, i) => d.y)
       .attr('fill', '#000000')
 
-    // append each dot
-    /*
-    for (let i = 0; i < 500; i++) {
-      svg
-        .append('circle')
-        .attr(
-          'cx',
-          Math.floor(Math.random() * chart.node().getBoundingClientRect().width)
-        )
-        .attr(
-          'cy',
-          Math.floor(
-            Math.random() * chart.node().getBoundingClientRect().height
-          )
-        )
-        .attr('r', 5)
-        .style('fill', '#000000')
-    }
-    */
-
+    // update the x and y deltas each tick (for collisions)
     simulation.on('tick', () => {
       svg.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
     })
   },
   methods: {
-    generateDataset(container) {
+    generateDataset() {
       const data = []
       for (let i = 0; i < 500; i++) {
         data[i] = {
-          x: Math.floor(
-            Math.random() * container.getBoundingClientRect().width
-          ),
-          y: Math.random() * container.getBoundingClientRect().height,
+          x: Math.floor(Math.random() * this.currentWidth),
+          y: Math.random() * this.currentHeight,
         }
       }
       return data
     },
-    resizeChart(chart, container) {
-      const targetWidth = container.getBoundingClientRect().width
-      const targetHeight = container.getBoundingClientRect().height
-      chart.attr('width', targetWidth)
-      chart.attr('height', targetHeight)
+    setupCollision(data) {
+      return d3
+        .forceSimulation(data)
+        .force('charge', d3.forceManyBody())
+        .force(
+          'center',
+          d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
+        )
+    },
+    resizeChart(chart) {
+      const container = chart.node().parentNode
+      this.currentWidth = container.getBoundingClientRect().width
+      this.currentHeight = container.getBoundingClientRect().height
+      chart.attr('width', this.currentWidth)
+      chart.attr('height', this.currentHeight)
     },
   },
 }
