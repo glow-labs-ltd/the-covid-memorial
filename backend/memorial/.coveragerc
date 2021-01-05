@@ -1,0 +1,9 @@
+[run]
+omit = 
+    *migrations*
+    *tests*
+    memorial/settings/*
+    *apps*
+    manage*
+    *wsgi*
+    docs/*
