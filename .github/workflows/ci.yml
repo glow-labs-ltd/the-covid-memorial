@@ -30,8 +30,6 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
 
       - name: Install dependencies 👨🏻‍💻
         working-directory: ./frontend
@@ -64,8 +62,6 @@ jobs:
           path: |
             .cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/requirements-dev.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
 
       - name: Install dependencies 👨🏻‍💻
         working-directory: ./backend
@@ -74,9 +70,9 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Lint with flake8 👀
-        working-directory: ./backend
+        working-directory: ./backend/memorial
         run: flake8 .
 
       - name: Test with pytest 🧪
-        working-directory: ./backend
+        working-directory: ./backend/memorial
         run: pytest -vv -s -x --cov=.
