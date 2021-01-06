@@ -14,7 +14,7 @@ handlers:
     secure: always
 
   - url: /static
-    static_dir: glow/static
+    static_dir: memorial/static
     redirect_http_response_code: 301
     expiration: "1d"
     secure: always
