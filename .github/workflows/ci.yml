@@ -98,32 +98,15 @@ jobs:
             env_variables:${{ secrets.GCP_PROJECT }}/env_variables
             gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
 
-      - name: Add secrets
-        working-directory: ./backend
-        env:
-          env_variables: ${{ steps.secrets.outputs.env_variables }}
-          gcs_service_account: ${{ steps.secrets.outputs.gcs_service_account }}
-        run: |
-          cat << EOF
-          ::add-mask::${{ steps.secrets.outputs.env_variables }}
-          EOF
-          cat << EOF
-          ::add-mask::${{ steps.secrets.outputs.gcs_service_account }}
-          EOF
-          cat <<EOT >> memorial/env_variables.yaml
-          ${{ steps.secrets.outputs.env_variables }}
-          EOT
-          cat <<EOT >> memorial/gcs_service_account.js
-          ${{ steps.secrets.outputs.gcs_service_account }}
-          EOT
-
-      - name: Deploy to App Engine
-        id: deploy
-        uses: google-github-actions/deploy-appengine@v0.2.0
+      - uses: Deploy to App Engine
         with:
-          deliverables: backend/backend.yaml
           project_id: ${{ secrets.GCP_PROJECT }}
-          credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
-
-      - name: Show Output
-        run: echo ${{ steps.deploy.outputs.url }}
+          service_account_key: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
+          export_default_credentials: true
+        env:
+          ENV_VARS: ${{ steps.secrets.outputs.env_variables }}
+          GCS_SA: ${{ steps.secrets.outputs.gcs_service_account }}
+        run: |
+          echo $ENV_VARS > backend/memorial/env_variables.yaml
+          echo $GCS_SA > backend/memorial/gcs_service_account.js
+          gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy backend/backend.yaml
