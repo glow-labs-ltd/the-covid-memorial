@@ -84,7 +84,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [js-test, python-test]
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -142,8 +142,10 @@ jobs:
         working-directory: ./frontend
         run: yarn build
 
-      - name: Deploy to App Engine
+      - name: Deploy to App Engine and perform migrations
         run: |
+          python backend/run_migrations_on_cloud_sql.py & echo $! > migrations.pid
           cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
           cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy frontend/app.yaml backend/backend.yaml dispatch.yaml
+          "kill $(cat migrations.pid) > /dev/null 2> /dev/null || :"
