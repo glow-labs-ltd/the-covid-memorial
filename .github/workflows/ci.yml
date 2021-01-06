@@ -98,18 +98,27 @@ jobs:
             env_variables:${{ secrets.GCP_PROJECT }}/env_variables
             gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
 
-      # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@master
+      - name: Configure gcloud
+        uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
           export_default_credentials: true
 
+      - name: Save env secret file
+        id: env_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "backend/env_variables.yaml"
+          encodedString: ${{ steps.secrets.outputs.env_variables }}
+
+      - name: Save service account secret files
+        id: sa_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "backend/memorial/gcs_service_account.js"
+          encodedString: ${{ steps.secrets.outputs.gcs_service_account }}
+
       - name: Deploy to App Engine
-        env:
-          ENV_VARS: ${{ steps.secrets.outputs.env_variables }}
-          GCS_SA: ${{ steps.secrets.outputs.gcs_service_account }}
         run: |
-          echo $ENV_VARS > backend/env_variables.yaml
-          echo $GCS_SA > backend/memorial/gcs_service_account.js
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy backend/backend.yaml
