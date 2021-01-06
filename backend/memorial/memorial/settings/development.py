@@ -24,7 +24,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'memorial',
         'USER': 'postgres',
-        'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD', 'password'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
         'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': '5432',
         'CONN_MAX_AGE': 0,
