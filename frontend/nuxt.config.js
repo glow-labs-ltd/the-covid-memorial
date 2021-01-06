@@ -15,30 +15,55 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: [],
+  css: ['~assets/scss/vars.scss'],
 
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
+  styleResources: {
+    scss: ['./assets/scss/*.scss'],
+  },
+
   plugins: [],
 
-  // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
 
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-  buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
-  ],
+  buildModules: ['@nuxtjs/eslint-module'],
 
-  // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-  ],
+  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'nuxt-helmet'],
 
-  // Axios module configuration (https://go.nuxtjs.dev/config-axios)
+  helmet: {},
+
+  render: {
+    csp: {
+      hashAlgorithm: 'sha256',
+      policies: {
+        'default-src': ["'none'"],
+        'base-uri': ["'self'"],
+        'font-src': ["'self'", 'https://fonts.gstatic.com'],
+        'frame-ancestors': ["'self'"],
+        'connect-src': ["'self'"],
+        'manifest-src': ["'self'"],
+        'img-src': ["'self'", 'data:'],
+        'object-src': ["'none'"],
+        'script-src': ["'self'"],
+        'script-src-attr': ["'none'"],
+        'style-src': [
+          "'self'",
+          "'unsafe-inline'",
+          'https://fonts.googleapis.com',
+        ],
+        'block-all-mixed-content': [],
+        'upgrade-insecure-requests': [],
+      },
+      addMeta: false,
+    },
+  },
+
   axios: {},
 
-  // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+
+  server: {
+    port: 3000, // default: 3000
+    host: '0.0.0.0', // default: localhost,
+    timing: false,
+  },
 }

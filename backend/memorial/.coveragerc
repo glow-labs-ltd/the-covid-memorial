@@ -1,0 +1,10 @@
+[run]
+omit = 
+    *migrations*
+    *tests*
+    memorial/settings/*
+    *apps*
+    manage*
+    *wsgi.py
+    *asgi.py
+    docs/*
