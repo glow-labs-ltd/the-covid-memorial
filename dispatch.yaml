@@ -1,0 +1,12 @@
+dispatch:
+  - url: "*/api/*"
+    service: backend
+
+  - url: "*/admin*"
+    service: backend
+
+  - url: "*/static/*"
+    service: backend
+
+  - url: "*/"
+    service: default
