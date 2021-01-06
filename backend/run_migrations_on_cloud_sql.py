@@ -22,18 +22,18 @@ with open('backend/env_variables.yaml', 'r') as stream:
             print('Waiting 5 seconds for proxy...')
             time.sleep(5)
 
-            print('Setting enviroment variables...')
+            print('Setting env variables...')
             os.environ['POSTGRES_PASSWORD'] = env['POSTGRES_PASSWORD']
             os.environ['POSTGRES_HOST'] = '127.0.0.1'
 
             print('Running migrations...')
-            migrate_command = 'python backend/glow/manage.py migrate'
+            migrate_command = 'python backend/memorial/manage.py migrate'
             os.system(migrate_command)
         finally:
             print('Killing Cloud SQL Proxy...')
             proxy.terminate()
 
-            print('Removing enviroment variables...')
+            print('Removing env variables...')
             del os.environ['POSTGRES_PASSWORD']
             del os.environ['POSTGRES_HOST']
             sys.exit()
