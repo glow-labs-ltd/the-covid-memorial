@@ -100,15 +100,22 @@ jobs:
 
       - name: Add secrets
         working-directory: ./backend
+        env:
+          env_variables: ${{ steps.secrets.outputs.env_variables }}
+          gcs_service_account: ${{ steps.secrets.outputs.gcs_service_account }}
         run: |
-          echo ${{ steps.secrets.outputs.env_variables }} > memorial/env_variables.yaml
+          echo "::add-mask::${{ steps.secrets.outputs.env_variables }}"
+          echo "::add-mask::${{ steps.secrets.outputs.gcs_service_account }}"
+          cat <<EOT >> memorial/env_variables.yaml
+          ${{ steps.secrets.outputs.env_variables }}
+          EOT
           echo ${{ steps.secrets.outputs.gcs_service_account }} > memorial/gcs_service_account.json
 
       - name: Deploy to App Engine
         id: deploy
         uses: google-github-actions/deploy-appengine@v0.2.0
         with:
-          deliverables: backend/app.yaml
+          deliverables: backend/backend.yaml
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
 
