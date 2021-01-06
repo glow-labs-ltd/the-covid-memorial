@@ -30,5 +30,5 @@ DATABASES = {
 
 GS_PUBLIC_BUCKET_NAME = 'tcm-public-dc5d0ad8-9d33-4a32-a2a0-d290d123d6d1'
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(os.path.dirname(BASE_DIR), 'gcs_service_account.json')
+    os.path.join(os.path.dirname(BASE_DIR), '../gcs_service_account.json')
 )

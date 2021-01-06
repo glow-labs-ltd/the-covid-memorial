@@ -80,3 +80,36 @@ jobs:
       - name: Test with pytest 🧪
         working-directory: ./backend/memorial
         run: pytest -vv -s -x --cov=.
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [js-test, python-test]
+    # if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Get secrets
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@main
+        with:
+          secrets: |-
+            env_variables:${{ secrets.GCP_PROJECT }}/env_variables
+            gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
+
+      - name: Add secrets
+        working-directory: ./backend
+        run: |
+          ${{ steps.secrets.outputs.env_variables }} >> env_variables.yaml
+          ${{ steps.secrets.outputs.gcs_service_account }} >> gcs_service_account.json
+
+      - name: Deploy to App Engine
+        id: deploy
+        uses: google-github-actions/deploy-appengine@v0.2.0
+        with:
+          deliverables: backend/app.yaml
+          project_id: ${{ secrets.GCP_PROJECT }}
+          credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}

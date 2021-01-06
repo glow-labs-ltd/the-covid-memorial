@@ -1,0 +1,29 @@
+runtime: python38
+service: backend
+entrypoint: gunicorn -b :$PORT -w 1 memorial.wsgi --chdir memorial
+
+handlers:
+  - url: /api/(.*)
+    script: auto
+    redirect_http_response_code: 301
+    secure: always
+
+  - url: /admin(.*)
+    script: auto
+    redirect_http_response_code: 301
+    secure: always
+
+  - url: /static
+    static_dir: glow/static
+    redirect_http_response_code: 301
+    expiration: "1d"
+    secure: always
+    http_headers:
+      Referrer-Policy: same-origin
+      X-Content-Type-Options: nosniff
+      X-Frame-Options: DENY
+      X-XSS-Protection: "1; mode=block"
+      Strict-Transport-Security: "max-age=15768000; includeSubDomains; preload"
+
+includes:
+  - env_variables.yaml
