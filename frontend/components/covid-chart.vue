@@ -17,6 +17,7 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       numDots: 500,
+      dotRadius: 8,
       dotColours: [
         '#73446A',
         '#F4C50F',
@@ -40,59 +41,165 @@ export default {
       }.bind(this)
     )
 
-    // generate the intial dataset
-    const data = this.generateDataset()
-    const nodes = data.map((d) => Object.create(d))
-    const simulation = this.setupCollision(data)
-
     // create the chart and append the initial dots
-    const boxG = chart
-      .call(
-        d3
-          .zoom()
-          .scaleExtent([0.01, 1])
-          .on(
-            'zoom',
-            function (event) {
-              const transform = event.transform
-              const scale = transform.k
-              const dx = transform.x % (this.currentHeight * scale)
-              const dy = transform.y % (this.currentWidth * scale)
-              svg.attr(
-                'transform',
-                'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
-              )
-              boxG.attr(
-                'transform',
-                'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
-              )
-            }.bind(this)
-          )
-      )
-      .append('g')
+    const boxG = chart.append('g')
+    const numBoxes = 4
+    // const arr = d3.range(0, numBoxes + 1)
+    const boxSize = (this.currentWidth * 4) / numBoxes
+    // const boxEnter = boxG.selectAll('line').data(arr).enter()
 
-    const svg = chart
+    // generate the intial dataset
+    const data = this.generateDataset(boxSize)
+    const nodes = data.map((d) => Object.create(d))
+    // const simulation = this.setupCollision(data)
+
+    /*
+    boxEnter
+      .append('line')
+      .attr('x1', function (d) {
+        return d * boxSize
+      })
+      .attr('x2', function (d) {
+        return d * boxSize
+      })
+      .attr('y1', -boxSize)
+      .attr('y2', this.currentHeight + boxSize)
+      .style('stroke', 'black')
+    boxEnter
+      .append('line')
+      .attr('x1', -boxSize)
+      .attr('x2', this.currentWidth + boxSize)
+      .attr('y1', function (d) {
+        return d * boxSize
+      })
+      .attr('y2', function (d) {
+        return d * boxSize
+      })
+      .style('stroke', 'black')
+*/
+
+    boxG
       .append('g')
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('r', 12)
-      .attr('x', (d, i) => d.x)
-      .attr('y', (d, i) => d.y)
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x)
+      .attr('cy', (d, i) => d.y)
       .attr('fill', (d, i) => d.colour)
 
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x + boxSize)
+      .attr('cy', (d, i) => d.y)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x + boxSize)
+      .attr('cy', (d, i) => d.y + boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x)
+      .attr('cy', (d, i) => d.y + boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x - boxSize)
+      .attr('cy', (d, i) => d.y)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x - boxSize)
+      .attr('cy', (d, i) => d.y - boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x)
+      .attr('cy', (d, i) => d.y - boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x + boxSize)
+      .attr('cy', (d, i) => d.y - boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    boxG
+      .append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', this.dotRadius)
+      .attr('cx', (d, i) => d.x - boxSize)
+      .attr('cy', (d, i) => d.y + boxSize)
+      .attr('fill', (d, i) => d.colour)
+
+    const zoom = d3
+      .zoom()
+      .scaleExtent([0.1, 2])
+      .on('zoom', function (event) {
+        const transform = event.transform
+        const scale = transform.k
+        const dx = transform.x % (boxSize * scale)
+        const dy = transform.y % (boxSize * scale)
+        // svg.attr(
+        //  'transform',
+        //  'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
+        // )
+        boxG.attr(
+          'transform',
+          'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
+        )
+      })
+
+    chart.call(zoom)
+
     // update the x and y deltas each tick (for collisions)
-    simulation.on('tick', () => {
-      svg.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
-    })
+    // simulation.on('tick', () => {
+    //   svg.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
+    // })
   },
   methods: {
-    generateDataset() {
+    generateDataset(boxSize) {
       const data = []
       for (let i = 0; i < this.numDots; i++) {
         data[i] = {
-          x: Math.floor(Math.random() * this.currentWidth),
-          y: Math.floor(Math.random() * this.currentHeight),
+          x: Math.floor(Math.random() * boxSize),
+          y: Math.floor(Math.random() * boxSize),
           colour: this.dotColours[
             Math.floor(Math.random() * this.dotColours.length)
           ],
@@ -101,13 +208,11 @@ export default {
       return data
     },
     setupCollision(data) {
-      return d3
-        .forceSimulation(data)
-        .force('charge', d3.forceManyBody())
-        .force(
-          'center',
-          d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
-        )
+      return d3.forceSimulation(data).force('charge', d3.forceManyBody())
+      // .force(
+      //   'center',
+      //   d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
+      // )
     },
     resizeChart(chart) {
       this.currentWidth = this.container.getBoundingClientRect().width
