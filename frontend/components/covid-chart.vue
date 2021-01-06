@@ -16,10 +16,15 @@ export default {
       container: null,
       currentWidth: 0,
       currentHeight: 0,
-      numDots: 600,
-      dotBlur: 7,
-      maxBgDotRadius: 16,
-      minBgDotRadius: 6,
+      minWidth: 800,
+      minHeight: 800,
+      zoomLevel: 1,
+      bgNumDots: 600,
+      bgDotBlur: 5,
+      bgDotMaxRadius: 16,
+      bgDotMinRadius: 6,
+      fgNumDots: 160,
+      fgDotRadius: 16,
     }
   },
   mounted() {
@@ -29,14 +34,15 @@ export default {
     // create the background dots
     const bG = chart.append('g')
     const data = this.generateDataset(
-      this.currentWidth * 2,
-      this.currentHeight * 2,
-      this.minBgDotRadius,
-      this.maxBgDotRadius,
-      this.numDots
+      this.currentWidth,
+      this.currentHeight,
+      this.bgDotMinRadius,
+      this.bgDotMaxRadius,
+      this.bgNumDots,
+      false
     )
     const nodes = data.map((d) => Object.create(d))
-    const simulation = this.setupCollision(data)
+    const bSimulation = this.setupCollision(data, 0.3)
     const bDots = bG
       .append('g')
       .attr('filter', 'url(#blur)')
@@ -48,51 +54,43 @@ export default {
       .attr('cy', (d, i) => d.y)
       .attr('fill', '#000000')
       .style('opacity', 0.6)
-    simulation.on('tick', () => {
+    bSimulation.on('tick', () => {
       bDots.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
     })
 
-    // create the foreground layer
+    // create the chart and append the initial dots
+    const numBoxes = 4
+    const boxSize = {
+      width: (Math.max(this.currentWidth, this.currentHeight) * 4) / numBoxes,
+      height: (Math.max(this.currentWidth, this.currentHeight) * 4) / numBoxes,
+    }
+
     const fG = chart.append('g')
     const fData = this.generateDataset(
-      this.currentWidth * 2,
-      this.currentHeight * 2,
-      14,
-      14,
-      this.numDots / 4
+      boxSize.width,
+      boxSize.height,
+      8,
+      8,
+      this.fgNumDots,
+      true
     )
     const fNodes = fData.map((d) => Object.create(d))
-    const fSimulation = this.setupCollision(fData)
-    const fDots = fG
-      .append('g')
-      .attr('width', this.currentWidth)
-      .attr('height', this.currentHeight)
-      .selectAll('circle')
-      .data(fNodes)
-      .join('circle')
-      .attr('r', (d, i) => d.radius)
-      .attr('cx', (d, i) => d.x)
-      .attr('cy', (d, i) => d.y)
-      .attr('fill', (d, i) => '#000000')
-      .style('opacity', 1)
-      .on('click', this.newMemorium)
-    fSimulation.on('tick', () => {
-      fDots.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
-    })
+    this.drawForegroundDots(fG, fNodes, boxSize)
 
     const zoom = d3
       .zoom()
-      .scaleExtent([1, 1])
+      .scaleExtent([0.01, this.zoomLevel])
       .on('zoom', function (event) {
         const transform = event.transform
-        // const dx = transform.x // % (boxSize * scale)
-        // const dy = transform.y // % (boxSize * scale)
+        const scale = transform.k
+        const dx = transform.x % (boxSize.width * scale)
+        const dy = transform.y % (boxSize.height * scale)
         fG.attr(
           'transform',
-          'translate(' + transform.x + ',' + transform.y + ')'
+          'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
         )
       })
-    chart.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(1))
+    chart.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(this.zoomLevel))
   },
   methods: {
     initializeChart() {
@@ -102,7 +100,7 @@ export default {
         .append('filter')
         .attr('id', 'blur')
         .append('feGaussianBlur')
-        .attr('stdDeviation', this.dotBlur)
+        .attr('stdDeviation', this.bgDotBlur)
 
       this.container = chart.node().parentNode
       this.resizeChart(chart)
@@ -114,7 +112,14 @@ export default {
       )
       return chart
     },
-    generateDataset(xSize, ySize, minRadius, maxRadius, numDots) {
+    generateDataset(
+      xSize,
+      ySize,
+      minRadius,
+      maxRadius,
+      numDots,
+      generateHuman
+    ) {
       const data = []
       for (let i = 0; i < numDots; i++) {
         data[i] = {
@@ -122,13 +127,35 @@ export default {
           y: Math.floor(Math.random() * ySize),
           radius:
             Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius,
+          human: generateHuman ? Math.random() < 0.7 : false,
         }
       }
       return data
     },
-    setupCollision(data) {
+    drawForegroundDots(fG, fNodes, boxSize) {
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
+          const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
+          fG.append('g')
+            .selectAll('circle')
+            .data(fNodes)
+            .join('circle')
+            .attr('r', (d, i) =>
+              d.human ? this.fgDotRadius : this.fgDotRadius * 0.75
+            )
+            .attr('cx', (d, i) => d.x + dx)
+            .attr('cy', (d, i) => d.y + dy)
+            .attr('fill', (d, i) => (d.human ? '#F3C316' : '#000000'))
+            .on('click', this.dotClicked)
+        }
+      }
+      return fG
+    },
+    setupCollision(data, decay) {
       return d3
         .forceSimulation(data)
+        .velocityDecay(decay)
         .force('charge', d3.forceManyBody())
         .force(
           'center',
@@ -141,9 +168,15 @@ export default {
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
     },
-    newMemorium(event) {
-      console.log('clicked')
-      console.log(event)
+    dotClicked(event, data) {
+      console.log(data)
+      if (data.human) {
+        console.log('viewing memorium')
+        alert('View an existing memorium modal')
+      } else {
+        console.log('new memorium')
+        alert('Create a new memorium modal')
+      }
     },
   },
 }
