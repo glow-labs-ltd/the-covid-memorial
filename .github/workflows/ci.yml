@@ -105,20 +105,22 @@ jobs:
           service_account_key: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
           export_default_credentials: true
 
-      - name: Save env secret file
+      - name: Save environment secret file
         id: env_file
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: "backend/env_variables.yaml"
+          fileName: "env_variables.yaml"
           encodedString: ${{ steps.secrets.outputs.env_variables }}
 
-      - name: Save service account secret files
+      - name: Save service account secret file
         id: sa_file
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: "backend/memorial/gcs_service_account.js"
+          fileName: "gcs_service_account.js"
           encodedString: ${{ steps.secrets.outputs.gcs_service_account }}
 
       - name: Deploy to App Engine
         run: |
+          cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
+          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.js
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy backend/backend.yaml
