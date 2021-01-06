@@ -131,7 +131,9 @@ STATIC_URL = '/static/'
 
 
 # Storage
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_EXPIRATION = timedelta(seconds=60)
+GS_FILE_OVERWRITE = False
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.MemoryFileUploadHandler',
 ]

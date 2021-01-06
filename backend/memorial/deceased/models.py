@@ -1,11 +1,11 @@
+from django.conf import settings
 from django.contrib.postgres.indexes import GistIndex
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django_countries.fields import CountryField
+from storages.backends.gcloud import GoogleCloudStorage
 
 from .helpers import get_image_path
-
-# from storages.backends.gcloud import GoogleCloudStorage
 
 
 class Deceased(models.Model):
@@ -16,10 +16,10 @@ class Deceased(models.Model):
     country = CountryField(null=True, blank=True)
     city = models.TextField(max_length=120, null=True, blank=True)
     image = models.ImageField(
-        # storage=GoogleCloudStorage(
-        #     bucket_name=settings.GS_PUBLIC_BUCKET_NAME,
-        #     default_acl='publicRead',
-        # ),
+        storage=GoogleCloudStorage(
+            bucket_name=settings.GS_PUBLIC_BUCKET_NAME,
+            default_acl='publicRead',
+        ),
         upload_to=get_image_path,
         null=True,
         blank=True
