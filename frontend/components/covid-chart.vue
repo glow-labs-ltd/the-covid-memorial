@@ -16,209 +16,134 @@ export default {
       container: null,
       currentWidth: 0,
       currentHeight: 0,
-      numDots: 500,
-      dotRadius: 8,
-      dotColours: [
-        '#73446A',
-        '#F4C50F',
-        '#45036E',
-        '#1E447A',
-        '#000000',
-        '#D57004',
-        '#2D5D2E',
-      ],
+      numDots: 600,
+      dotBlur: 7,
+      maxBgDotRadius: 16,
+      minBgDotRadius: 6,
     }
   },
   mounted() {
     // initialize the chart
-    const chart = d3.select('#chart')
-    this.container = chart.node().parentNode
-    this.resizeChart(chart)
-    window.addEventListener(
-      'resize',
-      function () {
-        this.resizeChart(chart)
-      }.bind(this)
+    const chart = this.initializeChart()
+
+    // create the background dots
+    const bG = chart.append('g')
+    const data = this.generateDataset(
+      this.currentWidth * 2,
+      this.currentHeight * 2,
+      this.minBgDotRadius,
+      this.maxBgDotRadius,
+      this.numDots
     )
-
-    // create the chart and append the initial dots
-    const boxG = chart.append('g')
-    const numBoxes = 4
-    // const arr = d3.range(0, numBoxes + 1)
-    const boxSize = (this.currentWidth * 4) / numBoxes
-    // const boxEnter = boxG.selectAll('line').data(arr).enter()
-
-    // generate the intial dataset
-    const data = this.generateDataset(boxSize)
     const nodes = data.map((d) => Object.create(d))
-    // const simulation = this.setupCollision(data)
-
-    /*
-    boxEnter
-      .append('line')
-      .attr('x1', function (d) {
-        return d * boxSize
-      })
-      .attr('x2', function (d) {
-        return d * boxSize
-      })
-      .attr('y1', -boxSize)
-      .attr('y2', this.currentHeight + boxSize)
-      .style('stroke', 'black')
-    boxEnter
-      .append('line')
-      .attr('x1', -boxSize)
-      .attr('x2', this.currentWidth + boxSize)
-      .attr('y1', function (d) {
-        return d * boxSize
-      })
-      .attr('y2', function (d) {
-        return d * boxSize
-      })
-      .style('stroke', 'black')
-*/
-
-    boxG
+    const simulation = this.setupCollision(data)
+    const bDots = bG
       .append('g')
+      .attr('filter', 'url(#blur)')
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('r', this.dotRadius)
+      .attr('r', (d, i) => d.radius)
       .attr('cx', (d, i) => d.x)
       .attr('cy', (d, i) => d.y)
-      .attr('fill', (d, i) => d.colour)
+      .attr('fill', '#000000')
+      .style('opacity', 0.6)
+    simulation.on('tick', () => {
+      bDots.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
+    })
 
-    boxG
+    // create the foreground layer
+    const fG = chart.append('g')
+    const fData = this.generateDataset(
+      this.currentWidth * 2,
+      this.currentHeight * 2,
+      14,
+      14,
+      this.numDots / 4
+    )
+    const fNodes = fData.map((d) => Object.create(d))
+    const fSimulation = this.setupCollision(fData)
+    const fDots = fG
       .append('g')
+      .attr('width', this.currentWidth)
+      .attr('height', this.currentHeight)
       .selectAll('circle')
-      .data(nodes)
+      .data(fNodes)
       .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x + boxSize)
-      .attr('cy', (d, i) => d.y)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x + boxSize)
-      .attr('cy', (d, i) => d.y + boxSize)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
+      .attr('r', (d, i) => d.radius)
       .attr('cx', (d, i) => d.x)
-      .attr('cy', (d, i) => d.y + boxSize)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x - boxSize)
       .attr('cy', (d, i) => d.y)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x - boxSize)
-      .attr('cy', (d, i) => d.y - boxSize)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x)
-      .attr('cy', (d, i) => d.y - boxSize)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x + boxSize)
-      .attr('cy', (d, i) => d.y - boxSize)
-      .attr('fill', (d, i) => d.colour)
-
-    boxG
-      .append('g')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', this.dotRadius)
-      .attr('cx', (d, i) => d.x - boxSize)
-      .attr('cy', (d, i) => d.y + boxSize)
-      .attr('fill', (d, i) => d.colour)
+      .attr('fill', (d, i) => '#000000')
+      .style('opacity', 1)
+      .on('click', this.newMemorium)
+    fSimulation.on('tick', () => {
+      fDots.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
+    })
 
     const zoom = d3
       .zoom()
-      .scaleExtent([0.1, 2])
+      .scaleExtent([1, 1])
       .on('zoom', function (event) {
         const transform = event.transform
-        const scale = transform.k
-        const dx = transform.x % (boxSize * scale)
-        const dy = transform.y % (boxSize * scale)
-        // svg.attr(
-        //  'transform',
-        //  'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
-        // )
-        boxG.attr(
+        // const dx = transform.x // % (boxSize * scale)
+        // const dy = transform.y // % (boxSize * scale)
+        fG.attr(
           'transform',
-          'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
+          'translate(' + transform.x + ',' + transform.y + ')'
         )
       })
-
-    chart.call(zoom)
-
-    // update the x and y deltas each tick (for collisions)
-    // simulation.on('tick', () => {
-    //   svg.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
-    // })
+    chart.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(1))
   },
   methods: {
-    generateDataset(boxSize) {
+    initializeChart() {
+      const chart = d3.select('#chart')
+      chart
+        .append('defs')
+        .append('filter')
+        .attr('id', 'blur')
+        .append('feGaussianBlur')
+        .attr('stdDeviation', this.dotBlur)
+
+      this.container = chart.node().parentNode
+      this.resizeChart(chart)
+      window.addEventListener(
+        'resize',
+        function () {
+          this.resizeChart(chart)
+        }.bind(this)
+      )
+      return chart
+    },
+    generateDataset(xSize, ySize, minRadius, maxRadius, numDots) {
       const data = []
-      for (let i = 0; i < this.numDots; i++) {
+      for (let i = 0; i < numDots; i++) {
         data[i] = {
-          x: Math.floor(Math.random() * boxSize),
-          y: Math.floor(Math.random() * boxSize),
-          colour: this.dotColours[
-            Math.floor(Math.random() * this.dotColours.length)
-          ],
+          x: Math.floor(Math.random() * xSize),
+          y: Math.floor(Math.random() * ySize),
+          radius:
+            Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius,
         }
       }
       return data
     },
     setupCollision(data) {
-      return d3.forceSimulation(data).force('charge', d3.forceManyBody())
-      // .force(
-      //   'center',
-      //   d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
-      // )
+      return d3
+        .forceSimulation(data)
+        .force('charge', d3.forceManyBody())
+        .force(
+          'center',
+          d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
+        )
     },
     resizeChart(chart) {
       this.currentWidth = this.container.getBoundingClientRect().width
       this.currentHeight = this.container.getBoundingClientRect().height
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
+    },
+    newMemorium(event) {
+      console.log('clicked')
+      console.log(event)
     },
   },
 }
