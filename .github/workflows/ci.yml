@@ -98,11 +98,14 @@ jobs:
             env_variables:${{ secrets.GCP_PROJECT }}/env_variables
             gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
 
-      - uses: Deploy to App Engine
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
           export_default_credentials: true
+
+      - name: Deploy to App Engine
         env:
           ENV_VARS: ${{ steps.secrets.outputs.env_variables }}
           GCS_SA: ${{ steps.secrets.outputs.gcs_service_account }}
