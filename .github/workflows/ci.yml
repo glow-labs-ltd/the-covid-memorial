@@ -110,6 +110,6 @@ jobs:
           ENV_VARS: ${{ steps.secrets.outputs.env_variables }}
           GCS_SA: ${{ steps.secrets.outputs.gcs_service_account }}
         run: |
-          echo $ENV_VARS > backend/memorial/env_variables.yaml
+          echo $ENV_VARS > backend/env_variables.yaml
           echo $GCS_SA > backend/memorial/gcs_service_account.js
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy backend/backend.yaml
