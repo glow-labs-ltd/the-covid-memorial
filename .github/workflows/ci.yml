@@ -116,7 +116,7 @@ jobs:
         id: sa_file
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: "gcs_service_account.js"
+          fileName: "gcs_service_account.json"
           encodedString: ${{ steps.secrets.outputs.gcs_service_account }}
 
       - name: Cache node_modules 📦
@@ -145,5 +145,5 @@ jobs:
       - name: Deploy to App Engine
         run: |
           cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
-          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.js
+          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy frontend/app.yaml backend/backend.yaml dispatch.yaml
