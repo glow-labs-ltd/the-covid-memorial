@@ -100,8 +100,8 @@ jobs:
       - name: Add secrets
         working-directory: ./backend
         run: |
-          ${{ steps.secrets.outputs.env_variables }} >> env_variables.yaml
-          ${{ steps.secrets.outputs.gcs_service_account }} >> gcs_service_account.json
+          ${{ steps.secrets.outputs.env_variables }} >> memorial/env_variables.yaml
+          ${{ steps.secrets.outputs.gcs_service_account }} >> memorial/gcs_service_account.json
 
       - name: Deploy to App Engine
         id: deploy
