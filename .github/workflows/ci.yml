@@ -104,12 +104,12 @@ jobs:
           env_variables: ${{ steps.secrets.outputs.env_variables }}
           gcs_service_account: ${{ steps.secrets.outputs.gcs_service_account }}
         run: |
-          echo "::add-mask::${{ steps.secrets.outputs.env_variables }}"
-          echo "::add-mask::${{ steps.secrets.outputs.gcs_service_account }}"
           cat <<EOT >> memorial/env_variables.yaml
           ${{ steps.secrets.outputs.env_variables }}
           EOT
-          echo ${{ steps.secrets.outputs.gcs_service_account }} > memorial/gcs_service_account.json
+          cat <<EOT >> memorial/gcs_service_account.js
+          ${{ steps.secrets.outputs.gcs_service_account }}
+          EOT
 
       - name: Deploy to App Engine
         id: deploy
