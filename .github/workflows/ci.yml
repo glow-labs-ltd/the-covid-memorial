@@ -104,6 +104,12 @@ jobs:
           env_variables: ${{ steps.secrets.outputs.env_variables }}
           gcs_service_account: ${{ steps.secrets.outputs.gcs_service_account }}
         run: |
+          cat << EOF
+          ::add-mask::${{ steps.secrets.outputs.env_variables }}
+          EOF
+          cat << EOF
+          ::add-mask::${{ steps.secrets.outputs.gcs_service_account }}
+          EOF
           cat <<EOT >> memorial/env_variables.yaml
           ${{ steps.secrets.outputs.env_variables }}
           EOT
