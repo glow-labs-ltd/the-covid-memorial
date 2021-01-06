@@ -149,8 +149,10 @@ jobs:
           instance: ${{ secrets.CLOUD_SQL_CONNECTION }}
 
       - name: Run migrations
-        working-directory: ./backend
-        run: python run_migrations_on_cloud_sql.py
+        run: |
+          cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
+          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
+          python run_migrations_on_cloud_sql.py
 
       - name: Deploy to App Engine
         run: |
