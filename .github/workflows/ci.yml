@@ -142,12 +142,6 @@ jobs:
         working-directory: ./frontend
         run: yarn build
 
-      - name: Cloud SQL Proxy
-        uses: mattes/gce-cloudsql-proxy-action@v1
-        with:
-          creds: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
-          instance: ${{ secrets.CLOUD_SQL_CONNECTION }}
-
       - name: Set up Python 3.8 🐍
         uses: actions/setup-python@v2
         with:
@@ -168,6 +162,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
+
+      - name: Cloud SQL Proxy
+        uses: mattes/gce-cloudsql-proxy-action@v1
+        with:
+          creds: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
+          instance: ${{ secrets.CLOUD_SQL_CONNECTION }}
+          proxy_version: 1.19.1
 
       - name: Run migrations
         run: |
