@@ -48,6 +48,10 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
 REST_FRAMEWORK['DEFAULT_METADATA_CLASS'] = 'rest_framework.metadata.SimpleMetadata'
 
 GS_PUBLIC_BUCKET_NAME = 'tcm-test-989aa9b5-319a-470e-876c-d9ba2131c1c1'
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(os.path.dirname(BASE_DIR), 'test_service_account.json')
-)
+
+try:
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        os.path.join(os.path.dirname(BASE_DIR), 'test_service_account.json')
+    )
+except FileNotFoundError:
+    GS_CREDENTIALS = None
