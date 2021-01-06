@@ -152,7 +152,7 @@ jobs:
         run: |
           cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
           cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
-          python run_migrations_on_cloud_sql.py
+          python backend/run_migrations_on_cloud_sql.py
 
       - name: Deploy to App Engine
         run: |
