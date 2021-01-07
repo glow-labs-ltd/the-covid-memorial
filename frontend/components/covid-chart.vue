@@ -19,29 +19,30 @@ export default {
       minWidth: 800,
       minHeight: 800,
       zoomLevel: 1,
-      bgNumDots: 600,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
-      fgNumDots: 160,
       fgDotRadius: 16,
     }
   },
   mounted() {
     // initialize the chart
     const chart = this.initializeChart()
-    this.bgNumDots = Math.floor(
-      Math.min(this.currentWidth, this.currentHeight) / 6
-    )
-    this.fgNumDots = Math.floor(
-      Math.min(this.currentWidth, this.currentHeight) / 8
-    )
+
+    const longestEdge = Math.max(this.currentWidth, this.currentHeight)
+    this.bgNumDots = Math.floor(longestEdge)
+    this.fgNumDots = Math.floor(longestEdge / 2)
+    const boxSize = {
+      width: this.currentWidth * 2,
+      height: this.currentHeight * 2,
+    }
+    this.zoomLevel = this.zoomLevel * (-1 / (-longestEdge / 1600))
 
     // create the background dots
     const bG = chart.append('g')
     const data = this.generateDataset(
-      this.currentWidth,
-      this.currentHeight,
+      boxSize.width,
+      boxSize.height,
       this.bgDotMinRadius,
       this.bgDotMaxRadius,
       this.bgNumDots,
@@ -59,13 +60,7 @@ export default {
       .attr('fill', '#000000')
       .style('opacity', 0.6)
 
-    // create the chart and append the initial dots
-    const numBoxes = 4
-    const boxSize = {
-      width: (Math.max(this.currentWidth, this.currentHeight) * 3) / numBoxes,
-      height: (Math.max(this.currentWidth, this.currentHeight) * 3) / numBoxes,
-    }
-
+    // create foreground dots
     const fG = chart.append('g')
     const fData = this.generateDataset(
       boxSize.width,
@@ -76,22 +71,46 @@ export default {
       true
     )
     const fNodes = fData.map((d) => Object.create(d))
-    this.drawForegroundDots(fG, fNodes, boxSize)
+    const fDots = this.drawForegroundDots(fG, fNodes, boxSize)
 
     const zoom = d3
       .zoom()
-      .scaleExtent([0.01, this.zoomLevel])
-      .on('zoom', function (event) {
-        const transform = event.transform
-        const scale = transform.k
-        const dx = transform.x % (boxSize.width * scale)
-        const dy = transform.y % (boxSize.height * scale)
-        fG.attr(
-          'transform',
-          'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
-        )
-      })
+      .scaleExtent([this.zoomLevel, this.zoomLevel])
+      .on(
+        'zoom',
+        function (event) {
+          const transform = event.transform
+          const scale = transform.k
+          const dx = transform.x % (boxSize.width * scale)
+          const dy = transform.y % (boxSize.height * scale)
+          fG.attr(
+            'transform',
+            'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
+          )
+
+          const dots = fDots.selectAll('circle')
+          for (const dot of dots) {
+            const node = d3.select(dot)
+            const data = node.data()[0]
+            if (data.human) {
+              const inViewport = this.isElementInViewport(dot)
+              if (inViewport && !data.visible) {
+                node.attr('fill', '#11CCFF')
+                data.visible = true
+              }
+            }
+          }
+        }.bind(this)
+      )
     chart.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(this.zoomLevel))
+
+    const zoomBg = d3
+      .zoom()
+      .scaleExtent([this.zoomLevel, this.zoomLevel])
+      .on('zoom', function (event) {
+        bG.attr('transform', 'scale(' + event.transform.k + ')')
+      })
+    chart.call(zoomBg.transform, d3.zoomIdentity.scale(this.zoomLevel))
   },
   methods: {
     initializeChart() {
@@ -113,6 +132,12 @@ export default {
       )
       return chart
     },
+    resizeChart(chart) {
+      this.currentWidth = this.container.getBoundingClientRect().width
+      this.currentHeight = this.container.getBoundingClientRect().height
+      chart.attr('width', this.currentWidth)
+      chart.attr('height', this.currentHeight)
+    },
     generateDataset(
       xSize,
       ySize,
@@ -131,6 +156,8 @@ export default {
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
         const human = generateHuman ? Math.random() < 0.6 : false
+        const colour = human ? '#F3C316' : '#000000'
+        const visible = false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
@@ -147,9 +174,9 @@ export default {
         }
 
         if (!collides) {
-          data.push({ x, y, radius, human })
-          i++
+          data.push({ x, y, radius, human, colour, visible })
           attempts = 0
+          i++
         }
       }
       return data
@@ -168,17 +195,30 @@ export default {
             )
             .attr('cx', (d, i) => d.x + dx)
             .attr('cy', (d, i) => d.y + dy)
-            .attr('fill', (d, i) => (d.human ? '#F3C316' : '#000000'))
+            .attr('fill', (d, i) => d.colour)
             .on('click', this.dotClicked)
+          /*
+            .append('svg:image')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', 24)
+            .attr('height', 24)
+            .attr('xlink:href', (d, i) =>
+              d.human ? 'https://www.w3schools.com/w3images/avatar6.png' : null
+            )
+            */
         }
       }
       return fG
     },
-    resizeChart(chart) {
-      this.currentWidth = this.container.getBoundingClientRect().width
-      this.currentHeight = this.container.getBoundingClientRect().height
-      chart.attr('width', this.currentWidth)
-      chart.attr('height', this.currentHeight)
+    isElementInViewport(el) {
+      const rect = el.getBoundingClientRect()
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= this.currentHeight &&
+        rect.right <= this.currentWidth
+      )
     },
     dotClicked(event, data) {
       console.log(data)
