@@ -20,12 +20,10 @@ __pycache__/
 
 # Backend
 venv/
-.gitlab-ci.yml
 .pytest_cache
 .DS_Store
 .coverage
 .benchmarks
-env_variables.yaml.encrypted
 README.md
 static/debug_toolbar/
 static/drf-yasg/
