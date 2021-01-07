@@ -1,9 +1,14 @@
 <template>
   <div>
     <Nuxt />
+    <SideMenu />
     <NavBar />
   </div>
 </template>
+
+<script>
+export default {}
+</script>
 
 <style>
 html {

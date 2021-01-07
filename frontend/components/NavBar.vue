@@ -1,18 +1,30 @@
 <template>
   <nav class="navbar">
-    <img
-      src="~/assets/images/the-covid-memorial-logo.svg"
-      class="logo"
-      alt="The COVID Memorial"
-    />
+    <NuxtLink to="/" class="logo">
+      <img
+        src="~/assets/images/the-covid-memorial-logo.svg"
+        alt="The COVID Memorial"
+      />
+    </NuxtLink>
     <h2 class="lost-count">1,854,764 <span>Sadly lost</span></h2>
     <img src="~/assets/images/search-icon.svg" class="search" alt="Search" />
-    <img src="~/assets/images/menu-icon.svg" class="menu" alt="Menu" />
+    <img
+      src="~/assets/images/menu-icon.svg"
+      class="menu"
+      alt="Menu"
+      @click="menuClick"
+    />
   </nav>
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    menuClick() {
+      this.$store.commit('toggleSideMenu')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
