@@ -21,7 +21,7 @@ export default {
       zoomLevel: 1,
       bgNumDots: 600,
       bgDotBlur: 5,
-      bgDotMaxRadius: 16,
+      bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
       fgNumDots: 160,
       fgDotRadius: 16,
@@ -30,6 +30,12 @@ export default {
   mounted() {
     // initialize the chart
     const chart = this.initializeChart()
+    this.bgNumDots = Math.floor(
+      Math.min(this.currentWidth, this.currentHeight) / 6
+    )
+    this.fgNumDots = Math.floor(
+      Math.min(this.currentWidth, this.currentHeight) / 8
+    )
 
     // create the background dots
     const bG = chart.append('g')
@@ -42,9 +48,7 @@ export default {
       false
     )
     const nodes = data.map((d) => Object.create(d))
-    const bSimulation = this.setupCollision(data, 0.3)
-    const bDots = bG
-      .append('g')
+    bG.append('g')
       .attr('filter', 'url(#blur)')
       .selectAll('circle')
       .data(nodes)
@@ -54,23 +58,20 @@ export default {
       .attr('cy', (d, i) => d.y)
       .attr('fill', '#000000')
       .style('opacity', 0.6)
-    bSimulation.on('tick', () => {
-      bDots.attr('cx', (d) => d.x).attr('cy', (d) => d.y)
-    })
 
     // create the chart and append the initial dots
     const numBoxes = 4
     const boxSize = {
-      width: (Math.max(this.currentWidth, this.currentHeight) * 4) / numBoxes,
-      height: (Math.max(this.currentWidth, this.currentHeight) * 4) / numBoxes,
+      width: (Math.max(this.currentWidth, this.currentHeight) * 3) / numBoxes,
+      height: (Math.max(this.currentWidth, this.currentHeight) * 3) / numBoxes,
     }
 
     const fG = chart.append('g')
     const fData = this.generateDataset(
       boxSize.width,
       boxSize.height,
-      8,
-      8,
+      this.fgDotRadius,
+      this.fgDotRadius,
       this.fgNumDots,
       true
     )
@@ -121,13 +122,34 @@ export default {
       generateHuman
     ) {
       const data = []
-      for (let i = 0; i < numDots; i++) {
-        data[i] = {
-          x: Math.floor(Math.random() * xSize),
-          y: Math.floor(Math.random() * ySize),
-          radius:
-            Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius,
-          human: generateHuman ? Math.random() < 0.7 : false,
+      let i = 0
+      let attempts = 0
+      while (i < numDots) {
+        let collides = false
+        const x = Math.floor(Math.random() * xSize)
+        const y = Math.floor(Math.random() * ySize)
+        const radius =
+          Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
+        const human = generateHuman ? Math.random() < 0.6 : false
+        if (data.length > 0) {
+          for (const node of data) {
+            const dX = (node.x - x) * (node.x - x)
+            const dY = (node.y - y) * (node.y - y)
+            const dR = node.radius + radius
+            if (Math.sqrt(dX + dY) < dR * 2 + 40) {
+              collides = true
+              attempts++
+              if (attempts > 2) {
+                i++
+              }
+            }
+          }
+        }
+
+        if (!collides) {
+          data.push({ x, y, radius, human })
+          i++
+          attempts = 0
         }
       }
       return data
@@ -151,16 +173,6 @@ export default {
         }
       }
       return fG
-    },
-    setupCollision(data, decay) {
-      return d3
-        .forceSimulation(data)
-        .velocityDecay(decay)
-        .force('charge', d3.forceManyBody())
-        .force(
-          'center',
-          d3.forceCenter(this.currentWidth / 2, this.currentHeight / 2)
-        )
     },
     resizeChart(chart) {
       this.currentWidth = this.container.getBoundingClientRect().width
