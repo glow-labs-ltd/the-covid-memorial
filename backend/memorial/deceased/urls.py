@@ -5,6 +5,7 @@ from . import views
 
 router = SimpleRouter()
 router.register('deceased', views.DeceasedAPIViewSet, basename='deceased')
+router.register('search', views.SearchAPIViewSet, basename='search')
 
 urlpatterns = [
     path('', include(router.urls)),
