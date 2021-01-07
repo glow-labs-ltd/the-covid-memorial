@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!--
     <div>
       <Logo />
       <h1 class="title">the-covid-memorial</h1>
@@ -22,11 +23,19 @@
         </a>
       </div>
     </div>
+    -->
+    <covid-chart />
   </div>
 </template>
 
 <script>
-export default {}
+import CovidChart from '@/components/covid-chart.vue'
+
+export default {
+  components: {
+    CovidChart,
+  },
+}
 </script>
 
 <style>
@@ -34,6 +43,7 @@ export default {}
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
