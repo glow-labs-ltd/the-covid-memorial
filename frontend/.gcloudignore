@@ -1,11 +1,5 @@
-assets/
-components/
-coverage/
-layouts/
-middleware/
+.gcloudignore
+.git
+.gitignore
 node_modules/
-pages/
-plugins/
-store/
-test/
 Dockerfile
