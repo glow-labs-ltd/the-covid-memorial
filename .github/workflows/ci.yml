@@ -87,7 +87,7 @@ jobs:
         id: test_gcs_file
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: "env_variables.yaml"
+          fileName: "test_service_account.json"
           encodedString: ${{ secrets.TEST_GCS_SA }}
 
       - name: Lint with flake8 👀
@@ -97,7 +97,7 @@ jobs:
       - name: Test with pytest 🧪
         working-directory: ./backend/memorial
         run: |
-          cp ${{ steps.test_gcs_file.outputs.filePath }} backend/memorial/test_service_account.json
+          cp ${{ steps.test_gcs_file.outputs.filePath }} test_service_account.json
           pytest -vv -s -x --cov=.
 
   deploy:
