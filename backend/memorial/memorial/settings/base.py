@@ -1,4 +1,9 @@
 # flake8: noqa
+import os
+from datetime import timedelta
+
+from google.oauth2 import service_account
+
 """
 Django settings for memorial project.
 
@@ -23,8 +28,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '!h#)uk02mf(33_#@tc33h6d3x^y-w(p=plqw2pa2kipeifi$5e'
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 CSRF_COOKIE_SAMESITE = 'Strict'
 CSRF_COOKIE_SECURE = True
 
@@ -48,7 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'rest_framework',
+    'deceased',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +128,41 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static/'
+
+# Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_EXPIRATION = timedelta(seconds=60)
+GS_FILE_OVERWRITE = False
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+]
+FILE_UPLOAD_MAX_MEMORY_SIZE = 16777216
+
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'cache_fallback.cache': {
+            'handlers': ['console'],
+            'level': 'CRITICAL',
+            'propagate': False,
+        },
+    },
+}
