@@ -1,0 +1,11 @@
+assets/
+components/
+coverage/
+layouts/
+middleware/
+node_modules/
+pages/
+plugins/
+store/
+test/
+Dockerfile
