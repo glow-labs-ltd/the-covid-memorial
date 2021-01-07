@@ -14,7 +14,6 @@ class SimilarityFilter(SearchFilter):
         ranks = []
 
         for param_terms in param_search_terms:
-            print(param_terms)
             new_queries = self.similar_queries(param_terms)
             queries.append(reduce(operator.or_, new_queries))
 

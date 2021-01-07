@@ -5,7 +5,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from storages.backends.gcloud import GoogleCloudStorage
 
-from .helpers import get_image_path
+from .helpers import compress_and_assign_image, get_image_path
 
 
 class Deceased(models.Model):
@@ -43,6 +43,10 @@ class Deceased(models.Model):
                 opclasses=['gist_trgm_ops', 'gist_trgm_ops', 'gist_trgm_ops'],
             ),
         ]
+
+    def save(self, *args, **kwargs):
+        compress_and_assign_image(Deceased, self, field_name='image')
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return 'Deceased: {}'.format(self.pk)

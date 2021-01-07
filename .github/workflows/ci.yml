@@ -48,6 +48,16 @@ jobs:
   python-test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -73,13 +83,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
+      - name: Get test GCS service account
+        id: test_gcs_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "test_service_account.json"
+          encodedString: ${{ secrets.TEST_GCS_SA }}
+
       - name: Lint with flake8 👀
         working-directory: ./backend/memorial
         run: flake8 .
 
       - name: Test with pytest 🧪
         working-directory: ./backend/memorial
-        run: pytest -vv -s -x --cov=.
+        run: |
+          cp ${{ steps.test_gcs_file.outputs.filePath }} test_service_account.json
+          pytest -vv -s -x --cov=.
 
   deploy:
     runs-on: ubuntu-latest
