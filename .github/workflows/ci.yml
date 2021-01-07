@@ -83,13 +83,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
+      - name: Get test GCS service account
+        id: test_gcs_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "env_variables.yaml"
+          encodedString: ${{ secrets.TEST_GCS_SA }}
+
       - name: Lint with flake8 👀
         working-directory: ./backend/memorial
         run: flake8 .
 
       - name: Test with pytest 🧪
         working-directory: ./backend/memorial
-        run: pytest -vv -s -x --cov=.
+        run: |
+          cp ${{ steps.test_gcs_file.outputs.filePath }} backend/memorial/test_service_account.json
+          pytest -vv -s -x --cov=.
 
   deploy:
     runs-on: ubuntu-latest
