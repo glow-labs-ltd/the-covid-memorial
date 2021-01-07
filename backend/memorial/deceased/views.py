@@ -1,15 +1,21 @@
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
-from .serializers import DeceasedSerializer
-from .models import Deceased
+
 from .filters import SimilarityFilter
+from .models import Deceased
+from .serializers import DeceasedPreviewSerializer, DeceasedSerializer
 
 
 class DeceasedAPIViewSet(
         mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet
 ):
-    serializer_class = DeceasedSerializer
-    queryset = Deceased.objects.all().order_by('-date_created')
+    queryset = Deceased.objects.all().order_by('?')[:10]
+    pagination_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return DeceasedPreviewSerializer
+        return DeceasedSerializer
 
 
 class SearchAPIViewSet(ReadOnlyModelViewSet):
@@ -27,5 +33,4 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
 
         if not query or not query.strip():
             return Deceased.objects.none()
-
         return Deceased.objects.all()
