@@ -1,9 +1,9 @@
+from datetime import date
 from io import BytesIO
 
 import pytest
 from deceased.models import Deceased
 from PIL import Image
-from datetime import date
 
 
 @pytest.fixture
