@@ -12,7 +12,14 @@ export default {
         content: 'The COVID Memorial',
       },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap',
+      },
+    ],
   },
 
   css: ['~assets/scss/vars.scss'],
@@ -51,7 +58,7 @@ export default {
           'https://fonts.googleapis.com',
         ],
         'block-all-mixed-content': [],
-        'upgrade-insecure-requests': [],
+        // 'upgrade-insecure-requests': [],
       },
       addMeta: false,
     },
@@ -59,10 +66,18 @@ export default {
 
   axios: {},
 
-  build: {},
+  build: {
+    postcss: {
+      preset: {
+        autoprefixer: {
+          grid: true,
+        },
+      },
+    },
+  },
 
   server: {
-    port: 3000, // default: 3000
+    port: process.env.PORT || 3000, // default: 3000
     host: '0.0.0.0', // default: localhost,
     timing: false,
   },

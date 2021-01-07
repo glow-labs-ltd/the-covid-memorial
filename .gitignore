@@ -170,3 +170,5 @@ pythonenv*
 
 # vs code
 .vscode/
+
+test_service_account.json

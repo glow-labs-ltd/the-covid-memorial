@@ -1,3 +1,4 @@
 pytest_plugins = [
-    # 'memorial.tests.fixtures',
+    'memorial.tests.fixtures',
+    'deceased.tests.fixtures',
 ]

@@ -1,11 +1,13 @@
 <template>
-  <svg
-    id="chart"
-    width="600"
-    height="400"
-    viewBox="0 0 600 400"
-    perserveAspectRatio="xMinYMid"
-  ></svg>
+  <div class="chart-background">
+    <svg
+      id="chart"
+      width="400"
+      height="400"
+      viewBox="0 0 400 400"
+      perserveAspectRatio="xMinYMid"
+    ></svg>
+  </div>
 </template>
 
 <script>
@@ -242,6 +244,12 @@ export default {
 </script>
 
 <style>
+.chart-background {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f5f6f5;
+}
+
 #chart {
   background-color: #f5f6f5;
 }
