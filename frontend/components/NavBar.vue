@@ -39,14 +39,20 @@ export default {
   width: 100%;
   padding: 2rem 4rem;
   grid-gap: 4rem;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
 
   > * {
     align-self: center;
   }
 
   .logo {
-    width: 13rem;
-    height: 6rem;
+    width: 10rem;
+    max-height: 5rem;
+
+    @media (min-width: $tablet) {
+      width: 13rem;
+      max-height: 6rem;
+    }
   }
 
   .lost-count {

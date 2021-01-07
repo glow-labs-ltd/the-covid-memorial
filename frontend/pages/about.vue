@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="about">
     <h1>About The COVID Memorial</h1>
     <p>This is the about page</p>
   </div>
@@ -9,4 +9,8 @@
 export default {}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.about {
+  margin: 2rem;
+}
+</style>
