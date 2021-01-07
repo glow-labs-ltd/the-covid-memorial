@@ -16,8 +16,6 @@ export default {
       container: null,
       currentWidth: 0,
       currentHeight: 0,
-      minWidth: 800,
-      minHeight: 800,
       zoomLevel: 1,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
@@ -33,10 +31,10 @@ export default {
     this.bgNumDots = Math.floor(longestEdge)
     this.fgNumDots = Math.floor(longestEdge / 2)
     const boxSize = {
-      width: this.currentWidth * 2,
-      height: this.currentHeight * 2,
+      width: this.currentWidth * 1.5,
+      height: this.currentHeight * 1.5,
     }
-    this.zoomLevel = this.zoomLevel * (-1 / (-longestEdge / 1600))
+    this.zoomLevel = -1 / (-longestEdge / 1600)
 
     // create the background dots
     const bG = chart.append('g')
@@ -88,15 +86,18 @@ export default {
             'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
           )
 
-          const dots = fDots.selectAll('circle')
+          const dots = fDots.selectAll('image')
           for (const dot of dots) {
             const node = d3.select(dot)
             const data = node.data()[0]
             if (data.human) {
               const inViewport = this.isElementInViewport(dot)
-              if (inViewport && !data.visible) {
-                node.attr('fill', '#11CCFF')
-                data.visible = true
+              if (inViewport && node.attr('data-visible') === 'false') {
+                node.attr('xlink:href', '/favicon.ico')
+                node.attr('data-visible', true)
+              } else if (!inViewport && node.attr('data-visible') === 'true') {
+                node.attr('xlink:href', null)
+                node.attr('data-visible', false)
               }
             }
           }
@@ -186,27 +187,36 @@ export default {
         for (let y = -1; y <= 1; y++) {
           const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
           const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
-          fG.append('g')
-            .selectAll('circle')
+          const diameter = this.fgDotRadius * 2
+
+          const node = fG
+            .append('g')
+            .selectAll('.node')
             .data(fNodes)
-            .join('circle')
+            .enter()
+            .append('g')
+            .attr('class', 'node')
+
+          node
+            .append('circle')
             .attr('r', (d, i) =>
               d.human ? this.fgDotRadius : this.fgDotRadius * 0.75
             )
             .attr('cx', (d, i) => d.x + dx)
             .attr('cy', (d, i) => d.y + dy)
             .attr('fill', (d, i) => d.colour)
-            .on('click', this.dotClicked)
-          /*
-            .append('svg:image')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', 24)
-            .attr('height', 24)
-            .attr('xlink:href', (d, i) =>
-              d.human ? 'https://www.w3schools.com/w3images/avatar6.png' : null
+
+          node
+            .append('image')
+            .attr('xlink:href', null)
+            .attr('x', (d, i) => d.x + dx - this.fgDotRadius + 2)
+            .attr('y', (d, i) => d.y + dy - this.fgDotRadius + 2)
+            .attr('width', (d, i) => (d.human ? diameter - 4 : diameter * 0.75))
+            .attr('height', (d, i) =>
+              d.human ? diameter - 4 : diameter * 0.75
             )
-            */
+            .attr('data-visible', false)
+            .on('click', this.dotClicked)
         }
       }
       return fG
@@ -221,12 +231,9 @@ export default {
       )
     },
     dotClicked(event, data) {
-      console.log(data)
       if (data.human) {
-        console.log('viewing memorium')
         alert('View an existing memorium modal')
       } else {
-        console.log('new memorium')
         alert('Create a new memorium modal')
       }
     },
