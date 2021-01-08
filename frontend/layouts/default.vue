@@ -51,13 +51,26 @@ button {
   cursor: pointer;
 }
 
-input {
+input,
+textarea {
   border: 2px solid black;
   border-radius: 6rem;
   font-size: 2rem;
   font-family: inherit;
   padding: 1rem 2rem;
   min-height: 2.7em;
+  width: 100%;
+}
+
+input[type='checkbox'] {
+  display: inline-block;
+  width: 3rem;
+  height: 2rem;
+  vertical-align: middle;
+}
+
+textarea {
+  border-radius: 1rem;
 }
 
 label {

@@ -17,8 +17,11 @@
     "@nuxtjs/style-resources": "^1.0.0",
     "core-js": "^3.6.5",
     "d3": "^6.3.1",
+    "i18n-iso-countries": "^6.4.0",
     "nuxt": "^2.14.6",
-    "nuxt-helmet": "^2.0.0"
+    "nuxt-helmet": "^2.0.0",
+    "nuxt-vue-select": "^0.1.4",
+    "vue-cropperjs": "^4.2.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",
