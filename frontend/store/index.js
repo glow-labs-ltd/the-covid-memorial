@@ -24,4 +24,8 @@ export const actions = {
     const deceased = await this.$axios.$get('deceased/')
     commit('appendDeceased', deceased)
   },
+
+  async postDeceased({ commit }, data) {
+    await this.$axios.$post('deceased/', data)
+  },
 }
