@@ -12,7 +12,6 @@ export const mutations = {
     state.addModal = value
   },
   appendDeceased(state, value) {
-    // state.deceased.push(value)
     state.deceased = [...state.deceased, value]
   },
   emptyDeceased(state) {
