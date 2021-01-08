@@ -28,6 +28,8 @@ export default {
     scss: ['./assets/scss/*.scss'],
   },
 
+  plugins: ['~/plugins/axios'],
+
   components: true,
 
   buildModules: ['@nuxtjs/eslint-module'],
@@ -63,8 +65,9 @@ export default {
   },
 
   axios: {
-    proxy: process.env.NODE_ENV !== 'production',
-    prefix: '/api/',
+    baseURL: '/api/', // production
+    proxy: process.env.NODE_ENV !== 'production', // enable proxy for development
+    prefix: '/api/', // used only when proxy is enabled
   },
 
   proxy: {
