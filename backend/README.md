@@ -18,9 +18,9 @@ To install postgres:
 To run postgres in a docker container locally (docker must be installed and running):
 `docker run --rm --name pg-memorial -e POSTGRES_PASSWORD=password -d -p 5432:5432 -v $HOME/docker/volumes/pg-memorial:/var/lib/postgresql/data postgres:13`
 
-Initial set up of postgres database (create the glow database):
+Initial set up of postgres database (create the memorial database):
 `psql -h localhost -U postgres`
-`create database glow;`
+`create database memorial;`
 `\q`
 
 ## Python commands

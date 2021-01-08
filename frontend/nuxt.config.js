@@ -28,8 +28,6 @@ export default {
     scss: ['./assets/scss/*.scss'],
   },
 
-  plugins: [],
-
   components: true,
 
   buildModules: ['@nuxtjs/eslint-module'],
@@ -64,7 +62,14 @@ export default {
     },
   },
 
-  axios: {},
+  axios: {
+    proxy: process.env.NODE_ENV !== 'production',
+    prefix: '/api/',
+  },
+
+  proxy: {
+    '/api/': { target: 'http://localhost:8000' },
+  },
 
   build: {
     postcss: {
