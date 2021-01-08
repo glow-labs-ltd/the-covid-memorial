@@ -15,8 +15,6 @@ class DeceasedPreviewSerializer(serializers.ModelSerializer):
 
 
 class DeceasedSerializer(serializers.ModelSerializer):
-    country = CountryField()
-
     class Meta:
         model = Deceased
         fields = (
