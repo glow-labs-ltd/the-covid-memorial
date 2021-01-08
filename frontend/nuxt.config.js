@@ -67,9 +67,9 @@ export default {
   },
 
   axios: {
-    baseURL: development ? 'http://localhost:3000' : '',
-    proxy: development,
-    prefix: '/api/',
+    baseURL: '/api/', // production
+    proxy: development, // enable proxy for development
+    prefix: '/api/', // when proxy is enabled
   },
 
   proxy: {
