@@ -1,3 +1,5 @@
+const development = process.env.NODE_ENV !== 'production'
+
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -27,6 +29,8 @@ export default {
   styleResources: {
     scss: ['./assets/scss/*.scss'],
   },
+
+  plugins: ['~/plugins/axios'],
 
   components: true,
 
@@ -63,7 +67,8 @@ export default {
   },
 
   axios: {
-    proxy: process.env.NODE_ENV !== 'production',
+    baseURL: development ? 'http://localhost:3000' : '',
+    proxy: development,
     prefix: '/api/',
   },
 
