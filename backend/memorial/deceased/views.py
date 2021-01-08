@@ -7,10 +7,18 @@ from .serializers import DeceasedPreviewSerializer, DeceasedSerializer
 
 
 class DeceasedAPIViewSet(
-        mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet
+        mixins.ListModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.CreateModelMixin,
+        GenericViewSet
 ):
-    queryset = Deceased.objects.all().order_by('?')[:10]
+    queryset = Deceased.objects.all().order_by('?')
     pagination_class = None
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return self.queryset[:10]
+        return self.queryset
 
     def get_serializer_class(self):
         if self.action == 'list':
