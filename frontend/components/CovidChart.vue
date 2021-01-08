@@ -25,6 +25,7 @@ export default {
       bgDotMinRadius: 6,
       fDotRadius: 20,
       fZoomLevel: null,
+      fPadding: 100,
       colours: [
         '#890608',
         '#d4700c',
@@ -41,9 +42,9 @@ export default {
     // initialize the chart
     const chart = this.initializeChart()
 
-    const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
-    this.bgNumDots = Math.floor(shortestEdge)
-    this.fgNumDots = Math.floor(shortestEdge / 1.5)
+    // const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
+    this.bgNumDots = 800
+    this.fgNumDots = 200
     const boxSize = {
       width: this.currentWidth * 1.5,
       height: this.currentHeight * 1.5,
@@ -77,11 +78,11 @@ export default {
       .on(
         'zoom',
         function (event) {
+          const x = -this.currentWidth / 2
+          const y = -this.currentHeight / 2
           bG.attr(
             'transform',
-            `translate(${-this.currentWidth / 2}, ${
-              -this.currentHeight / 2
-            })scale(${event.transform.k})`
+            `translate(${x}, ${y})scale(${event.transform.k})`
           )
         }.bind(this)
       )
@@ -122,7 +123,7 @@ export default {
       .call(this.fZoom)
       .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
 
-    this.showInitialDeceased(fDots)
+    this.downloadInitialDeceased(fDots)
   },
   methods: {
     initializeChart() {
@@ -226,6 +227,7 @@ export default {
             .attr('cy', 0)
             .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
             .attr('data-deceased-id', null)
+            .attr('style', 'cursor: pointer')
             .on('click', this.dotClicked)
 
           node
@@ -258,10 +260,10 @@ export default {
     isElementInViewport(el) {
       const rect = el.getBoundingClientRect()
       return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= this.currentHeight &&
-        rect.right <= this.currentWidth
+        rect.top >= -this.fPadding &&
+        rect.left >= -this.fPadding &&
+        rect.bottom <= this.currentHeight + this.fPadding &&
+        rect.right <= this.currentWidth + this.fPadding
       )
     },
     loadDeceased(fDots) {
@@ -290,7 +292,7 @@ export default {
         }
       }
     },
-    async showInitialDeceased(fDots) {
+    async downloadInitialDeceased(fDots) {
       if (this.$store.state.deceased.length === 0) {
         await this.$store.dispatch('getDeceased')
       }
