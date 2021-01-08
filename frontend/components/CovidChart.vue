@@ -19,6 +19,7 @@ export default {
       container: null,
       currentWidth: 0,
       currentHeight: 0,
+      data: [],
       bZoomLevel: 1,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
@@ -39,10 +40,8 @@ export default {
     }
   },
   mounted() {
-    // initialize the chart
+    // initialize the chart and variables
     const chart = this.initializeChart()
-
-    // const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
     this.bgNumDots = 800
     this.fgNumDots = 200
     const boxSize = {
@@ -52,7 +51,7 @@ export default {
 
     // create the background dots
     const bG = chart.append('g')
-    const data = this.generateDataset(
+    const data = this.generateData(
       boxSize.width,
       boxSize.height,
       this.bgDotMinRadius,
@@ -90,7 +89,7 @@ export default {
 
     // create foreground dots
     const fG = chart.append('g')
-    const fData = this.generateDataset(
+    this.data = this.generateData(
       boxSize.width,
       boxSize.height,
       this.fDotRadius,
@@ -98,8 +97,8 @@ export default {
       this.fgNumDots,
       true
     )
-    const fNodes = fData.map((d) => Object.create(d))
-    const fDots = this.drawForegroundDots(fG, fNodes, boxSize)
+    const fNodes = this.data.map((d) => Object.create(d))
+    const fDots = this.setupForegroundNodes(fG, fNodes, boxSize)
 
     this.fZoom = d3
       .zoom()
@@ -116,7 +115,7 @@ export default {
             'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
           )
 
-          this.loadDeceased(fDots)
+          this.updateDeceasedNodes(fDots)
         }.bind(this)
       )
     chart
@@ -161,14 +160,7 @@ export default {
       if (this.fZoom)
         chart.call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
     },
-    generateDataset(
-      xSize,
-      ySize,
-      minRadius,
-      maxRadius,
-      numDots,
-      generateHuman
-    ) {
+    generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []
       let i = 0
       let attempts = 0
@@ -195,14 +187,14 @@ export default {
         }
 
         if (!collides) {
-          data.push({ x, y, radius, human })
+          data.push({ id: i, x, y, radius, human, deceasedId: null })
           attempts = 0
           i++
         }
       }
       return data
     },
-    drawForegroundDots(fG, fNodes, boxSize) {
+    setupForegroundNodes(fG, fNodes, boxSize) {
       for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
           const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
@@ -216,7 +208,7 @@ export default {
             .enter()
             .append('g')
             .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
-            .attr('class', 'node')
+            .attr('class', (d, i) => `node node-${i}`)
 
           node
             .append('circle')
@@ -228,7 +220,8 @@ export default {
             .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
             .attr('data-deceased-id', null)
             .attr('style', 'cursor: pointer')
-            .on('click', this.dotClicked)
+            .attr('class', 'dot-background')
+            .on('click', this.nodeClicked)
 
           node
             .append('defs')
@@ -253,41 +246,41 @@ export default {
             .attr('preserveAspectRatio', 'xMidYMid slice')
             .attr('clip-path', 'url(#clip-circle)')
             .attr('style', 'pointer-events: none')
+            .attr('class', 'dot-image')
         }
       }
       return fG
     },
-    isElementInViewport(el) {
-      const rect = el.getBoundingClientRect()
-      return (
-        rect.top >= -this.fPadding &&
-        rect.left >= -this.fPadding &&
-        rect.bottom <= this.currentHeight + this.fPadding &&
-        rect.right <= this.currentWidth + this.fPadding
-      )
-    },
-    loadDeceased(fDots) {
-      const dots = fDots.selectAll('.node')
-      for (const dot of dots) {
-        const node = d3.select(dot)
-        const data = node.data()[0]
-        if (data.human) {
-          const circle = node.select('circle')
-          const image = node.select('image')
-          const inViewport = this.isElementInViewport(dot)
-          if (inViewport && circle.attr('data-deceased-id') === null) {
+    updateDeceasedNodes(fDots) {
+      for (const d of this.data) {
+        if (d.human) {
+          const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
+          let visible = false
+          for (const dot of dotsToCheck) {
+            if (this.isElementInViewport(dot)) visible = true
+          }
+
+          if (visible && !d.deceasedId) {
             const deceasedToAdd = this.$store.state.deceased[0]
             this.$store.commit('shiftDeceased')
             if (deceasedToAdd) {
-              circle.attr('data-deceased-id', deceasedToAdd.id)
-              circle.attr('fill', this.colours[deceasedToAdd.colour])
-              image.attr('xlink:href', deceasedToAdd.image)
+              dotsToCheck
+                .select('.dot-background')
+                .attr('data-deceased-id', deceasedToAdd.id)
+              dotsToCheck
+                .select('.dot-background')
+                .attr('fill', this.colours[deceasedToAdd.colour])
+              dotsToCheck
+                .select('.dot-image')
+                .attr('xlink:href', deceasedToAdd.image)
+              d.deceasedId = deceasedToAdd.id
             }
             this.downloadDeceased()
-          } else if (!inViewport && circle.attr('data-deceased-id')) {
-            circle.attr('data-deceased-id', null)
-            circle.attr('fill', '#00000000')
-            image.attr('xlink:href', null)
+          } else if (!visible && d.deceasedId) {
+            dotsToCheck.select('circle').attr('data-deceased-id', null)
+            dotsToCheck.select('circle').attr('fill', '#00000000')
+            dotsToCheck.select('image').attr('xlink:href', null)
+            d.deceasedId = null
           }
         }
       }
@@ -296,7 +289,7 @@ export default {
       if (this.$store.state.deceased.length === 0) {
         await this.$store.dispatch('getDeceased')
       }
-      this.loadDeceased(fDots)
+      this.updateDeceasedNodes(fDots)
     },
     downloadDeceased() {
       if (
@@ -305,13 +298,21 @@ export default {
       )
         this.$store.dispatch('getDeceased')
     },
-    dotClicked(event, data) {
+    nodeClicked(event, data) {
       if (data.human) {
-        const deceasedId = event.toElement.dataset.deceasedId
-        if (deceasedId) this.$emit('view', deceasedId)
+        if (data.deceasedId) this.$emit('view', data.deceasedId)
       } else {
         this.$emit('add')
       }
+    },
+    isElementInViewport(el) {
+      const bounds = el.getBoundingClientRect()
+      return (
+        bounds.top >= -this.fPadding &&
+        bounds.left >= -this.fPadding &&
+        bounds.bottom <= this.currentHeight + this.fPadding &&
+        bounds.right <= this.currentWidth + this.fPadding
+      )
     },
   },
 }
