@@ -53,7 +53,12 @@ export default {
         'frame-ancestors': ["'self'"],
         'connect-src': ["'self'", 'blob:'],
         'manifest-src': ["'self'"],
-        'img-src': ["'self'", 'data:', 'blob:'],
+        'img-src': [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://storage.googleapis.com',
+        ],
         'object-src': ["'none'"],
         'script-src': ["'self'"],
         'script-src-attr': ["'none'"],

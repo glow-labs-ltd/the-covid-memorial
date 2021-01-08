@@ -1,20 +1,23 @@
 <template>
   <div class="container">
-    <covid-chart />
+    <covid-chart @add="addNodeClick" @view="viewNodeClick" />
     <AddButton class="add-button" />
     <AddMemoriam />
   </div>
 </template>
 
 <script>
-import CovidChart from '@/components/covid-chart.vue'
-
 export default {
-  components: {
-    CovidChart,
-  },
   mounted() {
     this.$store.dispatch('getDeceased')
+  },
+  methods: {
+    addNodeClick() {
+      this.$store.commit('setAddModal', !this.$store.state.addModal)
+    },
+    viewNodeClick(deceasedId) {
+      alert(`View memorium id ${deceasedId}`)
+    },
   },
 }
 </script>
