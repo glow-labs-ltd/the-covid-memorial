@@ -23,6 +23,7 @@ export default {
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
       fgDotRadius: 16,
+      deceased: [],
     }
   },
   mounted() {
@@ -33,10 +34,9 @@ export default {
     this.bgNumDots = Math.floor(longestEdge)
     this.fgNumDots = Math.floor(longestEdge / 2)
     const boxSize = {
-      width: this.currentWidth * 1.5,
-      height: this.currentHeight * 1.5,
+      width: this.currentWidth * 2,
+      height: this.currentHeight * 2,
     }
-    this.zoomLevel = -1 / (-longestEdge / 1600)
 
     // create the background dots
     const bG = chart.append('g')
@@ -88,18 +88,26 @@ export default {
             'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
           )
 
-          const dots = fDots.selectAll('image')
+          const dots = fDots.selectAll('.node')
           for (const dot of dots) {
             const node = d3.select(dot)
             const data = node.data()[0]
             if (data.human) {
+              const circle = node.select('circle')
+              const image = node.select('image')
               const inViewport = this.isElementInViewport(dot)
-              if (inViewport && node.attr('data-visible') === 'false') {
-                node.attr('xlink:href', '/favicon.ico')
-                node.attr('data-visible', true)
-              } else if (!inViewport && node.attr('data-visible') === 'true') {
-                node.attr('xlink:href', null)
-                node.attr('data-visible', false)
+              if (inViewport && circle.attr('data-deceased-id') === null) {
+                const deceasedToAdd = this.deceased.shift()
+                if (deceasedToAdd) {
+                  circle.attr('data-deceased-id', deceasedToAdd.id)
+                  circle.attr('fill', deceasedToAdd.colour)
+                  image.attr('xlink:href', deceasedToAdd.image)
+                }
+                this.downloadDeceased()
+              } else if (!inViewport && circle.attr('data-deceased-id')) {
+                circle.attr('data-deceased-id', null)
+                circle.attr('fill', '#00000000')
+                image.attr('xlink:href', null)
               }
             }
           }
@@ -125,7 +133,6 @@ export default {
         .append('feGaussianBlur')
         .attr('stdDeviation', this.bgDotBlur)
 
-      this.container = chart.node().parentNode
       this.resizeChart(chart)
       window.addEventListener(
         'resize',
@@ -136,6 +143,7 @@ export default {
       return chart
     },
     resizeChart(chart) {
+      this.container = chart.node().parentNode
       this.currentWidth = this.container.getBoundingClientRect().width
       this.currentHeight = this.container.getBoundingClientRect().height
       chart.attr('width', this.currentWidth)
@@ -159,8 +167,6 @@ export default {
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
         const human = generateHuman ? Math.random() < 0.6 : false
-        const colour = human ? '#F3C316' : '#000000'
-        const visible = false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
@@ -177,7 +183,7 @@ export default {
         }
 
         if (!collides) {
-          data.push({ x, y, radius, human, colour, visible })
+          data.push({ x, y, radius, human })
           attempts = 0
           i++
         }
@@ -197,6 +203,7 @@ export default {
             .data(fNodes)
             .enter()
             .append('g')
+            .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
             .attr('class', 'node')
 
           node
@@ -204,21 +211,35 @@ export default {
             .attr('r', (d, i) =>
               d.human ? this.fgDotRadius : this.fgDotRadius * 0.75
             )
-            .attr('cx', (d, i) => d.x + dx)
-            .attr('cy', (d, i) => d.y + dy)
-            .attr('fill', (d, i) => d.colour)
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
+            .attr('data-deceased-id', null)
+            .on('click', this.dotClicked)
+
+          node
+            .append('defs')
+            .append('clipPath')
+            .attr('id', 'clip-circle')
+            .append('circle')
+            .attr('r', (d, i) =>
+              d.human ? this.fgDotRadius - 2 : this.fgDotRadius * 0.75
+            )
+            .attr('cy', 0)
+            .attr('cx', 0)
 
           node
             .append('image')
             .attr('xlink:href', null)
-            .attr('x', (d, i) => d.x + dx - this.fgDotRadius + 2)
-            .attr('y', (d, i) => d.y + dy - this.fgDotRadius + 2)
-            .attr('width', (d, i) => (d.human ? diameter - 4 : diameter * 0.75))
+            .attr('x', (d, i) => -this.fgDotRadius + 1)
+            .attr('y', (d, i) => -this.fgDotRadius + 1)
+            .attr('width', (d, i) => (d.human ? diameter - 2 : diameter * 0.75))
             .attr('height', (d, i) =>
-              d.human ? diameter - 4 : diameter * 0.75
+              d.human ? diameter - 2 : diameter * 0.75
             )
-            .attr('data-visible', false)
-            .on('click', this.dotClicked)
+            .attr('preserveAspectRatio', 'xMidYMid slice')
+            .attr('clip-path', 'url(#clip-circle)')
+            .attr('style', 'pointer-events: none')
         }
       }
       return fG
@@ -232,25 +253,30 @@ export default {
         rect.right <= this.currentWidth
       )
     },
+    downloadDeceased() {
+      if (this.deceased.length === 0)
+        this.deceased = [{ id: 123, image: '/favicon.ico', colour: '#FFCC11' }]
+    },
     dotClicked(event, data) {
       if (data.human) {
-        alert('View an existing memorium modal')
+        const deceasedId = event.toElement.dataset.deceasedId
+        if (deceasedId) this.$emit('view', deceasedId)
       } else {
-        alert('Create a new memorium modal')
+        this.$emit('create')
       }
     },
   },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .chart-background {
   width: 100vw;
   height: 100vh;
-  background-color: #f5f6f5;
+  background-color: $background;
 }
 
 #chart {
-  background-color: #f5f6f5;
+  background-color: $background;
 }
 </style>

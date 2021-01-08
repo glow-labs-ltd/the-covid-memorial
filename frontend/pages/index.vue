@@ -1,15 +1,18 @@
 <template>
   <div class="container">
-    <covid-chart />
+    <covid-chart @create="create" @view="view" />
   </div>
 </template>
 
 <script>
-import CovidChart from '@/components/CovidChart.vue'
-
 export default {
-  components: {
-    CovidChart,
+  methods: {
+    create() {
+      alert(`Create a new memorium`)
+    },
+    view(deceasedId) {
+      alert(`View memorium id ${deceasedId}`)
+    },
   },
 }
 </script>
