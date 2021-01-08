@@ -23,7 +23,7 @@ export default {
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
-      fDotRadius: 16,
+      fDotRadius: 20,
       fZoomLevel: null,
       colours: [
         '#890608',
@@ -121,6 +121,8 @@ export default {
     chart
       .call(this.fZoom)
       .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+
+    this.showInitialDeceased(fDots)
   },
   methods: {
     initializeChart() {
@@ -175,7 +177,7 @@ export default {
         const y = Math.floor(Math.random() * ySize)
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
-        const human = generateHuman ? Math.random() < 0.6 : false
+        const human = generateHuman ? Math.random() < 0.8 : false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
@@ -287,6 +289,12 @@ export default {
           }
         }
       }
+    },
+    async showInitialDeceased(fDots) {
+      if (this.$store.state.deceased.length === 0) {
+        await this.$store.dispatch('getDeceased')
+      }
+      this.loadDeceased(fDots)
     },
     downloadDeceased() {
       if (
