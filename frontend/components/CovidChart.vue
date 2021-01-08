@@ -208,7 +208,7 @@ export default {
             .enter()
             .append('g')
             .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
-            .attr('class', (d, i) => `node node-${i}`)
+            .attr('class', (d, i) => `node node-${d.id.toString()}`)
 
           node
             .append('circle')
@@ -218,7 +218,6 @@ export default {
             .attr('cx', 0)
             .attr('cy', 0)
             .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
-            .attr('data-deceased-id', null)
             .attr('style', 'cursor: pointer')
             .attr('class', 'dot-background')
             .on('click', this.nodeClicked)
@@ -252,36 +251,30 @@ export default {
       return fG
     },
     updateDeceasedNodes(fDots) {
-      for (const d of this.data) {
-        if (d.human) {
-          const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
-          let visible = false
-          for (const dot of dotsToCheck) {
-            if (this.isElementInViewport(dot)) visible = true
-          }
+      for (const d of this.data.filter((el) => el.human)) {
+        const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
+        let visible = false
+        for (const dot of dotsToCheck) {
+          if (this.isElementInViewport(dot)) visible = true
+        }
 
-          if (visible && !d.deceasedId) {
-            const deceasedToAdd = this.$store.state.deceased[0]
-            this.$store.commit('shiftDeceased')
-            if (deceasedToAdd) {
-              dotsToCheck
-                .select('.dot-background')
-                .attr('data-deceased-id', deceasedToAdd.id)
-              dotsToCheck
-                .select('.dot-background')
-                .attr('fill', this.colours[deceasedToAdd.colour])
-              dotsToCheck
-                .select('.dot-image')
-                .attr('xlink:href', deceasedToAdd.image)
-              d.deceasedId = deceasedToAdd.id
-            }
-            this.downloadDeceased()
-          } else if (!visible && d.deceasedId) {
-            dotsToCheck.select('circle').attr('data-deceased-id', null)
-            dotsToCheck.select('circle').attr('fill', '#00000000')
-            dotsToCheck.select('image').attr('xlink:href', null)
-            d.deceasedId = null
+        if (visible && !d.deceasedId) {
+          const deceasedToAdd = this.$store.state.deceased[0]
+          this.$store.commit('shiftDeceased')
+          if (deceasedToAdd) {
+            dotsToCheck
+              .select('.dot-background')
+              .attr('fill', this.colours[deceasedToAdd.colour])
+            dotsToCheck
+              .select('.dot-image')
+              .attr('xlink:href', deceasedToAdd.image)
+            d.deceasedId = deceasedToAdd.id
           }
+          this.downloadDeceased()
+        } else if (!visible && d.deceasedId) {
+          dotsToCheck.select('.dot-background').attr('fill', '#00000000')
+          dotsToCheck.select('.dot-image').attr('xlink:href', null)
+          d.deceasedId = null
         }
       }
     },
