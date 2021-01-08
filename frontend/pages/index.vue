@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <covid-chart @create="create" @view="view" />
+    <covid-chart @add="addNodeClick" @view="viewNodeClick" />
     <AddButton class="add-button" />
     <AddMemoriam />
   </div>
@@ -12,10 +12,10 @@ export default {
     this.$store.dispatch('getDeceased')
   },
   methods: {
-    create() {
-      alert(`Create a new memorium`)
+    addNodeClick() {
+      this.$store.commit('setAddModal', !this.$store.state.addModal)
     },
-    view(deceasedId) {
+    viewNodeClick(deceasedId) {
       alert(`View memorium id ${deceasedId}`)
     },
   },

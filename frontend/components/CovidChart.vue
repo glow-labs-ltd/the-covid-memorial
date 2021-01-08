@@ -12,30 +12,41 @@
 
 <script>
 import * as d3 from 'd3'
+
 export default {
   data() {
     return {
       container: null,
       currentWidth: 0,
       currentHeight: 0,
-      zoomLevel: 1,
+      bZoomLevel: 1,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
-      fgDotRadius: 16,
-      deceased: [],
+      fDotRadius: 16,
+      fZoomLevel: null,
+      colours: [
+        '#890608',
+        '#d4700c',
+        '#f3c316',
+        '#315e31',
+        '#00457a',
+        '#470c6e',
+        '#72466a',
+        '#000000',
+      ],
     }
   },
   mounted() {
     // initialize the chart
     const chart = this.initializeChart()
 
-    const longestEdge = Math.max(this.currentWidth, this.currentHeight)
-    this.bgNumDots = Math.floor(longestEdge)
-    this.fgNumDots = Math.floor(longestEdge / 2)
+    const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
+    this.bgNumDots = Math.floor(shortestEdge)
+    this.fgNumDots = Math.floor(shortestEdge / 1.5)
     const boxSize = {
-      width: this.currentWidth * 2,
-      height: this.currentHeight * 2,
+      width: this.currentWidth * 1.5,
+      height: this.currentHeight * 1.5,
     }
 
     // create the background dots
@@ -60,22 +71,38 @@ export default {
       .attr('fill', '#000000')
       .style('opacity', 0.6)
 
+    this.bZoom = d3
+      .zoom()
+      .scaleExtent([this.bZoomLevel, this.bZoomLevel])
+      .on(
+        'zoom',
+        function (event) {
+          bG.attr(
+            'transform',
+            `translate(${-this.currentWidth / 2}, ${
+              -this.currentHeight / 2
+            })scale(${event.transform.k})`
+          )
+        }.bind(this)
+      )
+    chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.bZoomLevel))
+
     // create foreground dots
     const fG = chart.append('g')
     const fData = this.generateDataset(
       boxSize.width,
       boxSize.height,
-      this.fgDotRadius,
-      this.fgDotRadius,
+      this.fDotRadius,
+      this.fDotRadius,
       this.fgNumDots,
       true
     )
     const fNodes = fData.map((d) => Object.create(d))
     const fDots = this.drawForegroundDots(fG, fNodes, boxSize)
 
-    const zoom = d3
+    this.fZoom = d3
       .zoom()
-      .scaleExtent([this.zoomLevel, this.zoomLevel])
+      .scaleExtent([this.fZoomLevel, this.fZoomLevel])
       .on(
         'zoom',
         function (event) {
@@ -88,40 +115,12 @@ export default {
             'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
           )
 
-          const dots = fDots.selectAll('.node')
-          for (const dot of dots) {
-            const node = d3.select(dot)
-            const data = node.data()[0]
-            if (data.human) {
-              const circle = node.select('circle')
-              const image = node.select('image')
-              const inViewport = this.isElementInViewport(dot)
-              if (inViewport && circle.attr('data-deceased-id') === null) {
-                const deceasedToAdd = this.deceased.shift()
-                if (deceasedToAdd) {
-                  circle.attr('data-deceased-id', deceasedToAdd.id)
-                  circle.attr('fill', deceasedToAdd.colour)
-                  image.attr('xlink:href', deceasedToAdd.image)
-                }
-                this.downloadDeceased()
-              } else if (!inViewport && circle.attr('data-deceased-id')) {
-                circle.attr('data-deceased-id', null)
-                circle.attr('fill', '#00000000')
-                image.attr('xlink:href', null)
-              }
-            }
-          }
+          this.loadDeceased(fDots)
         }.bind(this)
       )
-    chart.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(this.zoomLevel))
-
-    const zoomBg = d3
-      .zoom()
-      .scaleExtent([this.zoomLevel, this.zoomLevel])
-      .on('zoom', function (event) {
-        bG.attr('transform', 'scale(' + event.transform.k + ')')
-      })
-    chart.call(zoomBg.transform, d3.zoomIdentity.scale(this.zoomLevel))
+    chart
+      .call(this.fZoom)
+      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
   },
   methods: {
     initializeChart() {
@@ -148,6 +147,16 @@ export default {
       this.currentHeight = this.container.getBoundingClientRect().height
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
+
+      const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
+      this.fZoomLevel = -1 / (-shortestEdge / 800)
+
+      if (this.bZoom) {
+        chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.bZoomLevel))
+      }
+
+      if (this.fZoom)
+        chart.call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
     },
     generateDataset(
       xSize,
@@ -195,7 +204,7 @@ export default {
         for (let y = -1; y <= 1; y++) {
           const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
           const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
-          const diameter = this.fgDotRadius * 2
+          const diameter = this.fDotRadius * 2
 
           const node = fG
             .append('g')
@@ -209,7 +218,7 @@ export default {
           node
             .append('circle')
             .attr('r', (d, i) =>
-              d.human ? this.fgDotRadius : this.fgDotRadius * 0.75
+              d.human ? this.fDotRadius : this.fDotRadius * 0.75
             )
             .attr('cx', 0)
             .attr('cy', 0)
@@ -223,7 +232,7 @@ export default {
             .attr('id', 'clip-circle')
             .append('circle')
             .attr('r', (d, i) =>
-              d.human ? this.fgDotRadius - 2 : this.fgDotRadius * 0.75
+              d.human ? this.fDotRadius - 2 : this.fDotRadius * 0.75
             )
             .attr('cy', 0)
             .attr('cx', 0)
@@ -231,8 +240,8 @@ export default {
           node
             .append('image')
             .attr('xlink:href', null)
-            .attr('x', (d, i) => -this.fgDotRadius + 1)
-            .attr('y', (d, i) => -this.fgDotRadius + 1)
+            .attr('x', (d, i) => -this.fDotRadius + 1)
+            .attr('y', (d, i) => -this.fDotRadius + 1)
             .attr('width', (d, i) => (d.human ? diameter - 2 : diameter * 0.75))
             .attr('height', (d, i) =>
               d.human ? diameter - 2 : diameter * 0.75
@@ -253,16 +262,45 @@ export default {
         rect.right <= this.currentWidth
       )
     },
+    loadDeceased(fDots) {
+      const dots = fDots.selectAll('.node')
+      for (const dot of dots) {
+        const node = d3.select(dot)
+        const data = node.data()[0]
+        if (data.human) {
+          const circle = node.select('circle')
+          const image = node.select('image')
+          const inViewport = this.isElementInViewport(dot)
+          if (inViewport && circle.attr('data-deceased-id') === null) {
+            const deceasedToAdd = this.$store.state.deceased[0]
+            this.$store.commit('shiftDeceased')
+            if (deceasedToAdd) {
+              circle.attr('data-deceased-id', deceasedToAdd.id)
+              circle.attr('fill', this.colours[deceasedToAdd.colour])
+              image.attr('xlink:href', deceasedToAdd.image)
+            }
+            this.downloadDeceased()
+          } else if (!inViewport && circle.attr('data-deceased-id')) {
+            circle.attr('data-deceased-id', null)
+            circle.attr('fill', '#00000000')
+            image.attr('xlink:href', null)
+          }
+        }
+      }
+    },
     downloadDeceased() {
-      if (this.deceased.length === 0)
-        this.deceased = [{ id: 123, image: '/favicon.ico', colour: '#FFCC11' }]
+      if (
+        this.$store.state.deceased.length === 0 &&
+        !this.$store.state.deceasedLoading
+      )
+        this.$store.dispatch('getDeceased')
     },
     dotClicked(event, data) {
       if (data.human) {
         const deceasedId = event.toElement.dataset.deceasedId
         if (deceasedId) this.$emit('view', deceasedId)
       } else {
-        this.$emit('create')
+        this.$emit('add')
       }
     },
   },
