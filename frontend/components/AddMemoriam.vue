@@ -5,7 +5,19 @@
         Add memoriam
       </h2>
       <div slot="body" class="generic-modal__wrapper">
+        <hr />
         <form id="add" @submit.prevent="submit">
+          <div class="row image-section">
+            <img src="~/assets/images/add-icon.svg" />
+            <div class="instruction">
+              <h3>Add their photograph</h3>
+              <p>
+                Try to use a photo where the person is in the centre of the
+                image
+              </p>
+            </div>
+          </div>
+
           <div class="row">
             <label for="name">Their name <span class="required">*</span></label>
             <input v-model="name" type="text" name="name" required />
@@ -162,6 +174,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+hr {
+  margin: 2rem 0;
+}
+
+.image-section {
+  display: grid;
+  grid-template: auto / 16rem 1fr;
+  text-align: left;
+
+  h3 {
+    font-size: 2.5rem;
+  }
+
+  .instruction {
+    margin: auto 0 auto 3rem;
+
+    p {
+      font-size: 1.75rem;
+      margin: 1rem 0 0;
+      max-width: 32rem;
+    }
+  }
+}
+
+.image {
+  // max-width: 12rem;
+}
+
 label {
   text-align: left;
   display: block;

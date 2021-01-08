@@ -28,7 +28,7 @@ export default {
     scss: ['./assets/scss/*.scss'],
   },
 
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', { src: '~/plugins/vue-cropper', ssr: false }],
 
   components: true,
 
@@ -51,9 +51,9 @@ export default {
         'base-uri': ["'self'"],
         'font-src': ["'self'", 'https://fonts.gstatic.com'],
         'frame-ancestors': ["'self'"],
-        'connect-src': ["'self'"],
+        'connect-src': ["'self'", 'blob:'],
         'manifest-src': ["'self'"],
-        'img-src': ["'self'", 'data:'],
+        'img-src': ["'self'", 'data:', 'blob:'],
         'object-src': ["'none'"],
         'script-src': ["'self'"],
         'script-src-attr': ["'none'"],
@@ -87,6 +87,7 @@ export default {
         },
       },
     },
+    vendor: ['vue-cropperjs'],
   },
 
   server: {
