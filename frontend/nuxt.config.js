@@ -34,7 +34,12 @@ export default {
 
   buildModules: ['@nuxtjs/eslint-module'],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'nuxt-helmet'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/style-resources',
+    'nuxt-helmet',
+    'nuxt-vue-select',
+  ],
 
   helmet: {},
 

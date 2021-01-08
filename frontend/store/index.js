@@ -2,6 +2,7 @@ export const state = () => ({
   sideMenuOpen: false,
   addModal: false,
   deceased: [],
+  error: null,
 })
 
 export const mutations = {
@@ -10,6 +11,9 @@ export const mutations = {
   },
   setAddModal(state, value) {
     state.addModal = value
+  },
+  setError(state, value) {
+    state.error = value
   },
   appendDeceased(state, value) {
     state.deceased = [...state.deceased, value]
@@ -26,6 +30,12 @@ export const actions = {
   },
 
   async postDeceased({ commit }, data) {
-    await this.$axios.$post('deceased/', data)
+    try {
+      commit('setError', null)
+      const response = await this.$axios.$post('deceased/', data)
+      if (response) commit('setAddModal', false)
+    } catch (e) {
+      commit('setError', e.response.data)
+    }
   },
 }
