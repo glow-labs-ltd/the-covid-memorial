@@ -28,7 +28,7 @@ export default {
     scss: ['./assets/scss/*.scss'],
   },
 
-  plugins: [],
+  plugins: ['~/plugins/axios'],
 
   components: true,
 
@@ -64,7 +64,15 @@ export default {
     },
   },
 
-  axios: {},
+  axios: {
+    baseURL: '/api/', // production
+    proxy: process.env.NODE_ENV !== 'production', // enable proxy for development
+    prefix: '/api/', // used only when proxy is enabled
+  },
+
+  proxy: {
+    '/api/': { target: 'http://localhost:8000' },
+  },
 
   build: {
     postcss: {

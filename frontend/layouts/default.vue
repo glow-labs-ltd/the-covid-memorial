@@ -10,7 +10,7 @@
 export default {}
 </script>
 
-<style>
+<style lang="scss">
 html {
   font-family: 'Lora', serif;
   font-size: 8px;
@@ -31,5 +31,56 @@ body {
 *::after {
   box-sizing: border-box;
   margin: 0;
+}
+
+:focus {
+  box-shadow: 0 0 0 4px $active;
+  outline: none;
+}
+
+button {
+  display: inline-block;
+  border: 4px solid black;
+  background: $surface;
+  border-radius: 6rem;
+  font-size: 2rem;
+  color: $primary;
+  font-weight: 700;
+  padding: 2rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input {
+  border: 2px solid black;
+  border-radius: 6rem;
+  font-size: 2rem;
+  font-family: inherit;
+  padding: 1rem 2rem;
+  min-height: 2.7em;
+}
+
+label {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.fade-slow-enter-active,
+.fade-slow-leave-active {
+  transition: all $slow $standard-easing;
+}
+.fade-slow-enter,
+.fade-slow-leave-to {
+  opacity: 0;
+}
+
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+  transition: all $fast $standard-easing;
+}
+.fade-fast-enter,
+.fade-fast-leave-to {
+  opacity: 0;
 }
 </style>
