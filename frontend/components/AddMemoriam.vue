@@ -244,30 +244,6 @@ label {
   text-align: center;
   padding: 1em;
 }
-.colour--0 {
-  background-color: $palette1;
-}
-.colour--1 {
-  background-color: $palette2;
-}
-.colour--2 {
-  background-color: $palette3;
-}
-.colour--3 {
-  background-color: $palette4;
-}
-.colour--4 {
-  background-color: $palette5;
-}
-.colour--5 {
-  background-color: $palette6;
-}
-.colour--6 {
-  background-color: $palette7;
-}
-.colour--7 {
-  background-color: $palette8;
-}
 
 .ticks {
   display: grid;
