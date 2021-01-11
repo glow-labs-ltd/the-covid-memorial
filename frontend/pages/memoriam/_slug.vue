@@ -18,7 +18,7 @@
         </div>
         <div class="right">
           <div>
-            <p class="message">"{{ message }}"</p>
+            <p class="message">{{ message }}</p>
             <div class="comment-section">
               <h3>Add a comment</h3>
             </div>
@@ -50,7 +50,11 @@ export default {
       return this.memoriam?.city
     },
     message() {
-      return this.memoriam?.message
+      const message = this.memoriam?.message
+      if (message) {
+        return `"${message}"`
+      }
+      return null
     },
     colourClass() {
       if (this.memoriam?.colour) {

@@ -29,7 +29,7 @@ class Deceased(models.Model):
         null=True,
         validators=[MaxValueValidator(7)],
     )
-    message = models.TextField(max_length=480)
+    message = models.TextField(max_length=480, null=True, blank=True)
     date_created = models.DateTimeField(auto_now=True)
 
     def comments(self):
