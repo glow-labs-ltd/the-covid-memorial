@@ -1,3 +1,7 @@
+import uuid
+
+from secrets import token_urlsafe
+from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.postgres.indexes import GistIndex
 from django.core.validators import MaxValueValidator
@@ -29,7 +33,17 @@ class Deceased(models.Model):
         null=True,
         validators=[MaxValueValidator(7)],
     )
-    message = models.TextField(max_length=480, null=True, blank=True)
+    message = models.TextField(max_length=2500, null=True, blank=True)
+    slug = AutoSlugField(
+        populate_from='name',
+        unique=True,
+        null=True,
+    )
+    code = models.CharField(
+        default=token_urlsafe(8),
+        max_length=12,
+        editable=False
+    )
     date_created = models.DateTimeField(auto_now=True)
 
     def comments(self):

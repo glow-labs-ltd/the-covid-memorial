@@ -8,7 +8,7 @@ class DeceasedPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deceased
         fields = (
-            'id',
+            'slug',
             'image',
             'colour',
         )
@@ -21,6 +21,7 @@ class DeceasedSerializer(serializers.ModelSerializer):
         model = Deceased
         fields = (
             'id',
+            'slug',
             'name',
             'birth_date',
             'death_date',
@@ -31,6 +32,28 @@ class DeceasedSerializer(serializers.ModelSerializer):
             'colour',
             'date_created',
             'message',
+        )
+
+
+class DeceasedSerializerWithCode(DeceasedSerializer):
+    country = CountryField(required=False)
+
+    class Meta:
+        model = Deceased
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'birth_date',
+            'death_date',
+            'age',
+            'country',
+            'city',
+            'image',
+            'colour',
+            'date_created',
+            'message',
+            'code'
         )
 
 

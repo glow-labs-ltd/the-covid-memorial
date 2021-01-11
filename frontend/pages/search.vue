@@ -14,7 +14,7 @@
           class="result"
           @click="clickResult(result.id)"
         >
-          <img class="portrait" src="~/assets/images/placeholder.jpg" />
+          <img class="portrait" :src="result.image" />
           <div class="colour-bar" :class="colourClass(result.colour)"></div>
           <div class="details">
             <h2 class="name">{{ result.name }}</h2>

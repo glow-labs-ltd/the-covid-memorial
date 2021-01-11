@@ -280,7 +280,7 @@ export default {
               .attr('opacity', 1)
               .duration(1000)
               .delay(500)
-            d.deceasedId = deceasedToAdd.id
+            d.deceasedId = deceasedToAdd.slug
           }
           this.downloadDeceased()
         } else if (!visible && d.deceasedId) {

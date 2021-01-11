@@ -8,7 +8,7 @@
       </div>
       <div class="memoriam">
         <div class="left">
-          <img class="portrait" src="~/assets/images/placeholder.jpg" />
+          <img class="portrait" :src="image" />
           <div class="colour-bar" :class="colourClass"></div>
           <div class="details">
             <h1 class="name">{{ name }}</h1>
@@ -55,6 +55,9 @@ export default {
         return `"${message}"`
       }
       return null
+    },
+    image() {
+      return this.memoriam?.image
     },
     colourClass() {
       if (this.memoriam?.colour) {
