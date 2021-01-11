@@ -11,7 +11,7 @@
 export default {
   transition: {
     name: 'fade-slow',
-    mode: 'out-in',
+    mode: '',
   },
 }
 </script>

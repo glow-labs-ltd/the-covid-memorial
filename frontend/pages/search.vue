@@ -4,7 +4,12 @@
       <h4 class="back"><NuxtLink to="/">Back</NuxtLink></h4>
       <h3>{{ count }}</h3>
       <div class="results">
-        <div v-for="result in results" :key="result.id" class="result">
+        <div
+          v-for="result in results"
+          :key="result.id"
+          class="result"
+          @click="clickResult(result.id)"
+        >
           <img class="portrait" src="~/assets/images/placeholder.jpg" />
           <div class="colour-bar" :class="colourClass(result.colour)"></div>
           <div class="details">
@@ -21,7 +26,7 @@
 export default {
   transition: {
     name: 'fade-slow',
-    mode: 'out-in',
+    mode: '',
   },
   computed: {
     count() {
@@ -39,6 +44,9 @@ export default {
         return `colour--${colour}`
       }
       return null
+    },
+    clickResult(id) {
+      this.$router.push({ name: 'memoriam-slug', params: { slug: id } })
     },
   },
 }

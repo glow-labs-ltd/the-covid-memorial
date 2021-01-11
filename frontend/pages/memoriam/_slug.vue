@@ -51,7 +51,7 @@ export default {
   },
   transition: {
     name: 'fade-slow',
-    mode: 'out-in',
+    mode: '',
   },
   methods: {
     close() {
@@ -111,7 +111,7 @@ export default {
   .right {
     display: grid;
     grid-template: auto 1fr / auto;
-    margin: 2rem;
+    padding: 2rem;
     max-height: 100%;
 
     @media (min-width: $tablet) {
