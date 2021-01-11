@@ -218,8 +218,13 @@ label {
 
 .dates {
   display: grid;
-  grid-template: auto / repeat(3, auto);
-  grid-gap: 1rem 2rem;
+  grid-template: auto / auto;
+  grid-gap: 2rem;
+
+  @media (min-width: $tablet) {
+    grid-template: auto / repeat(3, auto);
+    grid-gap: 1rem 2rem;
+  }
 }
 
 .colour-select {

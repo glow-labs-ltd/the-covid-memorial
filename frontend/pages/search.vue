@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <div class="search-results">
-      <h4 class="back"><NuxtLink to="/">Back</NuxtLink></h4>
+      <div class="close">
+        <a href="#" @click.prevent="close"
+          ><img src="~/assets/images/close-icon.svg" alt="Close"
+        /></a>
+      </div>
       <h3>{{ count }}</h3>
       <div class="results">
         <div
@@ -43,10 +47,13 @@ export default {
       if (colour) {
         return `colour--${colour}`
       }
-      return null
+      return 'colour--7'
     },
     clickResult(id) {
       this.$router.push({ name: 'memoriam-slug', params: { slug: id } })
+    },
+    close() {
+      this.$router.push('/')
     },
   },
 }
@@ -54,7 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-results {
-  padding: 4rem;
+  padding: 2rem;
   height: 100%;
   width: 100%;
   text-align: left;
@@ -64,7 +71,7 @@ export default {
   }
 
   @media (min-width: $desktop) {
-    padding: 12rem;
+    padding: 10rem;
   }
 
   h4 {
@@ -78,6 +85,14 @@ export default {
 
   h3 {
     padding-bottom: 1rem;
+  }
+
+  .close {
+    img {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 0 1rem auto;
+    }
   }
 }
 
@@ -107,7 +122,6 @@ export default {
 
     .portrait {
       max-width: 100%;
-      display: block;
     }
 
     .colour-bar {

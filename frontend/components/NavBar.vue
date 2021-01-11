@@ -8,13 +8,14 @@
     </NuxtLink>
     <h2 class="lost-count">1,854,764 <span>Sadly lost</span></h2>
     <div>
-      <transition name="fade-slow">
+      <transition name="fade-slow" mode="in-out">
         <input
           v-show="$store.state.showSearch"
           ref="searchField"
           v-model="searchQuery"
           type="text"
           class="search-field"
+          size="30"
           @keyup.enter="search"
         />
       </transition>
@@ -76,17 +77,28 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 2rem 4rem;
-  grid-gap: 4rem;
+  padding: 2rem;
+  grid-gap: 2rem;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: $tablet) {
+    grid-template: auto / auto 1fr auto auto auto;
+    grid-gap: 4rem;
+    padding: 2rem 4rem;
+  }
 
   > * {
     align-self: center;
   }
 
   .logo {
-    width: 10rem;
-    max-height: 5rem;
+    width: 6rem;
+    max-height: 3rem;
+
+    @media (min-width: $phone) {
+      width: 10rem;
+      max-height: 5rem;
+    }
 
     @media (min-width: $tablet) {
       width: 13rem;
@@ -96,8 +108,16 @@ export default {
 
   .lost-count {
     text-align: center;
-    font-size: 3.75rem;
+    font-size: 2.75rem;
     font-weight: 400;
+
+    @media (min-width: $phone) {
+      font-size: 3rem;
+    }
+
+    @media (min-width: $tablet) {
+      font-size: 3.75rem;
+    }
 
     span {
       font-size: 2.5rem;
