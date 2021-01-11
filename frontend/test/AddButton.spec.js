@@ -1,9 +1,9 @@
 import { shallowMount, RouterLinkStub } from '@vue/test-utils'
-import NavBar from '@/components/NavBar.vue'
+import AddButton from '@/components/AddButton.vue'
 
-describe('NavBar', () => {
+describe('AddButton', () => {
   test('is a Vue instance', () => {
-    const wrapper = shallowMount(NavBar, {
+    const wrapper = shallowMount(AddButton, {
       stubs: {
         NuxtLink: RouterLinkStub,
       },
