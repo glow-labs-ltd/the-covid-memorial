@@ -20,14 +20,15 @@ class DeceasedAPIViewSet(
     def get_queryset(self):
         if self.action == 'list':
             return self.queryset[:10]
+
         return self.queryset
 
     def get_serializer_class(self):
         if self.action == 'list':
             return DeceasedPreviewSerializer
 
-        if self.action == 'create':
-            DeceasedSerializerWithCode
+        if self.request.method == 'POST':
+            return DeceasedSerializerWithCode
 
         return DeceasedSerializer
 
@@ -47,4 +48,5 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
 
         if not query or not query.strip():
             return Deceased.objects.none()
+
         return Deceased.objects.all()

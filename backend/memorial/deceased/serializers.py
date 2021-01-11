@@ -53,7 +53,7 @@ class DeceasedSerializerWithCode(DeceasedSerializer):
             'colour',
             'date_created',
             'message',
-            'code'
+            'code',
         )
 
 

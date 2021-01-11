@@ -1,6 +1,3 @@
-import uuid
-
-from secrets import token_urlsafe
 from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.postgres.indexes import GistIndex
@@ -9,7 +6,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from storages.backends.gcloud import GoogleCloudStorage
 
-from .helpers import compress_and_assign_image, get_image_path
+from .helpers import compress_and_assign_image, get_image_path, random_string
 
 
 class Deceased(models.Model):
@@ -40,7 +37,7 @@ class Deceased(models.Model):
         null=True,
     )
     code = models.CharField(
-        default=token_urlsafe(8),
+        default=random_string,
         max_length=12,
         editable=False
     )
