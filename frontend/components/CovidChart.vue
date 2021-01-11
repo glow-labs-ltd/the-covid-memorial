@@ -21,9 +21,11 @@ export default {
       currentHeight: 0,
       data: [],
       bZoomLevel: 1,
+      bgNumDots: 800,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
+      fgNumDots: 200,
       fDotRadius: 20,
       fZoomLevel: null,
       fPadding: 100,
@@ -42,11 +44,10 @@ export default {
   mounted() {
     // initialize the chart and variables
     const chart = this.initializeChart()
-    this.bgNumDots = 800
-    this.fgNumDots = 200
+    const longestEdge = Math.max(this.currentWidth, this.currentHeight)
     const boxSize = {
-      width: this.currentWidth * 1.5,
-      height: this.currentHeight * 1.5,
+      width: longestEdge * 1.5,
+      height: longestEdge * 1.5,
     }
 
     // create the background dots
@@ -145,8 +146,8 @@ export default {
     },
     resizeChart(chart) {
       this.container = chart.node().parentNode
-      this.currentWidth = this.container.getBoundingClientRect().width
-      this.currentHeight = this.container.getBoundingClientRect().height
+      this.currentWidth = window.innerWidth
+      this.currentHeight = window.innerHeight
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
 
@@ -170,13 +171,13 @@ export default {
         const y = Math.floor(Math.random() * ySize)
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
-        const human = generateHuman ? Math.random() < 0.8 : false
+        const human = generateHuman ? Math.random() < 0.7 : false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
             const dY = (node.y - y) * (node.y - y)
             const dR = node.radius + radius
-            if (Math.sqrt(dX + dY) < dR * 2 + 40) {
+            if (Math.sqrt(dX + dY) < dR * 2 + 10) {
               collides = true
               attempts++
               if (attempts > 2) {
