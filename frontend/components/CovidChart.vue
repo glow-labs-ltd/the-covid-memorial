@@ -208,6 +208,7 @@ export default {
             .enter()
             .append('g')
             .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
+            .attr('opacity', (d, i) => (d.human ? 0 : 1))
             .attr('class', (d, i) => `node node-${d.id.toString()}`)
 
           node
@@ -218,7 +219,7 @@ export default {
             .attr('cx', 0)
             .attr('cy', 0)
             .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
-            .attr('style', 'cursor: pointer')
+            .attr('style', 'cursor: pointer;')
             .attr('class', 'dot-background')
             .on('click', this.nodeClicked)
 
@@ -235,16 +236,22 @@ export default {
 
           node
             .append('image')
-            .attr('xlink:href', null)
-            .attr('x', (d, i) => -this.fDotRadius + 1)
-            .attr('y', (d, i) => -this.fDotRadius + 1)
+            .attr('xlink:href', (d, i) =>
+              d.human ? null : require('~/assets/images/add-icon.svg')
+            )
+            .attr('x', (d, i) =>
+              d.human ? -this.fDotRadius + 1 : -this.fDotRadius + 5
+            )
+            .attr('y', (d, i) =>
+              d.human ? -this.fDotRadius + 1 : -this.fDotRadius + 5
+            )
             .attr('width', (d, i) => (d.human ? diameter - 2 : diameter * 0.75))
             .attr('height', (d, i) =>
               d.human ? diameter - 2 : diameter * 0.75
             )
             .attr('preserveAspectRatio', 'xMidYMid slice')
             .attr('clip-path', 'url(#clip-circle)')
-            .attr('style', 'pointer-events: none')
+            .attr('style', 'pointer-events: none;')
             .attr('class', 'dot-image')
         }
       }
@@ -268,12 +275,18 @@ export default {
             dotsToCheck
               .select('.dot-image')
               .attr('xlink:href', deceasedToAdd.image)
+            dotsToCheck
+              .transition()
+              .attr('opacity', 1)
+              .duration(1000)
+              .delay(500)
             d.deceasedId = deceasedToAdd.id
           }
           this.downloadDeceased()
         } else if (!visible && d.deceasedId) {
           dotsToCheck.select('.dot-background').attr('fill', '#00000000')
           dotsToCheck.select('.dot-image').attr('xlink:href', null)
+          dotsToCheck.attr('opacity', 0)
           d.deceasedId = null
         }
       }
