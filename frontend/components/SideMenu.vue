@@ -31,6 +31,16 @@ export default {
       return this.$store.state.sideMenuOpen
     },
   },
+  watch: {
+    $route() {
+      this.close()
+    },
+  },
+  methods: {
+    close() {
+      return this.$store.commit('closeSideMenu')
+    },
+  },
 }
 </script>
 

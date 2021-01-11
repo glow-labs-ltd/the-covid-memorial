@@ -4,14 +4,29 @@ export const state = () => ({
   deceased: [],
   error: null,
   deceasedLoading: false,
+  showSearch: false,
+  searchQuery: null,
+  results: null,
 })
 
 export const mutations = {
   toggleSideMenu(state) {
     state.sideMenuOpen = !state.sideMenuOpen
   },
+  closeSideMenu(state) {
+    state.sideMenuOpen = false
+  },
   setAddModal(state, value) {
     state.addModal = value
+  },
+  setShowSearch(state, value) {
+    state.showSearch = value
+  },
+  setSearchQuery(state, value) {
+    state.searchQuery = value
+  },
+  setResults(state, value) {
+    state.results = value
   },
   setError(state, value) {
     state.error = value
@@ -37,6 +52,7 @@ export const actions = {
     commit('appendDeceased', deceased)
     commit('setDeceasedLoading', false)
   },
+
   nextDeceased({ state, commit }) {
     if (state.deceased.length > 0) {
       const deceased = state.deceased[0]
@@ -51,6 +67,16 @@ export const actions = {
       commit('setError', null)
       const response = await this.$axios.$post('deceased/', data)
       if (response) commit('setAddModal', false)
+    } catch (e) {
+      commit('setError', e.response.data)
+    }
+  },
+
+  async search({ state, commit }) {
+    try {
+      commit('setError', null)
+      const response = await this.$axios.$get(`search/?q=${state.searchQuery}`)
+      if (response) commit('setResults', response)
     } catch (e) {
       commit('setError', e.response.data)
     }

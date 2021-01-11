@@ -8,14 +8,7 @@
         <hr />
         <form id="add" @submit.prevent="submit">
           <div class="row image-section">
-            <img src="~/assets/images/add-icon.svg" />
-            <div class="instruction">
-              <h3>Add their photograph</h3>
-              <p>
-                Try to use a photo where the person is in the centre of the
-                image
-              </p>
-            </div>
+            <ImageUpload ref="imageUpload" />
           </div>
 
           <div class="row">
@@ -158,7 +151,7 @@ export default {
       this.$store.commit('setAddModal', false)
     },
     submit() {
-      this.$store.dispatch('postDeceased', {
+      const data = {
         name: this.name,
         birth_date: this.birth_date,
         death_date: this.death_date,
@@ -167,6 +160,16 @@ export default {
         country: this.country?.value,
         city: this.city,
         message: this.message,
+      }
+
+      const formData = new FormData()
+      for (const key in data) {
+        if (data[key]) formData.append(key, data[key])
+      }
+      this.$refs.imageUpload.getCroppedImage((croppedImage) => {
+        if (croppedImage)
+          formData.append('image', croppedImage.blob, croppedImage.fileName)
+        this.$store.dispatch('postDeceased', formData)
       })
     },
   },
@@ -176,26 +179,6 @@ export default {
 <style lang="scss" scoped>
 hr {
   margin: 2rem 0;
-}
-
-.image-section {
-  display: grid;
-  grid-template: auto / 16rem 1fr;
-  text-align: left;
-
-  h3 {
-    font-size: 2.5rem;
-  }
-
-  .instruction {
-    margin: auto 0 auto 3rem;
-
-    p {
-      font-size: 1.75rem;
-      margin: 1rem 0 0;
-      max-width: 32rem;
-    }
-  }
 }
 
 .image {
@@ -218,8 +201,13 @@ label {
 
 .dates {
   display: grid;
-  grid-template: auto / repeat(3, auto);
-  grid-gap: 1rem 2rem;
+  grid-template: auto / auto;
+  grid-gap: 2rem;
+
+  @media (min-width: $tablet) {
+    grid-template: auto / repeat(3, auto);
+    grid-gap: 1rem 2rem;
+  }
 }
 
 .colour-select {
@@ -243,30 +231,6 @@ label {
   font-weight: 600;
   text-align: center;
   padding: 1em;
-}
-.colour--0 {
-  background-color: $palette1;
-}
-.colour--1 {
-  background-color: $palette2;
-}
-.colour--2 {
-  background-color: $palette3;
-}
-.colour--3 {
-  background-color: $palette4;
-}
-.colour--4 {
-  background-color: $palette5;
-}
-.colour--5 {
-  background-color: $palette6;
-}
-.colour--6 {
-  background-color: $palette7;
-}
-.colour--7 {
-  background-color: $palette8;
 }
 
 .ticks {
