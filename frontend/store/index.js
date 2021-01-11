@@ -13,6 +13,9 @@ export const mutations = {
   toggleSideMenu(state) {
     state.sideMenuOpen = !state.sideMenuOpen
   },
+  closeSideMenu(state) {
+    state.sideMenuOpen = false
+  },
   setAddModal(state, value) {
     state.addModal = value
   },

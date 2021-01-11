@@ -19,6 +19,10 @@
 
 <script>
 export default {
+  transition: {
+    name: 'fade-slow',
+    mode: 'out-in',
+  },
   computed: {
     count() {
       const count = this.$store.state.results?.count

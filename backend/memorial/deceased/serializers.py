@@ -30,6 +30,7 @@ class DeceasedSerializer(serializers.ModelSerializer):
             'image',
             'colour',
             'date_created',
+            'message',
         )
 
 

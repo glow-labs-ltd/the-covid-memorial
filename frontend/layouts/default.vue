@@ -1,9 +1,7 @@
 <template>
   <div>
     <CovidChart class="background" @add="addNodeClick" @view="viewNodeClick" />
-    <transition mode="out-in" name="fade-slow">
-      <Nuxt />
-    </transition>
+    <Nuxt />
     <SideMenu />
     <NavBar />
   </div>
@@ -16,7 +14,7 @@ export default {
       this.$store.commit('setAddModal', !this.$store.state.addModal)
     },
     viewNodeClick(deceasedId) {
-      alert(`View memorium id ${deceasedId}`)
+      this.$router.push({ name: 'memoriam-slug', params: { slug: deceasedId } })
     },
   },
 }
