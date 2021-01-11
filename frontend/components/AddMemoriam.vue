@@ -8,14 +8,7 @@
         <hr />
         <form id="add" @submit.prevent="submit">
           <div class="row image-section">
-            <img src="~/assets/images/add-icon.svg" />
-            <div class="instruction">
-              <h3>Add their photograph</h3>
-              <p>
-                Try to use a photo where the person is in the centre of the
-                image
-              </p>
-            </div>
+            <ImageUpload ref="imageUpload" />
           </div>
 
           <div class="row">
@@ -158,7 +151,7 @@ export default {
       this.$store.commit('setAddModal', false)
     },
     submit() {
-      this.$store.dispatch('postDeceased', {
+      const data = {
         name: this.name,
         birth_date: this.birth_date,
         death_date: this.death_date,
@@ -167,6 +160,16 @@ export default {
         country: this.country?.value,
         city: this.city,
         message: this.message,
+      }
+
+      const formData = new FormData()
+      for (const key in data) {
+        if (data[key]) formData.append(key, data[key])
+      }
+      this.$refs.imageUpload.getCroppedImage((croppedImage) => {
+        if (croppedImage)
+          formData.append('image', croppedImage.blob, croppedImage.fileName)
+        this.$store.dispatch('postDeceased', formData)
       })
     },
   },
@@ -176,26 +179,6 @@ export default {
 <style lang="scss" scoped>
 hr {
   margin: 2rem 0;
-}
-
-.image-section {
-  display: grid;
-  grid-template: auto / 16rem 1fr;
-  text-align: left;
-
-  h3 {
-    font-size: 2.5rem;
-  }
-
-  .instruction {
-    margin: auto 0 auto 3rem;
-
-    p {
-      font-size: 1.75rem;
-      margin: 1rem 0 0;
-      max-width: 32rem;
-    }
-  }
 }
 
 .image {
