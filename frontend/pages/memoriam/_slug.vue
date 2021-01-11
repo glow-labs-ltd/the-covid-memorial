@@ -50,8 +50,7 @@ export default {
       return this.memoriam?.city
     },
     message() {
-      // return this.memoriam?.message
-      return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n\n   sed do eiusmod tempor incididunt ut labore\n\n et dolore magna aliqua. Bibendum arcu vitae elementum curabitur. Scelerisque felis imperdiet proin fermentum leo vel. Massa id neque aliquam vestibulum morbi. At consectetur lorem donec massa sapien faucibus et. Nibh tortor id aliquet lectus proin nibh. Eget duis at tellus at urna condimentum mattis. Morbi non arcu risus quis varius quam quisque id. Arcu cursus vitae congue mauris rhoncus. Blandit libero volutpat sed cras ornare. Orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Fermentum leo vel orci porta non pulvinar neque. Auctor urna nunc id cursus metus aliquam eleifend mi. Massa sapien faucibus et molestie. Sed ullamcorper morbi tincidunt ornare massa eget. Quisque non tellus orci ac auctor augue mauris. Nunc faucibus a pellentesque sit. Dolor magna eget est lorem ipsum dolor sit amet consectetur. Dignissim enim sit amet venenatis. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Purus semper eget duis at tellus at urna condimentum mattis. Eget nunc scelerisque viverra mauris in aliquam sem fringilla. Vitae proin sagittis nisl rhoncus. Ipsum faucibus vitae aliquet nec ullamcorper sit amet. Egestas congue quisque egestas diam. Ac auctor augue mauris augue neque gravida in fermentum et. Ut tellus elementum sagittis vitae et leo duis ut. Libero enim sed faucibus turpis. Mi eget mauris pharetra et ultrices neque ornare.\n\n Pretium lectus quam id leo in. Cras semper auctor neque vitae tempus quam pellentesque nec.\n\n Suspendisse ultrices gravida dictum fusce ut.'
+      return this.memoriam?.message
     },
     colourClass() {
       if (this.memoriam?.colour) {
