@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <div class="search-results">
-      <h3>{{ count }} People</h3>
+      <h4 class="back"><NuxtLink to="/">Back</NuxtLink></h4>
+      <h3>{{ count }}</h3>
       <div class="results">
         <div v-for="result in results" :key="result.id" class="result">
           <img class="portrait" src="~/assets/images/placeholder.jpg" />
@@ -20,14 +21,13 @@
 export default {
   computed: {
     count() {
-      return this.$store.state.results?.count
+      const count = this.$store.state.results?.count
+      if (count) return `${this.$store.state.results?.count} People`
+      return 'No results'
     },
     results() {
       return this.$store.state.results?.results
     },
-  },
-  mounted() {
-    this.$store.dispatch('getDeceased')
   },
   methods: {
     colourClass(colour) {
@@ -55,8 +55,17 @@ export default {
     padding: 12rem;
   }
 
+  h4 {
+    margin: 1rem 0;
+    a {
+      text-decoration: none;
+      color: $primary;
+      font-size: 2rem;
+    }
+  }
+
   h3 {
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
   }
 }
 
@@ -82,6 +91,7 @@ export default {
 
   .result {
     background-color: $surface;
+    box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 
     .portrait {
       max-width: 100%;

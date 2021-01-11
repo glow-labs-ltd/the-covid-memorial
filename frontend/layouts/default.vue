@@ -1,7 +1,9 @@
 <template>
   <div>
     <CovidChart class="background" @add="addNodeClick" @view="viewNodeClick" />
-    <Nuxt />
+    <transition mode="out-in" name="fade-slow">
+      <Nuxt />
+    </transition>
     <SideMenu />
     <NavBar />
   </div>
@@ -54,6 +56,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 button {
