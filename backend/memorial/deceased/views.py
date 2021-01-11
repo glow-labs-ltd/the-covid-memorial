@@ -3,7 +3,8 @@ from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from .filters import SimilarityFilter
 from .models import Deceased
-from .serializers import DeceasedPreviewSerializer, DeceasedSerializer
+from .serializers import (DeceasedPreviewSerializer, DeceasedSerializer,
+                          DeceasedSerializerWithCode)
 
 
 class DeceasedAPIViewSet(
@@ -14,15 +15,21 @@ class DeceasedAPIViewSet(
 ):
     queryset = Deceased.objects.all().order_by('?')
     pagination_class = None
+    lookup_field = 'slug'
 
     def get_queryset(self):
         if self.action == 'list':
             return self.queryset[:10]
+
         return self.queryset
 
     def get_serializer_class(self):
         if self.action == 'list':
             return DeceasedPreviewSerializer
+
+        if self.request.method == 'POST':
+            return DeceasedSerializerWithCode
+
         return DeceasedSerializer
 
 
@@ -41,4 +48,5 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
 
         if not query or not query.strip():
             return Deceased.objects.none()
+
         return Deceased.objects.all()
