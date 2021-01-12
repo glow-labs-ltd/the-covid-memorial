@@ -12,7 +12,7 @@
           v-for="result in results"
           :key="result.id"
           class="result"
-          @click="clickResult(result.id)"
+          @click="clickResult(result.slug)"
         >
           <img class="portrait" :src="result.image" />
           <div class="colour-bar" :class="colourClass(result.colour)"></div>
@@ -121,7 +121,7 @@ export default {
     box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 
     .portrait {
-      max-width: 100%;
+      width: 100%;
     }
 
     .colour-bar {
