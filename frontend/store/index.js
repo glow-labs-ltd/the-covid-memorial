@@ -4,7 +4,6 @@ export const state = () => ({
   deceased: [],
   error: null,
   deceasedLoading: false,
-  showSearch: false,
   searchQuery: null,
   results: null,
 })
@@ -18,9 +17,6 @@ export const mutations = {
   },
   setAddModal(state, value) {
     state.addModal = value
-  },
-  setShowSearch(state, value) {
-    state.showSearch = value
   },
   setSearchQuery(state, value) {
     state.searchQuery = value

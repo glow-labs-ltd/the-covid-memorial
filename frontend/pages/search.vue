@@ -6,6 +6,10 @@
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
+      <form class="query shadow" @submit.prevent="search">
+        <h1>Search</h1>
+        <input ref="searchField" v-model="searchQuery" type="text" />
+      </form>
       <h3>{{ count }}</h3>
       <div class="results">
         <div
@@ -44,6 +48,17 @@ export default {
     results() {
       return this.$store.state.results?.results
     },
+    searchQuery: {
+      get() {
+        return this.$store.state.searchQuery
+      },
+      set(value) {
+        this.$store.commit('setSearchQuery', value)
+      },
+    },
+  },
+  mounted() {
+    this.$refs.searchField.focus()
   },
   methods: {
     colourClass(colour) {
@@ -58,11 +73,35 @@ export default {
     close() {
       this.$router.push('/')
     },
+    search() {
+      this.$store.dispatch('search')
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.query {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  background-color: $surface;
+
+  input {
+    font-size: 3rem;
+    padding: 1rem;
+    border: none;
+    border-bottom: 2px solid $secondary;
+    border-radius: 0;
+    transition: border-color $fast $standard-easing;
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid $active;
+      outline: none;
+    }
+  }
+}
+
 .search-results {
   padding: 2rem;
   width: 100%;

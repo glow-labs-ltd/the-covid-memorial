@@ -12,6 +12,7 @@
 
 <script>
 import * as d3 from 'd3'
+import { gsap, Sine } from 'gsap'
 
 export default {
   data() {
@@ -20,8 +21,7 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      // fZoomLevel: 1,
-      bNumDots: 200,
+      bNumDots: 50,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
@@ -39,70 +39,73 @@ export default {
         '#72466a',
         '#000000',
       ],
+      randomX: this.random(1, 5),
+      randomY: this.random(1, 5),
+      randomTime: this.random(1, 3),
+      randomTime2: this.random(3, 6),
     }
   },
   mounted() {
     // initialize the chart and variables
     const chart = this.initializeChart()
     const longestEdge = Math.max(this.currentWidth, this.currentHeight)
-    const boxSize = {
-      width: longestEdge * 1.5,
-      height: longestEdge * 1.5,
-    }
+    const fBoxSize = longestEdge
+    const bBoxSize = longestEdge / 2
 
     // create the background dots
     const bG = chart.append('g')
     const data = this.generateData(
-      boxSize.width,
-      boxSize.height,
+      bBoxSize,
+      bBoxSize,
       this.bgDotMinRadius,
       this.bgDotMaxRadius,
       this.bNumDots,
       false
     )
     const bNodes = data.map((d) => Object.create(d))
-    this.setupBackgroundNodes(bG, bNodes, boxSize)
+    this.setupBackgroundNodes(bG, bNodes, bBoxSize)
+    this.setupBackgroundAnimation()
 
     // create foreground dots
     const fG = chart.append('g')
     this.data = this.generateData(
-      boxSize.width,
-      boxSize.height,
+      fBoxSize,
+      fBoxSize,
       this.fDotRadius,
       this.fDotRadius,
       this.fNumDots,
       true
     )
     const fNodes = this.data.map((d) => Object.create(d))
-    const fDots = this.setupForegroundNodes(fG, fNodes, boxSize)
+    const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
-    let performanceCount = 1
     this.fZoom = d3
       .zoom()
       .scaleExtent([this.fZoomLevel, this.fZoomLevel])
-      .on(
-        'zoom',
-        function (event) {
-          const transform = event.transform
-          const scale = transform.k
-          const dx = transform.x % (boxSize.width * scale)
-          const dy = transform.y % (boxSize.height * scale)
-          fG.attr(
-            'transform',
-            'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
-          )
-          const bdx = (transform.x / 2) % (boxSize.width * scale)
-          const bdy = (transform.y / 2) % (boxSize.height * scale)
-          bG.attr(
-            'transform',
-            'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
-          )
+      .on('zoom', function (event) {
+        const transform = event.transform
+        const scale = transform.k
 
-          if (performanceCount === 5) {
-            this.updateDeceasedNodes(fDots)
-            performanceCount = 0
-          }
-          performanceCount++
+        const fScaleFactor = fBoxSize * scale
+        const fdx = transform.x % fScaleFactor
+        const fdy = transform.y % fScaleFactor
+        fG.attr(
+          'transform',
+          'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
+        )
+
+        const bScaleFactor = bBoxSize * scale
+        const bdx = (transform.x / 2) % bScaleFactor
+        const bdy = (transform.y / 2) % bScaleFactor
+        bG.attr(
+          'transform',
+          'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
+        )
+      })
+      .on(
+        'end',
+        function (event) {
+          this.updateDeceasedNodes(fDots)
         }.bind(this)
       )
     chart
@@ -184,12 +187,12 @@ export default {
     setupBackgroundNodes(bG, bNodes, boxSize) {
       for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
-          const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
-          const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
+          const dx = x > 0 ? boxSize : x < 0 ? -boxSize : 0
+          const dy = y > 0 ? boxSize : y < 0 ? -boxSize : 0
 
           const node = bG
             .append('g')
-            .attr('filter', 'url(#blur)')
+            // .attr('filter', 'url(#blur)')
             .selectAll('circle')
             .data(bNodes)
             .enter()
@@ -202,7 +205,8 @@ export default {
             .attr('cx', (d, i) => d.x)
             .attr('cy', (d, i) => d.y)
             .attr('fill', '#000000')
-            .style('opacity', 0.6)
+            .attr('class', 'b-node')
+            .style('opacity', 0.1)
         }
       }
       return bG
@@ -210,8 +214,8 @@ export default {
     setupForegroundNodes(fG, fNodes, boxSize) {
       for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
-          const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
-          const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
+          const dx = x > 0 ? boxSize : x < 0 ? -boxSize : 0
+          const dy = y > 0 ? boxSize : y < 0 ? -boxSize : 0
           const diameter = this.fDotRadius * 2
 
           const node = fG
@@ -226,12 +230,10 @@ export default {
 
           node
             .append('circle')
-            .attr('r', (d, i) =>
-              d.human ? this.fDotRadius : this.fDotRadius * 0.75
-            )
+            .attr('r', this.fDotRadius)
             .attr('cx', 0)
             .attr('cy', 0)
-            .attr('fill', (d, i) => (d.human ? '#00000000' : '#000000'))
+            .attr('fill', '#00000000')
             .attr('style', 'cursor: pointer;')
             .attr('class', 'dot-background')
             .on('click', this.nodeClicked)
@@ -275,7 +277,10 @@ export default {
         const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
         let visible = false
         for (const dot of dotsToCheck) {
-          if (this.isElementInViewport(dot)) visible = true
+          if (this.isElementInViewport(dot)) {
+            visible = true
+            break
+          }
         }
 
         if (visible && !d.deceasedId) {
@@ -332,6 +337,41 @@ export default {
         bounds.bottom <= this.currentHeight + this.fPadding &&
         bounds.right <= this.currentWidth + this.fPadding
       )
+    },
+    setupBackgroundAnimation() {
+      const dotsToAnimate = gsap.utils.toArray('.b-node')
+      dotsToAnimate.forEach((dot) => {
+        gsap.set(dot, {
+          x: this.randomX(-1),
+          y: this.randomX(1),
+          force3D: true,
+        })
+
+        this.moveX(dot, 1)
+        this.moveY(dot, -1)
+      })
+    },
+    moveX(target, direction) {
+      gsap.to(target, this.randomTime(), {
+        x: this.randomX(direction),
+        ease: Sine.easeInOut,
+        onComplete: this.moveX,
+        onCompleteParams: [target, direction * -1],
+        force3D: true,
+      })
+    },
+    moveY(target, direction) {
+      gsap.to(target, this.randomTime(), {
+        y: this.randomY(direction),
+        ease: Sine.easeInOut,
+        onComplete: this.moveY,
+        onCompleteParams: [target, direction * -1],
+        force3D: true,
+      })
+    },
+    random(min, max) {
+      const delta = max - min
+      return (direction = 1) => (min + delta * Math.random()) * direction
     },
   },
 }
