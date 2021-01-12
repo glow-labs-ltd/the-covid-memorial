@@ -192,7 +192,7 @@ export default {
 
           const node = bG
             .append('g')
-            .attr('filter', 'url(#blur)')
+            // .attr('filter', 'url(#blur)')
             .selectAll('circle')
             .data(bNodes)
             .enter()
@@ -206,7 +206,7 @@ export default {
             .attr('cy', (d, i) => d.y)
             .attr('fill', '#000000')
             .attr('class', 'b-node')
-            .style('opacity', 0.6)
+            .style('opacity', 0.1)
         }
       }
       return bG
@@ -339,9 +339,7 @@ export default {
       )
     },
     setupBackgroundAnimation() {
-      gsap.ticker.fps(24)
       const dotsToAnimate = gsap.utils.toArray('.b-node')
-      console.log(dotsToAnimate.length)
       dotsToAnimate.forEach((dot) => {
         gsap.set(dot, {
           x: this.randomX(-1),
