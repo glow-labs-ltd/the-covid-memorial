@@ -1,27 +1,26 @@
 <template>
-  <div class="container">
-    <div class="wrapper">
-      <div class="close">
-        <a href="#" @click.prevent="close"
-          ><img src="~/assets/images/close-icon.svg" alt="Close"
-        /></a>
-      </div>
-      <div class="memoriam">
-        <div class="left">
-          <img class="portrait" :src="image" />
-          <div class="colour-bar" :class="colourClass"></div>
-          <div class="details">
-            <h1 class="name">{{ name }}</h1>
-            <h2 class="city">{{ city }}</h2>
-            <p class="age"></p>
-          </div>
+  <div class="wrapper scroll">
+    <div class="close">
+      <a href="#" @click.prevent="$emit('close')"
+        ><img src="~/assets/images/close-icon.svg" alt="Close"
+      /></a>
+    </div>
+    <Share v-if="correctCode" :name="name" class="share" />
+    <div class="memoriam shadow">
+      <div class="left">
+        <img class="portrait" :src="image" />
+        <div class="colour-bar" :class="colourClass"></div>
+        <div class="details">
+          <h1 class="name">{{ name }}</h1>
+          <h2 class="city">{{ city }}</h2>
+          <p class="age"></p>
         </div>
-        <div class="right">
-          <div>
-            <p class="message">{{ message }}</p>
-            <div class="comment-section">
-              <h3>Add a comment</h3>
-            </div>
+      </div>
+      <div class="right">
+        <div>
+          <p class="message">{{ message }}</p>
+          <div class="comment-section">
+            <h3>Add a comment</h3>
           </div>
         </div>
       </div>
@@ -31,9 +30,21 @@
 
 <script>
 export default {
+  props: {
+    slug: {
+      type: String,
+      required: true,
+    },
+    code: {
+      type: String,
+      default: null,
+    },
+  },
   async fetch() {
     const response = await this.$axios.get(
-      `deceased/${this.$route.params.slug}/`
+      this.code
+        ? `deceased/${this.slug}/?c=${this.code}`
+        : `deceased/${this.slug}/`
     )
     this.memoriam = response.data
   },
@@ -57,7 +68,7 @@ export default {
       return null
     },
     image() {
-      return this.memoriam?.image
+      return this.memoriam?.image || require('~/assets/images/placeholder.jpg')
     },
     colourClass() {
       if (this.memoriam?.colour) {
@@ -65,14 +76,9 @@ export default {
       }
       return 'colour--7'
     },
-  },
-  transition: {
-    name: 'fade-slow',
-    mode: '',
-  },
-  methods: {
-    close() {
-      this.$router.push('/')
+    correctCode() {
+      if (this.code) return true
+      return false
     },
   },
 }
@@ -82,7 +88,6 @@ export default {
 .wrapper {
   margin: 2rem auto 0;
   max-width: 100rem;
-  max-height: 75%;
 
   @media (min-width: $tablet) {
     margin: 8rem auto 0;
@@ -93,6 +98,10 @@ export default {
   }
 }
 
+.share {
+  margin-bottom: 2rem;
+}
+
 .memoriam {
   display: grid;
   grid-template: auto / 1fr;
@@ -100,13 +109,9 @@ export default {
   width: 100%;
   text-align: left;
   background-color: $surface;
-  overflow-y: scroll;
-  padding-bottom: 10rem; // make sure you can scroll and view bottom
 
   @media (min-width: $tablet) {
-    grid-template: 75vh / repeat(2, 1fr);
-    max-height: 75vh;
-    overflow-y: hidden;
+    grid-template: auto / repeat(2, 1fr);
     padding-bottom: 0;
   }
 
@@ -138,14 +143,8 @@ export default {
   }
 
   .right {
-    // display: grid;
-    // grid-template: auto 1fr / auto;
     padding: 2rem;
     max-height: 100%;
-
-    @media (min-width: $tablet) {
-      overflow-y: scroll;
-    }
   }
 
   .message {

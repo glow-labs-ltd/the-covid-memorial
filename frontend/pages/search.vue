@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="search-results">
+    <div class="search-results scroll">
       <div class="close">
         <a href="#" @click.prevent="close"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
@@ -11,10 +11,13 @@
         <div
           v-for="result in results"
           :key="result.id"
-          class="result"
+          class="result shadow"
           @click="clickResult(result.slug)"
         >
-          <img class="portrait" :src="result.image" />
+          <img
+            class="portrait"
+            :src="result.image || require('~/assets/images/placeholder.jpg')"
+          />
           <div class="colour-bar" :class="colourClass(result.colour)"></div>
           <div class="details">
             <h2 class="name">{{ result.name }}</h2>
@@ -62,7 +65,6 @@ export default {
 <style lang="scss" scoped>
 .search-results {
   padding: 2rem;
-  height: 100%;
   width: 100%;
   text-align: left;
 
@@ -118,7 +120,6 @@ export default {
 
   .result {
     background-color: $surface;
-    box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 
     .portrait {
       width: 100%;

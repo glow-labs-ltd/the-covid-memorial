@@ -103,7 +103,7 @@ export default {
       if (value) this.dragging++
       else this.dragging--
     },
-    getCroppedImage(callback) {
+    getCroppedImage() {
       if (this.$refs.previewImage) {
         this.$refs.previewImage
           .getCroppedCanvas({ maxWidth: this.maxWidth })
@@ -113,14 +113,13 @@ export default {
                 blob,
                 fileName: this.file?.name?.replace(/\.[^/.]+$/, '.jpg'),
               }
-              return callback(data)
+              return data
             },
             'image/jpeg',
             0.85
           )
-      } else {
-        return callback(null)
       }
+      return null
     },
   },
 }

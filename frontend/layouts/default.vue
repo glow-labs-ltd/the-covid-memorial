@@ -60,6 +60,11 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
+.scroll {
+  overflow-y: scroll;
+  max-height: calc(100vh - 20rem);
+}
+
 img {
   display: block;
 }
@@ -103,6 +108,10 @@ label {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 1rem;
+}
+
+.shadow {
+  box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 }
 
 .colour--0 {
