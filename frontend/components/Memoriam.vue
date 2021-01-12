@@ -1,11 +1,11 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper scroll">
     <div class="close">
       <a href="#" @click.prevent="$emit('close')"
         ><img src="~/assets/images/close-icon.svg" alt="Close"
       /></a>
     </div>
-    <Share v-if="correctCode" class="share" />
+    <Share v-if="correctCode" :name="name" class="share" />
     <div class="memoriam shadow">
       <div class="left">
         <img class="portrait" :src="image" />
@@ -68,7 +68,7 @@ export default {
       return null
     },
     image() {
-      return this.memoriam?.image
+      return this.memoriam?.image || require('~/assets/images/placeholder.jpg')
     },
     colourClass() {
       if (this.memoriam?.colour) {
@@ -88,7 +88,6 @@ export default {
 .wrapper {
   margin: 2rem auto 0;
   max-width: 100rem;
-  max-height: 75%;
 
   @media (min-width: $tablet) {
     margin: 8rem auto 0;
@@ -110,13 +109,9 @@ export default {
   width: 100%;
   text-align: left;
   background-color: $surface;
-  overflow-y: scroll;
-  padding-bottom: 10rem; // make sure you can scroll and view bottom
 
   @media (min-width: $tablet) {
-    grid-template: 75vh / repeat(2, 1fr);
-    max-height: 75vh;
-    overflow-y: hidden;
+    grid-template: auto / repeat(2, 1fr);
     padding-bottom: 0;
   }
 
@@ -150,10 +145,6 @@ export default {
   .right {
     padding: 2rem;
     max-height: 100%;
-
-    @media (min-width: $tablet) {
-      overflow-y: scroll;
-    }
   }
 
   .message {

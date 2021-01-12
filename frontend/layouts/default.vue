@@ -60,6 +60,11 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
+.scroll {
+  overflow-y: scroll;
+  max-height: calc(100vh - 20rem);
+}
+
 img {
   display: block;
 }

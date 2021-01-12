@@ -24,8 +24,28 @@
           <CopyButton @click="copy(linkComments)" />
         </div>
         <div class="social">
-          <img src="~/assets/images/facebook-icon.svg" />
-          <img src="~/assets/images/twitter-icon.svg" />
+          <a
+            v-if="facebookCommentsShare"
+            :href="facebookCommentsShare"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="~/assets/images/facebook-icon.svg"
+              alt="facebook share with comments"
+            />
+          </a>
+          <a
+            v-if="twitterCommentsShare"
+            :href="twitterCommentsShare"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="~/assets/images/twitter-icon.svg"
+              alt="twitter share with comments"
+            />
+          </a>
         </div>
       </div>
       <div class="divider"></div>
@@ -41,8 +61,28 @@
           <CopyButton @click="copy(linkNoComments)" />
         </div>
         <div class="social">
-          <img src="~/assets/images/facebook-icon.svg" />
-          <img src="~/assets/images/twitter-icon.svg" />
+          <a
+            v-if="facebookNoCommentsShare"
+            :href="facebookNoCommentsShare"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="~/assets/images/facebook-icon.svg"
+              alt="facebook share without comments"
+            />
+          </a>
+          <a
+            v-if="twitterNoCommentsShare"
+            :href="twitterNoCommentsShare"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="~/assets/images/twitter-icon.svg"
+              alt="twitter share without comments"
+            />
+          </a>
         </div>
       </div>
     </div>
@@ -53,12 +93,15 @@
 import { clipboardCopy } from '@/utilities/clipboard'
 
 export default {
+  props: {
+    name: {
+      type: String,
+      default: null,
+    },
+  },
   computed: {
     linkComments() {
-      if (process.client) {
-        return window.location.href
-      }
-      return null
+      return process.client ? window.location.href : null
     },
     linkNoComments() {
       if (process.client) {
@@ -67,10 +110,33 @@ export default {
       }
       return null
     },
+    shareText() {
+      return this.name
+        ? `${this.name} - The COVID Memorial`
+        : 'The COVID Memorial'
+    },
+    facebookCommentsShare() {
+      return process.client ? this.facebookShare(this.linkComments) : null
+    },
+    facebookNoCommentsShare() {
+      return process.client ? this.facebookShare(this.linkNoComments) : null
+    },
+    twitterCommentsShare() {
+      return process.client ? this.twitterShare(this.linkComments) : null
+    },
+    twitterNoCommentsShare() {
+      return process.client ? this.twitterShare(this.linkNoComments) : null
+    },
   },
   methods: {
     copy(link) {
       clipboardCopy(link)
+    },
+    facebookShare(link) {
+      return `https://www.facebook.com/sharer/sharer.php?u=${link}&title=${this.shareText}`
+    },
+    twitterShare(link) {
+      return `https://twitter.com/intent/tweet?text=${this.shareText}&url=${link}`
     },
   },
 }
@@ -120,13 +186,14 @@ export default {
     }
 
     .social {
-      display: flex;
+      display: grid;
+      grid-template: auto / repeat(2, auto) 1fr;
+      grid-gap: 2rem;
       margin-top: 1rem;
 
       img {
         width: 4.25rem;
         height: 4.25rem;
-        margin-right: 2rem;
       }
     }
   }
