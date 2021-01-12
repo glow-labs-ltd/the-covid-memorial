@@ -20,12 +20,12 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      bZoomLevel: 1,
-      bgNumDots: 800,
+      // fZoomLevel: 1,
+      bNumDots: 200,
       bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
-      fgNumDots: 200,
+      fNumDots: 200,
       fDotRadius: 20,
       fZoomLevel: null,
       fPadding: 100,
@@ -57,36 +57,11 @@ export default {
       boxSize.height,
       this.bgDotMinRadius,
       this.bgDotMaxRadius,
-      this.bgNumDots,
+      this.bNumDots,
       false
     )
-    const nodes = data.map((d) => Object.create(d))
-    bG.append('g')
-      .attr('filter', 'url(#blur)')
-      .selectAll('circle')
-      .data(nodes)
-      .join('circle')
-      .attr('r', (d, i) => d.radius)
-      .attr('cx', (d, i) => d.x)
-      .attr('cy', (d, i) => d.y)
-      .attr('fill', '#000000')
-      .style('opacity', 0.6)
-
-    this.bZoom = d3
-      .zoom()
-      .scaleExtent([this.bZoomLevel, this.bZoomLevel])
-      .on(
-        'zoom',
-        function (event) {
-          const x = -this.currentWidth / 2
-          const y = -this.currentHeight / 2
-          bG.attr(
-            'transform',
-            `translate(${x}, ${y})scale(${event.transform.k})`
-          )
-        }.bind(this)
-      )
-    chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.bZoomLevel))
+    const bNodes = data.map((d) => Object.create(d))
+    this.setupBackgroundNodes(bG, bNodes, boxSize)
 
     // create foreground dots
     const fG = chart.append('g')
@@ -95,12 +70,13 @@ export default {
       boxSize.height,
       this.fDotRadius,
       this.fDotRadius,
-      this.fgNumDots,
+      this.fNumDots,
       true
     )
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, boxSize)
 
+    let performanceCount = 1
     this.fZoom = d3
       .zoom()
       .scaleExtent([this.fZoomLevel, this.fZoomLevel])
@@ -115,8 +91,18 @@ export default {
             'transform',
             'translate(' + dx + ',' + dy + ')scale(' + scale + ')'
           )
+          const bdx = (transform.x / 2) % (boxSize.width * scale)
+          const bdy = (transform.y / 2) % (boxSize.height * scale)
+          bG.attr(
+            'transform',
+            'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
+          )
 
-          this.updateDeceasedNodes(fDots)
+          if (performanceCount === 5) {
+            this.updateDeceasedNodes(fDots)
+            performanceCount = 0
+          }
+          performanceCount++
         }.bind(this)
       )
     chart
@@ -155,7 +141,7 @@ export default {
       this.fZoomLevel = -1 / (-shortestEdge / 800)
 
       if (this.bZoom) {
-        chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.bZoomLevel))
+        chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
       }
 
       if (this.fZoom)
@@ -194,6 +180,32 @@ export default {
         }
       }
       return data
+    },
+    setupBackgroundNodes(bG, bNodes, boxSize) {
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          const dx = x > 0 ? boxSize.width : x < 0 ? -boxSize.width : 0
+          const dy = y > 0 ? boxSize.height : y < 0 ? -boxSize.height : 0
+
+          const node = bG
+            .append('g')
+            .attr('filter', 'url(#blur)')
+            .selectAll('circle')
+            .data(bNodes)
+            .enter()
+            .append('g')
+            .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
+
+          node
+            .append('circle')
+            .attr('r', (d, i) => d.radius)
+            .attr('cx', (d, i) => d.x)
+            .attr('cy', (d, i) => d.y)
+            .attr('fill', '#000000')
+            .style('opacity', 0.6)
+        }
+      }
+      return bG
     },
     setupForegroundNodes(fG, fNodes, boxSize) {
       for (let x = -1; x <= 1; x++) {
