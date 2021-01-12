@@ -22,13 +22,13 @@ export default {
       currentHeight: 0,
       data: [],
       bNumDots: 50,
-      bgDotBlur: 5,
       bgDotMaxRadius: 18,
       bgDotMinRadius: 6,
-      fNumDots: 200,
+      fNumDots: 300,
       fDotRadius: 20,
       fZoomLevel: null,
-      fPadding: 100,
+      fDotPadding: 10,
+      inViewportPadding: 100,
       colours: [
         '#890608',
         '#d4700c',
@@ -166,7 +166,13 @@ export default {
             const dX = (node.x - x) * (node.x - x)
             const dY = (node.y - y) * (node.y - y)
             const dR = node.radius + radius
-            if (Math.sqrt(dX + dY) < dR * 2 + 10) {
+            if (
+              Math.sqrt(dX + dY) < dR * 2 + this.fDotPadding ||
+              x > xSize - this.fDotPadding ||
+              x < this.fDotPadding ||
+              y > ySize - this.fDotPadding ||
+              y < this.fDotPadding
+            ) {
               collides = true
               attempts++
               if (attempts > 2) {
@@ -332,10 +338,10 @@ export default {
     isElementInViewport(el) {
       const bounds = el.getBoundingClientRect()
       return (
-        bounds.top >= -this.fPadding &&
-        bounds.left >= -this.fPadding &&
-        bounds.bottom <= this.currentHeight + this.fPadding &&
-        bounds.right <= this.currentWidth + this.fPadding
+        bounds.top >= -this.inViewportPadding &&
+        bounds.left >= -this.inViewportPadding &&
+        bounds.bottom <= this.currentHeight + this.inViewportPadding &&
+        bounds.right <= this.currentWidth + this.inViewportPadding
       )
     },
     setupBackgroundAnimation() {
