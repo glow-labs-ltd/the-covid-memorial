@@ -1,27 +1,26 @@
 <template>
-  <div class="container">
-    <div class="wrapper">
-      <div class="close">
-        <a href="#" @click.prevent="close"
-          ><img src="~/assets/images/close-icon.svg" alt="Close"
-        /></a>
-      </div>
-      <div class="memoriam">
-        <div class="left">
-          <img class="portrait" :src="image" />
-          <div class="colour-bar" :class="colourClass"></div>
-          <div class="details">
-            <h1 class="name">{{ name }}</h1>
-            <h2 class="city">{{ city }}</h2>
-            <p class="age"></p>
-          </div>
+  <div class="wrapper">
+    <div class="close">
+      <a href="#" @click.prevent="$emit('close')"
+        ><img src="~/assets/images/close-icon.svg" alt="Close"
+      /></a>
+    </div>
+    <Share v-if="correctCode" class="share" />
+    <div class="memoriam shadow">
+      <div class="left">
+        <img class="portrait" :src="image" />
+        <div class="colour-bar" :class="colourClass"></div>
+        <div class="details">
+          <h1 class="name">{{ name }}</h1>
+          <h2 class="city">{{ city }}</h2>
+          <p class="age"></p>
         </div>
-        <div class="right">
-          <div>
-            <p class="message">{{ message }}</p>
-            <div class="comment-section">
-              <h3>Add a comment</h3>
-            </div>
+      </div>
+      <div class="right">
+        <div>
+          <p class="message">{{ message }}</p>
+          <div class="comment-section">
+            <h3>Add a comment</h3>
           </div>
         </div>
       </div>
@@ -31,9 +30,21 @@
 
 <script>
 export default {
+  props: {
+    slug: {
+      type: String,
+      required: true,
+    },
+    code: {
+      type: String,
+      default: null,
+    },
+  },
   async fetch() {
     const response = await this.$axios.get(
-      `deceased/${this.$route.params.slug}/`
+      this.code
+        ? `deceased/${this.slug}/?c=${this.code}`
+        : `deceased/${this.slug}/`
     )
     this.memoriam = response.data
   },
@@ -65,14 +76,9 @@ export default {
       }
       return 'colour--7'
     },
-  },
-  transition: {
-    name: 'fade-slow',
-    mode: '',
-  },
-  methods: {
-    close() {
-      this.$router.push('/')
+    correctCode() {
+      if (this.code) return true
+      return false
     },
   },
 }
@@ -91,6 +97,10 @@ export default {
   @media (min-width: $desktop) {
     margin: 10rem auto 0;
   }
+}
+
+.share {
+  margin-bottom: 2rem;
 }
 
 .memoriam {
@@ -138,8 +148,6 @@ export default {
   }
 
   .right {
-    // display: grid;
-    // grid-template: auto 1fr / auto;
     padding: 2rem;
     max-height: 100%;
 

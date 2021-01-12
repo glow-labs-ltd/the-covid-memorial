@@ -66,7 +66,7 @@ export const actions = {
     try {
       commit('setError', null)
       const response = await this.$axios.$post('deceased/', data)
-      if (response) commit('setAddModal', false)
+      return response
     } catch (e) {
       commit('setError', e.response.data)
     }

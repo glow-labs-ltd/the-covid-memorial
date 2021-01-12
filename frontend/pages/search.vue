@@ -7,7 +7,7 @@
         /></a>
       </div>
       <h3>{{ count }}</h3>
-      <div class="results">
+      <div class="results shadow">
         <div
           v-for="result in results"
           :key="result.id"
@@ -118,7 +118,6 @@ export default {
 
   .result {
     background-color: $surface;
-    box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 
     .portrait {
       width: 100%;

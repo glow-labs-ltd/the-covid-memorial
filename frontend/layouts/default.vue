@@ -105,6 +105,10 @@ label {
   margin: 0 0 1rem;
 }
 
+.shadow {
+  box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
+}
+
 .colour--0 {
   background-color: $palette1;
 }
