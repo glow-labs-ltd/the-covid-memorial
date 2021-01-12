@@ -10,13 +10,13 @@
       >
         <header class="modal__header">
           <slot name="header">Modal header</slot>
-          <button
+          <a
+            href="#"
             aria-label="Close modal"
             class="modal__exit"
             @click="$emit('close')"
-          >
-            Exit
-          </button>
+            ><img src="~/assets/images/close-icon.svg" alt="Close"
+          /></a>
         </header>
         <section class="modal__body">
           <slot name="body">Modal Body</slot>
@@ -88,6 +88,11 @@ export default {
     @media (min-width: $tablet) {
       padding: 0 4rem 3rem 4rem;
     }
+  }
+
+  &__exit {
+    width: 4rem;
+    height: 4rem;
   }
 }
 

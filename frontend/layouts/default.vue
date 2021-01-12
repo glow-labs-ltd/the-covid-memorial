@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CovidChart class="background" @add="addNodeClick" @view="viewNodeClick" />
     <Nuxt />
     <SideMenu />
     <NavBar />
@@ -7,7 +8,16 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    addNodeClick() {
+      this.$store.commit('setAddModal', !this.$store.state.addModal)
+    },
+    viewNodeClick(deceasedId) {
+      this.$router.push({ name: 'memoriam-slug', params: { slug: deceasedId } })
+    },
+  },
+}
 </script>
 
 <style lang="scss">
@@ -39,6 +49,24 @@ body {
 :focus {
   box-shadow: 0 0 0 4px $active;
   outline: none;
+}
+
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.scroll {
+  overflow-y: scroll;
+  max-height: calc(100vh - 20rem);
+}
+
+img {
+  display: block;
 }
 
 button {
@@ -80,6 +108,35 @@ label {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 1rem;
+}
+
+.shadow {
+  box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
+}
+
+.colour--0 {
+  background-color: $palette1;
+}
+.colour--1 {
+  background-color: $palette2;
+}
+.colour--2 {
+  background-color: $palette3;
+}
+.colour--3 {
+  background-color: $palette4;
+}
+.colour--4 {
+  background-color: $palette5;
+}
+.colour--5 {
+  background-color: $palette6;
+}
+.colour--6 {
+  background-color: $palette7;
+}
+.colour--7 {
+  background-color: $palette8;
 }
 
 .fade-slow-enter-active,

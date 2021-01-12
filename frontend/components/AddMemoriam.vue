@@ -150,7 +150,7 @@ export default {
     close() {
       this.$store.commit('setAddModal', false)
     },
-    submit() {
+    async submit() {
       const data = {
         name: this.name,
         birth_date: this.birth_date,
@@ -166,11 +166,19 @@ export default {
       for (const key in data) {
         if (data[key]) formData.append(key, data[key])
       }
-      this.$refs.imageUpload.getCroppedImage((croppedImage) => {
-        if (croppedImage)
-          formData.append('image', croppedImage.blob, croppedImage.fileName)
-        this.$store.dispatch('postDeceased', formData)
-      })
+
+      const croppedImage = await this.$refs.imageUpload.getCroppedImage()
+      if (croppedImage)
+        formData.append('image', croppedImage.blob, croppedImage.fileName)
+
+      const response = await this.$store.dispatch('postDeceased', formData)
+      if (response) {
+        this.$store.commit('setAddModal', false)
+        this.$router.push({
+          name: 'memoriam-slug-code',
+          params: { slug: response.slug, code: response.code },
+        })
+      }
     },
   },
 }
@@ -179,10 +187,6 @@ export default {
 <style lang="scss" scoped>
 hr {
   margin: 2rem 0;
-}
-
-.image {
-  // max-width: 12rem;
 }
 
 label {
@@ -201,8 +205,13 @@ label {
 
 .dates {
   display: grid;
-  grid-template: auto / repeat(3, auto);
-  grid-gap: 1rem 2rem;
+  grid-template: auto / auto;
+  grid-gap: 2rem;
+
+  @media (min-width: $tablet) {
+    grid-template: auto / repeat(3, auto);
+    grid-gap: 1rem 2rem;
+  }
 }
 
 .colour-select {
@@ -226,30 +235,6 @@ label {
   font-weight: 600;
   text-align: center;
   padding: 1em;
-}
-.colour--0 {
-  background-color: $palette1;
-}
-.colour--1 {
-  background-color: $palette2;
-}
-.colour--2 {
-  background-color: $palette3;
-}
-.colour--3 {
-  background-color: $palette4;
-}
-.colour--4 {
-  background-color: $palette5;
-}
-.colour--5 {
-  background-color: $palette6;
-}
-.colour--6 {
-  background-color: $palette7;
-}
-.colour--7 {
-  background-color: $palette8;
 }
 
 .ticks {

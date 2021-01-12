@@ -1,3 +1,5 @@
+const production = process.env.NODE_ENV === 'production'
+
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -75,8 +77,8 @@ export default {
   },
 
   axios: {
-    baseURL: '/api/', // production
-    proxy: process.env.NODE_ENV !== 'production', // enable proxy for development
+    baseURL: production ? '/api/' : 'http://localhost:3000/api/',
+    proxy: !production, // enable proxy for development
     prefix: '/api/', // used only when proxy is enabled
   },
 

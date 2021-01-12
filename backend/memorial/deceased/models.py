@@ -1,3 +1,4 @@
+from autoslug import AutoSlugField
 from django.conf import settings
 from django.contrib.postgres.indexes import GistIndex
 from django.core.validators import MaxValueValidator
@@ -5,7 +6,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from storages.backends.gcloud import GoogleCloudStorage
 
-from .helpers import compress_and_assign_image, get_image_path
+from .helpers import compress_and_assign_image, get_image_path, random_string
 
 
 class Deceased(models.Model):
@@ -29,8 +30,22 @@ class Deceased(models.Model):
         null=True,
         validators=[MaxValueValidator(7)],
     )
-    message = models.TextField(max_length=480)
+    message = models.TextField(max_length=2500, null=True, blank=True)
+    slug = AutoSlugField(
+        populate_from='name',
+        unique=True,
+        null=True,
+    )
+    code = models.CharField(
+        default=random_string,
+        max_length=12,
+        editable=False
+    )
     date_created = models.DateTimeField(auto_now=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_image = self.image
 
     def comments(self):
         return self.comment_set()
@@ -45,7 +60,8 @@ class Deceased(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        compress_and_assign_image(Deceased, self, field_name='image')
+        if self.pk is None or (self.__original_image != self.image):
+            compress_and_assign_image(Deceased, self, field_name='image')
         return super().save(*args, **kwargs)
 
     def __str__(self):

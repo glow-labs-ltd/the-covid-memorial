@@ -1,5 +1,6 @@
 import os
 import uuid
+from secrets import token_urlsafe
 
 from django.core.files.temp import NamedTemporaryFile
 from PIL import Image
@@ -33,3 +34,7 @@ def compress_and_assign_image(model, instance, field_name='image'):
             compress_image(image=image, max_width=512),
             save=False,
         )
+
+
+def random_string():
+    return token_urlsafe(8)
