@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="about">
+    <div class="about shadow">
       <h1>About The COVID Memorial</h1>
       <p>This is the about page</p>
     </div>
@@ -19,5 +19,7 @@ export default {
 <style lang="scss" scoped>
 .about {
   margin: 2rem;
+  padding: 3rem;
+  background-color: $surface;
 }
 </style>

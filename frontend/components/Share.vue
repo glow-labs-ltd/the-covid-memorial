@@ -15,12 +15,7 @@
       <div>
         <h3>Share: Allow comments</h3>
         <div class="url">
-          <input
-            id="comments-link"
-            type="text"
-            :value="linkComments"
-            readonly
-          />
+          <input type="text" :value="linkComments" readonly />
           <CopyButton @click="copy(linkComments)" />
         </div>
         <div class="social">
@@ -52,12 +47,7 @@
       <div>
         <h3>Share: No comments</h3>
         <div class="url">
-          <input
-            id="comments-link"
-            type="text"
-            :value="linkNoComments"
-            readonly
-          />
+          <input type="text" :value="linkNoComments" readonly />
           <CopyButton @click="copy(linkNoComments)" />
         </div>
         <div class="social">
