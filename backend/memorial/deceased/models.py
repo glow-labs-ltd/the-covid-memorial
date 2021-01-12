@@ -43,6 +43,10 @@ class Deceased(models.Model):
     )
     date_created = models.DateTimeField(auto_now=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_image = self.image
+
     def comments(self):
         return self.comment_set()
 
@@ -56,7 +60,8 @@ class Deceased(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        compress_and_assign_image(Deceased, self, field_name='image')
+        if self.pk is None or (self.__original_image != self.image):
+            compress_and_assign_image(Deceased, self, field_name='image')
         return super().save(*args, **kwargs)
 
     def __str__(self):
