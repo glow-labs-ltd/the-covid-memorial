@@ -103,21 +103,17 @@ export default {
       if (value) this.dragging++
       else this.dragging--
     },
-    getCroppedImage() {
+    async getCroppedImage() {
       if (this.$refs.previewImage) {
-        this.$refs.previewImage
-          .getCroppedCanvas({ maxWidth: this.maxWidth })
-          .toBlob(
-            (blob) => {
-              const data = {
-                blob,
-                fileName: this.file?.name?.replace(/\.[^/.]+$/, '.jpg'),
-              }
-              return data
-            },
-            'image/jpeg',
-            0.85
-          )
+        const blob = await new Promise((resolve) =>
+          this.$refs.previewImage
+            .getCroppedCanvas({ maxWidth: this.maxWidth })
+            .toBlob(resolve, 'image/jpeg', 0.85)
+        )
+        return {
+          blob,
+          fileName: this.file?.name?.replace(/\.[^/.]+$/, '.jpg'),
+        }
       }
       return null
     },
