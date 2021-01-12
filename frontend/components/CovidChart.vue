@@ -39,12 +39,10 @@ export default {
         '#72466a',
         '#000000',
       ],
-      randomX: this.random(1, 10),
-      randomY: this.random(1, 10),
-      randomDelay: this.random(0, 1),
-      randomTime: this.random(3, 5),
-      randomTime2: this.random(5, 10),
-      randomAngle: this.random(-10, 10),
+      randomX: this.random(1, 5),
+      randomY: this.random(1, 5),
+      randomTime: this.random(1, 3),
+      randomTime2: this.random(3, 6),
     }
   },
   mounted() {
