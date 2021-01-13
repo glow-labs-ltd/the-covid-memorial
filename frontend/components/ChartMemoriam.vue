@@ -1,13 +1,11 @@
 <template>
-  <div class="chart-background">
-    <svg
-      id="chart"
-      width="400"
-      height="400"
-      viewBox="0 0 400 400"
-      perserveAspectRatio="xMinYMid"
-    ></svg>
-  </div>
+  <svg
+    id="chart"
+    width="400"
+    height="400"
+    viewBox="0 0 400 400"
+    perserveAspectRatio="xMinYMid"
+  ></svg>
 </template>
 
 <script>
@@ -22,12 +20,14 @@ export default {
       currentHeight: 0,
       data: [],
       bNumDots: 50,
-      bgDotMaxRadius: 18,
-      bgDotMinRadius: 6,
+      bgDotMaxRadius: 36,
+      bgDotMinRadius: 12,
       fNumDots: 300,
       fDotRadius: 20,
       fZoomLevel: null,
-      fDotPadding: 10,
+      fDotPadding: 2,
+      oNumDots: 300,
+      oDotRadius: 4,
       inViewportPadding: 100,
       colours: [
         '#890608',
@@ -49,8 +49,9 @@ export default {
     // initialize the chart and variables
     const chart = this.initializeChart()
     const longestEdge = Math.max(this.currentWidth, this.currentHeight)
-    const fBoxSize = longestEdge
+    const fBoxSize = longestEdge * 1.5
     const bBoxSize = longestEdge / 2
+    // const oBoxSize = longestEdge
 
     // create the background dots
     const bG = chart.append('g')
@@ -79,9 +80,24 @@ export default {
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
+    /*
+    const oG = chart.append('g')
+    const oData = this.generateData(
+      oBoxSize,
+      oBoxSize,
+      this.oDotRadius,
+      this.oDotRadius,
+      this.oNumDots,
+      false
+    )
+    const oNodes = oData.map((d) => Object.create(d))
+    this.setupOverviewNodes(oG, oNodes, fBoxSize)
+    */
+
+    // zoom/pan function
     this.fZoom = d3
       .zoom()
-      .scaleExtent([this.fZoomLevel, this.fZoomLevel])
+      .scaleExtent([this.fZoomLevel * 0.25, this.fZoomLevel])
       .on('zoom', function (event) {
         const transform = event.transform
         const scale = transform.k
@@ -91,12 +107,12 @@ export default {
         const fdy = transform.y % fScaleFactor
         fG.attr(
           'transform',
-          'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
+          'translate(' + fdx + ', ' + fdy + ')scale(' + scale + ')'
         )
 
         const bScaleFactor = bBoxSize * scale
-        const bdx = (transform.x / 2) % bScaleFactor
-        const bdy = (transform.y / 2) % bScaleFactor
+        const bdx = (transform.x * 0.5) % bScaleFactor
+        const bdy = (transform.y * 0.5) % bScaleFactor
         bG.attr(
           'transform',
           'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
@@ -110,20 +126,13 @@ export default {
       )
     chart
       .call(this.fZoom)
-      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel * 0.5))
 
     this.downloadInitialDeceased(fDots)
   },
   methods: {
     initializeChart() {
       const chart = d3.select('#chart')
-      chart
-        .append('defs')
-        .append('filter')
-        .attr('id', 'blur')
-        .append('feGaussianBlur')
-        .attr('stdDeviation', this.bgDotBlur)
-
       this.resizeChart(chart)
       window.addEventListener(
         'resize',
@@ -210,9 +219,8 @@ export default {
             .attr('r', (d, i) => d.radius)
             .attr('cx', (d, i) => d.x)
             .attr('cy', (d, i) => d.y)
-            .attr('fill', '#000000')
+            .attr('fill', '#DDDDDD')
             .attr('class', 'b-node')
-            .style('opacity', 0.1)
         }
       }
       return bG
@@ -277,6 +285,24 @@ export default {
         }
       }
       return fG
+    },
+    setupOverviewNodes(oG, oNodes, boxSize) {
+      console.log(oNodes.length)
+      const colours = d3.scaleOrdinal(
+        d3.range(oNodes.length),
+        d3.schemeTableau10
+      )
+      console.log(colours)
+
+      oG.selectAll('.node')
+        .data(oNodes)
+        .enter()
+        .append('circle')
+        .attr('r', this.oDotRadius)
+        .attr('cx', (d, i) => d.x)
+        .attr('cy', (d, i) => d.y)
+        .attr('fill', (d, i) => colours[i])
+      return oG
     },
     updateDeceasedNodes(fDots) {
       for (const d of this.data.filter((el) => el.human)) {
@@ -384,12 +410,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.chart-background {
-  width: 100vw;
-  height: 100vh;
-  background-color: $background;
-}
-
 #chart {
   background-color: $background;
 }
