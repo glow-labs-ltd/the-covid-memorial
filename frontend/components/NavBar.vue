@@ -48,6 +48,7 @@ export default {
   padding: 2rem;
   grid-gap: 2rem;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  height: 10rem;
 
   @media (min-width: $tablet) {
     grid-template: auto / auto 1fr auto auto;
