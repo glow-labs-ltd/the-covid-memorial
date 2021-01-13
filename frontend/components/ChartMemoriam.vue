@@ -24,7 +24,8 @@ export default {
       bgDotMinRadius: 12,
       fNumDots: 300,
       fDotRadius: 20,
-      fZoomLevel: null,
+      fMinZoomLevel: null,
+      fMaxZoomLevel: null,
       fDotPadding: 2,
       oNumDots: 300,
       oDotRadius: 4,
@@ -50,8 +51,7 @@ export default {
     const chart = this.initializeChart()
     const longestEdge = Math.max(this.currentWidth, this.currentHeight)
     const fBoxSize = longestEdge * 1.5
-    const bBoxSize = longestEdge / 2
-    // const oBoxSize = longestEdge
+    const bBoxSize = longestEdge
 
     // create the background dots
     const bG = chart.append('g')
@@ -80,44 +80,37 @@ export default {
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
-    /*
-    const oG = chart.append('g')
-    const oData = this.generateData(
-      oBoxSize,
-      oBoxSize,
-      this.oDotRadius,
-      this.oDotRadius,
-      this.oNumDots,
-      false
-    )
-    const oNodes = oData.map((d) => Object.create(d))
-    this.setupOverviewNodes(oG, oNodes, fBoxSize)
-    */
-
     // zoom/pan function
     this.fZoom = d3
       .zoom()
-      .scaleExtent([this.fZoomLevel * 0.25, this.fZoomLevel])
-      .on('zoom', function (event) {
-        const transform = event.transform
-        const scale = transform.k
+      .scaleExtent([this.fMinZoomLevel, this.fMaxZoomLevel])
+      .on(
+        'zoom',
+        function (event) {
+          const transform = event.transform
+          const scale = transform.k
 
-        const fScaleFactor = fBoxSize * scale
-        const fdx = transform.x % fScaleFactor
-        const fdy = transform.y % fScaleFactor
-        fG.attr(
-          'transform',
-          'translate(' + fdx + ', ' + fdy + ')scale(' + scale + ')'
-        )
+          if (transform.k < this.fMinZoomLevel + 0.1) {
+            this.$emit('zoomOut')
+          }
 
-        const bScaleFactor = bBoxSize * scale
-        const bdx = (transform.x * 0.5) % bScaleFactor
-        const bdy = (transform.y * 0.5) % bScaleFactor
-        bG.attr(
-          'transform',
-          'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
-        )
-      })
+          const fScaleFactor = fBoxSize * scale
+          const fdx = transform.x % fScaleFactor
+          const fdy = transform.y % fScaleFactor
+          fG.attr(
+            'transform',
+            'translate(' + fdx + ', ' + fdy + ')scale(' + scale + ')'
+          )
+
+          const bScaleFactor = bBoxSize * scale
+          const bdx = (transform.x * 0.5) % bScaleFactor
+          const bdy = (transform.y * 0.5) % bScaleFactor
+          bG.attr(
+            'transform',
+            'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
+          )
+        }.bind(this)
+      )
       .on(
         'end',
         function (event) {
@@ -126,7 +119,7 @@ export default {
       )
     chart
       .call(this.fZoom)
-      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel * 0.5))
+      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMinZoomLevel))
 
     this.downloadInitialDeceased(fDots)
   },
@@ -150,14 +143,21 @@ export default {
       chart.attr('height', this.currentHeight)
 
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
-      this.fZoomLevel = -1 / (-shortestEdge / 800)
+      this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
+      this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
 
       if (this.bZoom) {
-        chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+        chart.call(
+          this.bZoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
       }
 
       if (this.fZoom)
-        chart.call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+        chart.call(
+          this.fZoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
     },
     generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []

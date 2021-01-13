@@ -1,14 +1,13 @@
 <template>
   <div class="chart-background">
     <transition-group name="fade-slow" tag="div" class="chart-wrapper">
-      <!--
       <ChartOverview
-        v-show="zoomedOut"
+        v-if="zoomedOut"
         key="overview"
         @zoomIn="zoomedOut = false"
       />
-      -->
       <ChartMemoriam
+        v-else
         key="memoriam"
         @add="addNodeClick"
         @view="viewNodeClick"
@@ -22,7 +21,7 @@
 export default {
   data() {
     return {
-      zoomedOut: true,
+      zoomedOut: false,
     }
   },
   methods: {
