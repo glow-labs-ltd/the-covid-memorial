@@ -93,6 +93,10 @@ textarea {
   width: 100%;
 }
 
+textarea {
+  resize: vertical;
+}
+
 input[type='checkbox'] {
   display: inline-block;
   width: 3rem;

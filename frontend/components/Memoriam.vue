@@ -14,15 +14,13 @@
           <div class="details">
             <h1 class="name">{{ name }}</h1>
             <h2 class="city">{{ city }}</h2>
-            <p class="age"></p>
+            <p class="age">Age</p>
           </div>
         </div>
         <div class="right">
           <div>
             <p class="message">{{ message }}</p>
-            <div class="comment-section">
-              <h3>Add a comment</h3>
-            </div>
+            <Comments v-if="correctCode && id" :deceased-id="id" />
           </div>
         </div>
       </div>
@@ -56,6 +54,9 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.memoriam?.id
+    },
     name() {
       return this.memoriam?.name
     },
@@ -92,10 +93,6 @@ export default {
 
   @media (min-width: $tablet) {
     padding: 8rem 0;
-  }
-
-  @media (min-width: $desktop) {
-    padding: 10rem 0;
   }
 }
 
