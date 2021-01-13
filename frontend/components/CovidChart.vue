@@ -64,7 +64,7 @@ export default {
     )
     const bNodes = data.map((d) => Object.create(d))
     this.setupBackgroundNodes(bG, bNodes, bBoxSize)
-    // this.setupBackgroundAnimation()
+    this.setupBackgroundAnimation()
 
     // create foreground dots
     const fG = chart.append('g')
