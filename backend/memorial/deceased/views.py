@@ -2,9 +2,9 @@ from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from .filters import SimilarityFilter
-from .models import Deceased
+from .models import Deceased, Comment
 from .serializers import (DeceasedPreviewSerializer, DeceasedSerializer,
-                          DeceasedSerializerWithCode)
+                          DeceasedSerializerWithCode, CommentSerializer)
 
 
 class DeceasedAPIViewSet(
@@ -50,3 +50,17 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
             return Deceased.objects.none()
 
         return Deceased.objects.all()
+
+
+class CommentsAPIViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet
+):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        deceased_pk = self.kwargs.get('deceased_pk')
+        if deceased_pk:
+            return Comment.objects.filter(deceased__pk=deceased_pk)
+        return Comment.objects.none()

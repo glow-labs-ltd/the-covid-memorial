@@ -75,7 +75,7 @@ class Comment(models.Model):
         null=False,
         blank=False,
     )
-    message = models.CharField(max_length=240)
+    message = models.TextField(max_length=240)
     date_created = models.DateTimeField(auto_now=True, db_index=True)
 
     def __str__(self):

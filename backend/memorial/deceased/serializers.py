@@ -62,6 +62,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = (
             'id',
+            'deceased',
             'author',
             'message',
             'date_created',
