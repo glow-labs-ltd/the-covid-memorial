@@ -6,29 +6,36 @@
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
-      <form class="query shadow" @submit.prevent="search">
+      <form class="query shadow" @submit.prevent="search(false)">
         <h1>Search</h1>
         <input ref="searchField" v-model="searchQuery" type="text" />
       </form>
       <h3>{{ count }}</h3>
       <div class="results">
-        <div
-          v-for="result in results"
-          :key="result.id"
-          class="result shadow"
-          @click="clickResult(result.slug)"
-        >
-          <img
-            class="portrait"
-            :src="result.image || require('~/assets/images/placeholder.jpg')"
-          />
-          <div class="colour-bar" :class="colourClass(result.colour)"></div>
-          <div class="details">
-            <h2 class="name">{{ result.name }}</h2>
-            <h3 class="city">{{ result.city }}</h3>
+        <transition-group name="fade-group" class="transition">
+          <div
+            v-for="result in results"
+            :key="result.id"
+            class="result shadow"
+            @click="clickResult(result.slug)"
+          >
+            <img
+              class="portrait"
+              :src="result.image || require('~/assets/images/placeholder.jpg')"
+            />
+            <div class="colour-bar" :class="colourClass(result.colour)"></div>
+            <div class="details">
+              <h2 class="name">{{ result.name }}</h2>
+              <h3 class="city">{{ result.city }}</h3>
+            </div>
           </div>
-        </div>
+        </transition-group>
       </div>
+      <transition name="fade-fast">
+        <div v-if="moreResults" class="more">
+          <button @click="search(true)">Load more</button>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -41,12 +48,16 @@ export default {
   },
   computed: {
     count() {
-      const count = this.$store.state.results?.count
-      if (count) return `${this.$store.state.results?.count} People`
+      const count = this.$store.state.searchCount
+      if (count) return `${this.$store.state.searchCount} People`
       return 'No results'
     },
     results() {
-      return this.$store.state.results?.results
+      return this.$store.state.searchResults
+    },
+    moreResults() {
+      if (this.$store.state.searchNext) return true
+      return false
     },
     searchQuery: {
       get() {
@@ -73,8 +84,8 @@ export default {
     close() {
       this.$router.push('/')
     },
-    search() {
-      this.$store.dispatch('search')
+    search(append) {
+      this.$store.dispatch('search', append)
     },
   },
 }
@@ -137,7 +148,7 @@ export default {
   }
 }
 
-.results {
+.results > .transition {
   display: grid;
   grid-template: auto / repeat(2, 1fr);
   grid-gap: 2rem;
@@ -183,6 +194,18 @@ export default {
       font-weight: 400;
       margin-top: 0.5rem;
     }
+  }
+}
+
+.more {
+  text-align: center;
+
+  button {
+    margin: 4rem 0 2rem;
+    font-size: 2.25rem;
+    padding: 2rem 8rem;
+    background-color: $secondary;
+    color: $surface;
   }
 }
 </style>
