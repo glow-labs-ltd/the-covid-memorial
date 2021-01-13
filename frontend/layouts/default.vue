@@ -118,6 +118,11 @@ label {
   box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
 }
 
+.error {
+  font-weight: 600;
+  color: $error;
+}
+
 .colour--0 {
   background-color: $palette1;
 }

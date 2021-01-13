@@ -6,7 +6,7 @@
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
-      <Share v-if="correctCode" :name="name" class="share" />
+      <Share v-if="codeVerified" :name="name" class="share" />
       <div class="memoriam shadow">
         <div class="left">
           <img class="portrait" :src="image" />
@@ -14,13 +14,13 @@
           <div class="details">
             <h1 class="name">{{ name }}</h1>
             <h2 class="city">{{ city }}</h2>
-            <p class="age">Age</p>
+            <p class="age"></p>
           </div>
         </div>
         <div class="right">
           <div>
             <p class="message">{{ message }}</p>
-            <Comments v-if="correctCode && id" :deceased-id="id" />
+            <Comments v-if="id" :deceased-id="id" :code="codeVerified" />
           </div>
         </div>
       </div>
@@ -79,9 +79,8 @@ export default {
       }
       return 'colour--7'
     },
-    correctCode() {
-      if (this.code) return true
-      return false
+    codeVerified() {
+      return this.memoriam?.can_comment ? this.code : null
     },
   },
 }

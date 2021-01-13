@@ -16,6 +16,7 @@ class DeceasedPreviewSerializer(serializers.ModelSerializer):
 
 class DeceasedSerializer(serializers.ModelSerializer):
     country = CountryField(required=False)
+    can_comment = serializers.ReadOnlyField()
 
     class Meta:
         model = Deceased
@@ -32,6 +33,7 @@ class DeceasedSerializer(serializers.ModelSerializer):
             'colour',
             'date_created',
             'message',
+            'can_comment'
         )
 
 
@@ -58,6 +60,8 @@ class DeceasedSerializerWithCode(DeceasedSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = Comment
         fields = (
@@ -65,5 +69,6 @@ class CommentSerializer(serializers.ModelSerializer):
             'deceased',
             'author',
             'message',
+            'code',
             'date_created',
         )

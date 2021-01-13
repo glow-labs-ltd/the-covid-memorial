@@ -29,8 +29,10 @@
             class="submit"
           />
         </div>
+        <p v-if="error" class="error">{{ error }}</p>
       </form>
-      <div v-else>
+
+      <div v-else class="thanks">
         <h3>Your comment has been saved.</h3>
         <h3>Thank you.</h3>
       </div>
@@ -45,6 +47,10 @@ export default {
       type: Number,
       required: true,
     },
+    code: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -53,6 +59,18 @@ export default {
       loading: false,
       done: false,
     }
+  },
+  computed: {
+    error() {
+      const error = this.$store.state.comment.error
+      if (error?.code) {
+        return 'Your link appears to be incorrect.'
+      }
+      if (error) {
+        return 'An error occured submitting your comment. Please try again later.'
+      }
+      return null
+    },
   },
   methods: {
     async submit() {
@@ -63,6 +81,7 @@ export default {
         author: this.author,
         message: this.message,
         deceased: this.deceasedId,
+        code: this.code,
       }
       const response = await this.$store.dispatch('comment/postComment', data)
       if (response) {
@@ -106,6 +125,10 @@ export default {
     color: $surface;
     max-width: 40%;
     margin-left: auto;
+  }
+
+  .thanks {
+    text-align: center;
   }
 }
 </style>
