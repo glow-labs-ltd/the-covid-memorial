@@ -60,7 +60,13 @@
 
           <div class="row">
             <label for="message">Your message</label>
-            <textarea v-model="message" type="text" name="message" rows="6" />
+            <textarea
+              v-model="message"
+              type="text"
+              name="message"
+              rows="6"
+              maxlength="2500"
+            />
           </div>
 
           <div class="row">

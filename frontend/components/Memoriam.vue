@@ -6,7 +6,7 @@
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
-      <Share v-if="correctCode" :name="name" class="share" />
+      <Share v-if="codeVerified" :name="name" class="share" />
       <div class="memoriam shadow">
         <div class="left">
           <img class="portrait" :src="image" />
@@ -20,9 +20,7 @@
         <div class="right">
           <div>
             <p class="message">{{ message }}</p>
-            <div class="comment-section">
-              <h3>Add a comment</h3>
-            </div>
+            <Comments v-if="id" :deceased-id="id" :code="codeVerified" />
           </div>
         </div>
       </div>
@@ -56,6 +54,9 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.memoriam?.id
+    },
     name() {
       return this.memoriam?.name
     },
@@ -78,9 +79,8 @@ export default {
       }
       return 'colour--7'
     },
-    correctCode() {
-      if (this.code) return true
-      return false
+    codeVerified() {
+      return this.memoriam?.can_comment ? this.code : null
     },
   },
 }
@@ -92,10 +92,6 @@ export default {
 
   @media (min-width: $tablet) {
     padding: 8rem 0;
-  }
-
-  @media (min-width: $desktop) {
-    padding: 10rem 0;
   }
 }
 

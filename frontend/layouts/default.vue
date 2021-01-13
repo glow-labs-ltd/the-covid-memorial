@@ -93,6 +93,10 @@ textarea {
   width: 100%;
 }
 
+textarea {
+  resize: vertical;
+}
+
 input[type='checkbox'] {
   display: inline-block;
   width: 3rem;
@@ -112,6 +116,11 @@ label {
 
 .shadow {
   box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
+}
+
+.error {
+  font-weight: 600;
+  color: $error;
 }
 
 .colour--0 {

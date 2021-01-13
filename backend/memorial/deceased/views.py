@@ -1,18 +1,15 @@
-from rest_framework import mixins
+from rest_framework import mixins, status
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from .filters import SimilarityFilter
-from .models import Deceased
-from .serializers import (DeceasedPreviewSerializer, DeceasedSerializer,
-                          DeceasedSerializerWithCode)
+from .models import Comment, Deceased
+from .serializers import (CommentSerializer, DeceasedPreviewSerializer,
+                          DeceasedSerializer, DeceasedSerializerWithCode)
 
 
-class DeceasedAPIViewSet(
-        mixins.ListModelMixin,
-        mixins.RetrieveModelMixin,
-        mixins.CreateModelMixin,
-        GenericViewSet
-):
+class DeceasedAPIViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                         mixins.CreateModelMixin, GenericViewSet):
     queryset = Deceased.objects.all().order_by('?')
     pagination_class = None
     lookup_field = 'slug'
@@ -32,6 +29,17 @@ class DeceasedAPIViewSet(
 
         return DeceasedSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        code = request.query_params.get('c')
+
+        instance = self.get_object()
+        instance.can_comment = False
+        if instance.code == code:
+            instance.can_comment = True
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class SearchAPIViewSet(ReadOnlyModelViewSet):
     param_search_fields = [
@@ -50,3 +58,30 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
             return Deceased.objects.none()
 
         return Deceased.objects.all()
+
+
+class CommentsAPIViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
+                         GenericViewSet):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        deceased_pk = self.kwargs.get('deceased_pk')
+        if deceased_pk:
+            return Comment.objects.filter(deceased__pk=deceased_pk)
+        return Comment.objects.none()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        code = serializer.validated_data.pop('code')
+        deceased = serializer.validated_data.get('deceased')
+
+        if deceased.code != code:
+            return Response({'code': ['not valid']},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                        headers=headers)
