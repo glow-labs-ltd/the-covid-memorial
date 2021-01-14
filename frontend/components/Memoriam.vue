@@ -41,12 +41,12 @@ export default {
     },
   },
   async fetch() {
-    const response = await this.$axios.get(
+    const data = await this.$axios.$get(
       this.code
         ? `deceased/${this.slug}/?c=${this.code}`
         : `deceased/${this.slug}/`
     )
-    this.memoriam = response.data
+    this.memoriam = data
   },
   data() {
     return {
