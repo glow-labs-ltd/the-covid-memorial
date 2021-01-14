@@ -6,7 +6,7 @@
         alt="The COVID Memorial"
       />
     </NuxtLink>
-    <h2 class="lost-count">1,854,764 <span>Sadly lost</span></h2>
+    <DeathCount />
     <img
       src="~/assets/images/search-icon.svg"
       class="search"
@@ -72,24 +72,6 @@ export default {
     @media (min-width: $tablet) {
       width: 13rem;
       max-height: 6rem;
-    }
-  }
-
-  .lost-count {
-    text-align: center;
-    font-size: 2.75rem;
-    font-weight: 400;
-
-    @media (min-width: $phone) {
-      font-size: 3rem;
-    }
-
-    @media (min-width: $tablet) {
-      font-size: 3.75rem;
-    }
-
-    span {
-      font-size: 2.5rem;
     }
   }
 
