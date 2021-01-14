@@ -12,6 +12,7 @@ export default {
       width: null,
       height: null,
       transform: null,
+      opacityScale: null,
       canvas: null,
       zoom: null,
       minZoom: 1,
@@ -45,10 +46,15 @@ export default {
       .attr('height', this.height)
       .attr('initial-scale', this.maxZoom)
     const context = this.canvas.node().getContext('2d')
+    this.calculateZoomLevels()
 
     const radii = Array.from({ length: 800 }, this.radius)
     const nodes = radii.map((r) => ({ r }))
     this.transform = d3.zoomIdentity
+    this.opacityScale = d3
+      .scaleLinear()
+      .domain([this.minZoom, this.maxZoom])
+      .range([1, 0])
 
     const simulation = d3
       .forceSimulation(nodes)
@@ -104,6 +110,10 @@ export default {
     )
   },
   methods: {
+    calculateZoomLevels() {
+      const shortestEdge = Math.min(this.width, this.height)
+      this.minZoom = shortestEdge / 800
+    },
     spawnMoreDots(interval, nodes, simulation) {
       setInterval(
         function () {
@@ -121,7 +131,8 @@ export default {
     ticked(context, nodes) {
       context.clearRect(0, 0, this.width, this.height)
       context.save()
-      context.globalAlpha = this.maxZoom - this.transform.k
+
+      context.globalAlpha = this.opacityScale(this.transform.k)
       context.translate(this.width / 2, this.height / 2)
       context.scale(this.transform.k, this.transform.k)
       context.beginPath()

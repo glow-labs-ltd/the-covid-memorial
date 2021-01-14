@@ -20,7 +20,7 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      bNumDots: 20,
+      bNumDots: 25,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
       fNumDots: 150,
@@ -150,7 +150,6 @@ export default {
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
 
-      console.log(window.devicePixelRatio)
       const pixelRatio = window.devicePixelRatio
       if (pixelRatio > 1) this.fNumDots = Math.floor(this.fNumDots / pixelRatio)
 
@@ -181,7 +180,7 @@ export default {
         const y = Math.floor(Math.random() * ySize)
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
-        const human = generateHuman ? Math.random() < 0.7 : false
+        const human = generateHuman ? Math.random() < 0.85 : false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
@@ -371,7 +370,6 @@ export default {
         gsap.set(dot, {
           x: this.randomX(-1),
           y: this.randomX(1),
-          force3D: true,
         })
 
         this.moveX(dot, 1)
@@ -384,7 +382,6 @@ export default {
         ease: Sine.easeInOut,
         onComplete: this.moveX,
         onCompleteParams: [target, direction * -1],
-        force3D: true,
       })
     },
     moveY(target, direction) {
@@ -393,7 +390,6 @@ export default {
         ease: Sine.easeInOut,
         onComplete: this.moveY,
         onCompleteParams: [target, direction * -1],
-        force3D: true,
       })
     },
     random(min, max) {
