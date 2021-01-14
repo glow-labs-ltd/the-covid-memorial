@@ -25,7 +25,11 @@ export default {
   align-items: flex-end;
   flex-direction: column;
   top: 5rem;
-  right: 5rem;
+  right: 3rem;
+
+  @media (min-width: $tablet) {
+    right: 5rem;
+  }
 
   > * {
     margin-bottom: 2rem;

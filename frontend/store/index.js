@@ -4,9 +4,12 @@ export const state = () => ({
   deceased: [],
   error: null,
   deceasedLoading: false,
-  showSearch: false,
   searchQuery: null,
-  results: null,
+  searchResults: null,
+  searchCount: null,
+  searchNext: null,
+  searchLast: {},
+  searchPage: 1,
   overview: true,
   overviewTransition: false,
 })
@@ -21,14 +24,25 @@ export const mutations = {
   setAddModal(state, value) {
     state.addModal = value
   },
-  setShowSearch(state, value) {
-    state.showSearch = value
-  },
   setSearchQuery(state, value) {
     state.searchQuery = value
   },
-  setResults(state, value) {
-    state.results = value
+  setSearchResults(state, { results, count, next }) {
+    state.searchResults = results
+    state.searchCount = count
+    state.searchNext = next
+  },
+  setSearchLast(state, value) {
+    state.searchLast = value
+  },
+  clearSearchResults(state) {
+    state.searchResults = []
+    state.searchCount = 0
+    state.searchNext = null
+    state.searchPage = 1
+  },
+  incrementSearchPage(state) {
+    state.searchPage += 1
   },
   setError(state, value) {
     state.error = value
@@ -80,11 +94,37 @@ export const actions = {
     }
   },
 
-  async search({ state, commit }) {
+  async search({ state, commit }, append) {
     try {
+      if (append && state.searchNext) commit('incrementSearchPage')
+
+      const sameQuery = state.searchLast?.query === state.searchQuery
+      const samePage = state.searchLast?.page === state.searchPage
+      if (sameQuery && samePage) return
+      if (!sameQuery) commit('clearSearchResults')
+
       commit('setError', null)
-      const response = await this.$axios.$get(`search/?q=${state.searchQuery}`)
-      if (response) commit('setResults', response)
+      const response = await this.$axios.$get(
+        `search/?q=${state.searchQuery}&limit=10&offset=${
+          (state.searchPage - 1) * 10
+        }`
+      )
+
+      if (response) {
+        commit('setSearchLast', {
+          query: state.searchQuery,
+          page: state.searchPage,
+        })
+        const results = append
+          ? [...state.searchResults, ...response.results]
+          : response.results
+
+        commit('setSearchResults', {
+          results,
+          count: response.count,
+          next: response.next,
+        })
+      }
     } catch (e) {
       commit('setError', e.response.data)
     }

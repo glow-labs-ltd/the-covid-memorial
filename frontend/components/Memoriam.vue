@@ -1,26 +1,26 @@
 <template>
   <div class="wrapper scroll">
-    <div class="close">
-      <a href="#" @click.prevent="$emit('close')"
-        ><img src="~/assets/images/close-icon.svg" alt="Close"
-      /></a>
-    </div>
-    <Share v-if="correctCode" :name="name" class="share" />
-    <div class="memoriam shadow">
-      <div class="left">
-        <img class="portrait" :src="image" />
-        <div class="colour-bar" :class="colourClass"></div>
-        <div class="details">
-          <h1 class="name">{{ name }}</h1>
-          <h2 class="city">{{ city }}</h2>
-          <p class="age"></p>
-        </div>
+    <div class="limit-width">
+      <div class="close">
+        <a href="#" @click.prevent="$emit('close')"
+          ><img src="~/assets/images/close-icon.svg" alt="Close"
+        /></a>
       </div>
-      <div class="right">
-        <div>
-          <p class="message">{{ message }}</p>
-          <div class="comment-section">
-            <h3>Add a comment</h3>
+      <Share v-if="codeVerified" :name="name" class="share" />
+      <div class="memoriam shadow">
+        <div class="left">
+          <img class="portrait" :src="image" />
+          <div class="colour-bar" :class="colourClass"></div>
+          <div class="details">
+            <h1 class="name">{{ name }}</h1>
+            <h2 class="city">{{ city }}</h2>
+            <p class="age"></p>
+          </div>
+        </div>
+        <div class="right">
+          <div>
+            <p class="message">{{ message }}</p>
+            <Comments v-if="id" :deceased-id="id" :code="codeVerified" />
           </div>
         </div>
       </div>
@@ -41,12 +41,12 @@ export default {
     },
   },
   async fetch() {
-    const response = await this.$axios.get(
+    const data = await this.$axios.$get(
       this.code
         ? `deceased/${this.slug}/?c=${this.code}`
         : `deceased/${this.slug}/`
     )
-    this.memoriam = response.data
+    this.memoriam = data
   },
   data() {
     return {
@@ -54,6 +54,9 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.memoriam?.id
+    },
     name() {
       return this.memoriam?.name
     },
@@ -76,9 +79,8 @@ export default {
       }
       return 'colour--7'
     },
-    correctCode() {
-      if (this.code) return true
-      return false
+    codeVerified() {
+      return this.memoriam?.can_comment ? this.code : null
     },
   },
 }
@@ -86,16 +88,16 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  margin: 2rem auto 0;
-  max-width: 100rem;
+  padding: 2rem 0;
 
   @media (min-width: $tablet) {
-    margin: 8rem auto 0;
+    padding: 8rem 0;
   }
+}
 
-  @media (min-width: $desktop) {
-    margin: 10rem auto 0;
-  }
+.limit-width {
+  max-width: 100rem;
+  margin: 0 auto;
 }
 
 .share {

@@ -48,18 +48,18 @@ export default {
 aside {
   background-color: $surface;
   color: $primary;
-  overflow: hidden;
   position: fixed;
   top: 0;
   right: 0;
-  height: 100vh;
   max-width: 90vw;
   min-width: 40rem;
-
+  overflow-y: auto;
   display: grid;
   grid-template: auto auto 1fr / 1fr;
   grid-gap: 4rem;
-  padding: 4rem;
+  padding: 4rem 4rem 10rem;
+  height: 100vh;
+  max-height: calc(100vh - 10rem);
 
   @media (min-width: $desktop) {
     right: 0;
@@ -82,8 +82,7 @@ aside {
   }
 
   .foot {
-    margin-top: auto;
-    padding-bottom: 10rem;
+    margin: auto 0 2rem;
     display: grid;
     grid-template: auto / auto auto 1fr;
     grid-gap: 1rem;

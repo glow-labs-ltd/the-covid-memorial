@@ -19,7 +19,13 @@ export default {
 
 <style lang="scss" scoped>
 button {
-  font-size: 2.25rem;
+  font-size: 2rem;
+  padding: 1rem;
+
+  @media (min-width: $tablet) {
+    font-size: 2.25rem;
+    padding: 2rem;
+  }
 
   img {
     width: 4.25rem;

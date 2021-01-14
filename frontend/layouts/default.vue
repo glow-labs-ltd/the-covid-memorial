@@ -48,12 +48,12 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .scroll {
-  overflow-y: scroll;
-  max-height: calc(100vh - 20rem);
+  overflow-y: auto;
+  max-height: calc(100vh - 10rem); // nav bar is height: 10rem
 }
 
 img {
@@ -84,6 +84,10 @@ textarea {
   width: 100%;
 }
 
+textarea {
+  resize: vertical;
+}
+
 input[type='checkbox'] {
   display: inline-block;
   width: 3rem;
@@ -103,6 +107,11 @@ label {
 
 .shadow {
   box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.23);
+}
+
+.error {
+  font-weight: 600;
+  color: $error;
 }
 
 .colour--0 {
@@ -132,7 +141,7 @@ label {
 
 .fade-slow-enter-active,
 .fade-slow-leave-active {
-  transition: all $slow $standard-easing;
+  transition: opacity $slow $standard-easing;
 }
 .fade-slow-enter,
 .fade-slow-leave-to {
@@ -141,10 +150,22 @@ label {
 
 .fade-fast-enter-active,
 .fade-fast-leave-active {
-  transition: all $fast $standard-easing;
+  transition: opacity $fast $standard-easing;
 }
 .fade-fast-enter,
 .fade-fast-leave-to {
   opacity: 0;
+}
+
+.fade-group-enter-active,
+.fade-group-leave-active {
+  transition: opacity $fast $standard-easing;
+}
+.fade-group-enter,
+.fade-group-leave-to {
+  opacity: 0;
+}
+.fade-group-enter-active {
+  transition-delay: $fast;
 }
 </style>

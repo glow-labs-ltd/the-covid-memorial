@@ -11,81 +11,73 @@
         won’t be available after you leave this screen.
       </strong>
     </p>
-    <div class="links">
-      <div>
-        <h3>Share: Allow comments</h3>
-        <div class="url">
-          <input
-            id="comments-link"
-            type="text"
-            :value="linkComments"
-            readonly
-          />
-          <CopyButton @click="copy(linkComments)" />
+    <client-only>
+      <div class="links">
+        <div>
+          <h3>Share: Allow comments</h3>
+          <div class="url">
+            <input type="text" :value="linkComments" readonly />
+            <CopyButton @click="copy(linkComments)" />
+          </div>
+          <div class="social">
+            <a
+              v-if="facebookCommentsShare"
+              :href="facebookCommentsShare"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="~/assets/images/facebook-icon.svg"
+                alt="facebook share with comments"
+              />
+            </a>
+            <a
+              v-if="twitterCommentsShare"
+              :href="twitterCommentsShare"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="~/assets/images/twitter-icon.svg"
+                alt="twitter share with comments"
+              />
+            </a>
+          </div>
         </div>
-        <div class="social">
-          <a
-            v-if="facebookCommentsShare"
-            :href="facebookCommentsShare"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="~/assets/images/facebook-icon.svg"
-              alt="facebook share with comments"
-            />
-          </a>
-          <a
-            v-if="twitterCommentsShare"
-            :href="twitterCommentsShare"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="~/assets/images/twitter-icon.svg"
-              alt="twitter share with comments"
-            />
-          </a>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div>
-        <h3>Share: No comments</h3>
-        <div class="url">
-          <input
-            id="comments-link"
-            type="text"
-            :value="linkNoComments"
-            readonly
-          />
-          <CopyButton @click="copy(linkNoComments)" />
-        </div>
-        <div class="social">
-          <a
-            v-if="facebookNoCommentsShare"
-            :href="facebookNoCommentsShare"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="~/assets/images/facebook-icon.svg"
-              alt="facebook share without comments"
-            />
-          </a>
-          <a
-            v-if="twitterNoCommentsShare"
-            :href="twitterNoCommentsShare"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="~/assets/images/twitter-icon.svg"
-              alt="twitter share without comments"
-            />
-          </a>
+        <div class="divider"></div>
+        <div>
+          <h3>Share: No comments</h3>
+          <div class="url">
+            <input type="text" :value="linkNoComments" readonly />
+            <CopyButton @click="copy(linkNoComments)" />
+          </div>
+          <div class="social">
+            <a
+              v-if="facebookNoCommentsShare"
+              :href="facebookNoCommentsShare"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="~/assets/images/facebook-icon.svg"
+                alt="facebook share without comments"
+              />
+            </a>
+            <a
+              v-if="twitterNoCommentsShare"
+              :href="twitterNoCommentsShare"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="~/assets/images/twitter-icon.svg"
+                alt="twitter share without comments"
+              />
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </client-only>
   </div>
 </template>
 
