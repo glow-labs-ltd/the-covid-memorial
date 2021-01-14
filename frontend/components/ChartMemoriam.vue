@@ -126,11 +126,13 @@ export default {
       .call(this.fZoom)
       .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
 
+    chart.transition().duration(3000).attr('opacity', '1')
     this.downloadInitialDeceased(fDots)
   },
   methods: {
     initializeChart() {
-      const chart = d3.select('#chart')
+      const chart = d3.select('#chart').attr('opacity', '0')
+
       this.resizeChart(chart)
       window.addEventListener(
         'resize',
