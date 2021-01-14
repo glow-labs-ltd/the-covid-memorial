@@ -34,7 +34,7 @@ export const actions = {
       if (!state.next) commit('appendComment', response)
       return response
     } catch (e) {
-      commit('setError', e.response.data)
+      commit('setError', e.response?.data)
     }
   },
 
