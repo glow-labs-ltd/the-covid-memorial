@@ -1,32 +1,15 @@
 <template>
   <div>
-    <h2 class="lost-count">{{ format(count) }} <span>Sadly lost</span></h2>
+    <h2 class="lost-count">
+      {{ format($store.state.count.count) }} <span>Sadly lost</span>
+    </h2>
   </div>
 </template>
 
 <script>
 export default {
   async fetch() {
-    const timeline = await this.$axios.$get('https://corona-api.com/timeline')
-    this.last2 = timeline.data.slice(0, 2)
-    this.count = this.last2[0]?.deaths
-  },
-  data() {
-    return {
-      last2: null,
-      count: null,
-    }
-  },
-  computed: {
-    deathRate() {
-      if (this.last2) {
-        const date0 = new Date(this.last2[0].date)
-        const date1 = new Date(this.last2[1].date)
-        const seconds = Math.ceil(date0 - date1)
-        return (this.last2[0].deaths - this.last2[1].deaths) / seconds
-      }
-      return null
-    },
+    await this.$store.dispatch('count/getDeathCount')
   },
   mounted() {
     this.start()
@@ -36,11 +19,9 @@ export default {
       return number ? Math.floor(number).toLocaleString() : ''
     },
     start() {
-      setInterval(() => this.incrementCount(), 1 / this.deathRate)
-    },
-    incrementCount() {
-      if (this.count) {
-        this.count += 1
+      const deathRate = this.$store.getters['count/deathRate']
+      if (deathRate) {
+        setInterval(() => this.$store.commit('count/increment'), 1 / deathRate)
       }
     },
   },
