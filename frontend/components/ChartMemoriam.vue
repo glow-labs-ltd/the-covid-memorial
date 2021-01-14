@@ -20,14 +20,14 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      bNumDots: 30,
+      bNumDots: 20,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
       fNumDots: 200,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
-      fDotPadding: 4,
+      fDotPadding: 2,
       inViewportPadding: 100,
       colours: [
         '#890608',
@@ -55,7 +55,7 @@ export default {
     // initialize the chart and variables
     const chart = this.initializeChart()
     const longestEdge = Math.max(this.currentWidth, this.currentHeight)
-    const fBoxSize = longestEdge * 1.5
+    const fBoxSize = longestEdge
     const bBoxSize = longestEdge
 
     // create the background dots
@@ -94,7 +94,7 @@ export default {
         function (event) {
           const transform = event.transform
           const scale = transform.k
-          if (transform.k < this.fMaxZoomLevel - 0.01) {
+          if (transform.k <= this.fMaxZoomLevel - 0.1) {
             this.$store.commit('setOverview', true)
           }
 
@@ -181,17 +181,19 @@ export default {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
             const dY = (node.y - y) * (node.y - y)
+            const distance = Math.sqrt(dX + dY)
             const dR = node.radius + radius
+            const padding = dR + this.fDotPadding
             if (
-              Math.sqrt(dX + dY) < dR * 2 + this.fDotPadding ||
-              x > xSize - this.fDotPadding ||
-              x < this.fDotPadding ||
-              y > ySize - this.fDotPadding ||
-              y < this.fDotPadding
+              distance < padding ||
+              x > xSize - padding ||
+              x < padding ||
+              y > ySize - padding ||
+              y < padding
             ) {
               collides = true
               attempts++
-              if (attempts > 2) {
+              if (attempts > 100) {
                 i++
               }
             }
@@ -214,7 +216,6 @@ export default {
 
           const node = bG
             .append('g')
-            // .attr('filter', 'url(#blur)')
             .selectAll('circle')
             .data(bNodes)
             .enter()
@@ -292,24 +293,6 @@ export default {
         }
       }
       return fG
-    },
-    setupOverviewNodes(oG, oNodes, boxSize) {
-      console.log(oNodes.length)
-      const colours = d3.scaleOrdinal(
-        d3.range(oNodes.length),
-        d3.schemeTableau10
-      )
-      console.log(colours)
-
-      oG.selectAll('.node')
-        .data(oNodes)
-        .enter()
-        .append('circle')
-        .attr('r', this.oDotRadius)
-        .attr('cx', (d, i) => d.x)
-        .attr('cy', (d, i) => d.y)
-        .attr('fill', (d, i) => colours[i])
-      return oG
     },
     updateDeceasedNodes(fDots) {
       for (const d of this.data.filter((el) => el.human)) {
