@@ -42,7 +42,6 @@ export default {
       randomX: this.random(1, 5),
       randomY: this.random(1, 5),
       randomTime: this.random(1, 3),
-      randomTime2: this.random(3, 6),
     }
   },
   computed: mapState(['overviewTransition']),
@@ -218,21 +217,17 @@ export default {
           const dx = x > 0 ? boxSize : x < 0 ? -boxSize : 0
           const dy = y > 0 ? boxSize : y < 0 ? -boxSize : 0
 
-          const node = bG
-            .append('g')
+          bG.append('g')
             .selectAll('circle')
             .data(bNodes)
             .enter()
-            .append('g')
-            .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
-
-          node
             .append('circle')
             .attr('r', (d, i) => d.radius)
-            .attr('cx', (d, i) => d.x)
-            .attr('cy', (d, i) => d.y)
+            .attr('cx', (d, i) => d.x + dx)
+            .attr('cy', (d, i) => d.y + dy)
             .attr('fill', '#DDDDDD')
             .attr('class', 'b-node')
+            .attr('style', 'will-change: transform;')
         }
       }
       return bG
@@ -365,6 +360,7 @@ export default {
       )
     },
     setupBackgroundAnimation() {
+      gsap.ticker.fps(24)
       const dotsToAnimate = gsap.utils.toArray('.b-node')
       dotsToAnimate.forEach((dot) => {
         gsap.set(dot, {

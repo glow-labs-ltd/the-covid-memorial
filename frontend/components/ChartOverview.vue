@@ -15,6 +15,7 @@ export default {
       opacityScale: null,
       canvas: null,
       zoom: null,
+      simulation: null,
       minZoom: null,
       maxZoom: null,
       maxDots: 2000,
@@ -32,21 +33,16 @@ export default {
         .on(
           'end',
           function () {
+            this.simulation.stop()
             this.$store.commit('setOverview', false)
           }.bind(this)
         )
     },
   },
   mounted() {
-    this.width = window.innerWidth
-    this.height = window.innerHeight - 80
-    this.canvas = d3
-      .select('canvas')
-      .attr('width', this.width)
-      .attr('height', this.height)
-      .attr('initial-scale', this.maxZoom)
+    this.canvas = d3.select('canvas')
+    this.resizeCanvas(this.canvas)
     const context = this.canvas.node().getContext('2d')
-    this.calculateZoomLevels()
 
     const radii = Array.from({ length: 800 }, this.radius)
     const nodes = radii.map((r) => ({ r }))
@@ -56,7 +52,7 @@ export default {
       .domain([this.minZoom, this.maxZoom])
       .range([1, 0])
 
-    const simulation = d3
+    this.simulation = d3
       .forceSimulation(nodes)
       .alphaTarget(0.2)
       .velocityDecay(0.5)
@@ -104,21 +100,16 @@ export default {
 
     setTimeout(
       function () {
-        this.spawnMoreDots(100, nodes, simulation)
+        this.spawnMoreDots(100, nodes, this.simulation)
       }.bind(this),
       3000
     )
   },
   methods: {
-    calculateZoomLevels() {
-      const shortestEdge = Math.min(this.width, this.height)
-      this.minZoom = shortestEdge / 800
-      this.maxZoom = this.minZoom * 5
-    },
     spawnMoreDots(interval, nodes, simulation) {
       setInterval(
         function () {
-          this.addNode(nodes, simulation)
+          if (this.$store.state.overview) this.addNode(nodes, simulation)
         }.bind(this),
         interval
       )
@@ -147,8 +138,12 @@ export default {
     },
     resizeCanvas(canvas) {
       this.width = window.innerWidth
-      this.height = window.innerHeight
+      this.height = window.innerHeight - 80
       canvas.attr('width', this.width).attr('height', this.height)
+
+      const shortestEdge = Math.min(this.width, this.height)
+      this.minZoom = shortestEdge / 800
+      this.maxZoom = this.minZoom * 5
     },
   },
 }
