@@ -4,6 +4,7 @@
 
 <script>
 import * as d3 from 'd3'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -11,21 +12,39 @@ export default {
       width: null,
       height: null,
       transform: null,
+      canvas: null,
+      zoom: null,
       minZoom: 1,
       maxZoom: 2,
       maxDots: 2000,
       radius: d3.randomInt(4, 16),
+      transitionTime: 3000,
     }
+  },
+  computed: mapState(['overviewTransition']),
+  watch: {
+    overviewTransition() {
+      this.canvas
+        .transition()
+        .duration(this.transitionTime)
+        .call(this.zoom.transform, d3.zoomIdentity.scale(this.maxZoom - 0.01))
+        .on(
+          'end',
+          function () {
+            this.$store.commit('setOverview', false)
+          }.bind(this)
+        )
+    },
   },
   mounted() {
     this.width = window.innerWidth
     this.height = window.innerHeight - 80
-    const canvas = d3
+    this.canvas = d3
       .select('canvas')
       .attr('width', this.width)
       .attr('height', this.height)
       .attr('initial-scale', this.maxZoom)
-    const context = canvas.node().getContext('2d')
+    const context = this.canvas.node().getContext('2d')
 
     const radii = Array.from({ length: 800 }, this.radius)
     const nodes = radii.map((r) => ({ r }))
@@ -33,13 +52,13 @@ export default {
 
     const simulation = d3
       .forceSimulation(nodes)
-      .alphaTarget(0.1)
-      .velocityDecay(0.3)
-      .force('x', d3.forceX().strength(0.002))
-      .force('y', d3.forceY().strength(0.002))
+      .alphaTarget(0.2)
+      .velocityDecay(0.5)
+      .force('x', d3.forceX().strength(0.001))
+      .force('y', d3.forceY().strength(0.001))
       .force(
         'collide',
-        d3.forceCollide().radius((d) => d.r + 0.5)
+        d3.forceCollide().radius((d) => d.r + 1)
       )
       .on(
         'tick',
@@ -48,7 +67,7 @@ export default {
         }.bind(this)
       )
 
-    const zoom = d3
+    this.zoom = d3
       .zoom()
       .scaleExtent([this.minZoom, this.maxZoom])
       .on(
@@ -56,26 +75,26 @@ export default {
         function (event) {
           this.transform = event.transform
           if (this.transform.k >= this.maxZoom) {
-            this.$emit('zoomIn')
+            this.$store.commit('setOverview', false)
           }
           this.ticked(context, nodes)
         }.bind(this)
       )
-    d3.select(canvas.node()).call(zoom)
+    d3.select(this.canvas.node()).call(this.zoom)
 
     window.addEventListener(
       'resize',
       function () {
-        this.resizeCanvas(canvas)
+        this.resizeCanvas(this.canvas)
       }.bind(this)
     )
 
-    canvas
-      .call(zoom.transform, d3.zoomIdentity.scale(this.maxZoom - 0.01))
+    this.canvas
+      .call(this.zoom.transform, d3.zoomIdentity.scale(this.maxZoom - 0.01))
       .transition()
       .delay(1500)
-      .duration(3000)
-      .call(zoom.transform, d3.zoomIdentity.scale(this.minZoom))
+      .duration(this.transitionTime)
+      .call(this.zoom.transform, d3.zoomIdentity.scale(this.minZoom))
 
     setTimeout(
       function () {

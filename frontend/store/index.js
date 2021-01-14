@@ -7,7 +7,8 @@ export const state = () => ({
   showSearch: false,
   searchQuery: null,
   results: null,
-  overview: false,
+  overview: true,
+  overviewTransition: false,
 })
 
 export const mutations = {
@@ -34,6 +35,9 @@ export const mutations = {
   },
   setOverview(state, value) {
     state.overview = value
+  },
+  setOverviewTransition(state, value) {
+    state.overviewTransition = value
   },
   appendDeceased(state, value) {
     state.deceased = state.deceased.concat(value)

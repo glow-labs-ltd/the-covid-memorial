@@ -1,17 +1,12 @@
 <template>
   <div class="chart-background">
     <transition-group name="fade-slow" tag="div" class="chart-wrapper">
-      <ChartOverview
-        v-if="$store.state.overview"
-        key="overview"
-        @zoomIn="$store.commit('setOverview', false)"
-      />
+      <ChartOverview v-if="$store.state.overview" key="overview" />
       <ChartMemoriam
         v-else
         key="memoriam"
         @add="addNodeClick"
         @view="viewNodeClick"
-        @zoomOut="$store.commit('setOverview', true)"
       />
     </transition-group>
   </div>

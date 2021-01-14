@@ -10,12 +10,17 @@
 export default {
   computed: {
     text() {
-      return this.$store.state.overview ? 'Go to memorial' : 'Go to overview'
+      return this.$store.state.overview
+        ? 'Go to the memorial'
+        : 'Go to overview'
     },
   },
   methods: {
     overviewButtonClick() {
-      this.$store.commit('setOverview', !this.$store.state.overview)
+      this.$store.commit(
+        'setOverviewTransition',
+        !this.$store.state.overviewTransition
+      )
     },
   },
 }

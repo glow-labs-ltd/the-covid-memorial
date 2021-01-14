@@ -11,6 +11,7 @@
 <script>
 import * as d3 from 'd3'
 import { gsap, Sine } from 'gsap'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -22,7 +23,7 @@ export default {
       bNumDots: 30,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
-      fNumDots: 300,
+      fNumDots: 200,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
@@ -43,6 +44,12 @@ export default {
       randomTime: this.random(1, 3),
       randomTime2: this.random(3, 6),
     }
+  },
+  computed: mapState(['overviewTransition']),
+  watch: {
+    overviewTransition() {
+      this.$store.commit('setOverview', true)
+    },
   },
   mounted() {
     // initialize the chart and variables
@@ -88,7 +95,7 @@ export default {
           const transform = event.transform
           const scale = transform.k
           if (transform.k < this.fMaxZoomLevel - 0.01) {
-            this.$emit('zoomOut')
+            this.$store.commit('setOverview', true)
           }
 
           const fScaleFactor = fBoxSize * scale
