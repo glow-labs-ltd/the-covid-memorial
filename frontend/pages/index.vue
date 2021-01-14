@@ -1,6 +1,9 @@
 <template>
   <div>
-    <AddButton class="add-button" />
+    <div class="button-wrapper">
+      <AddButton v-if="!$store.state.overview" class="add-button" />
+      <OverviewButton class="overview-button" />
+    </div>
     <AddMemoriam />
   </div>
 </template>
@@ -15,13 +18,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.add-button {
+.button-wrapper {
   position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: column;
   top: 5rem;
   right: 3rem;
 
   @media (min-width: $tablet) {
     right: 5rem;
+  }
+
+  > * {
+    margin-bottom: 2rem;
   }
 }
 </style>

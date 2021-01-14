@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CovidChart class="background" @add="addNodeClick" @view="viewNodeClick" />
+    <ChartHandler />
     <Nuxt />
     <SideMenu />
     <NavBar />
@@ -8,16 +8,7 @@
 </template>
 
 <script>
-export default {
-  methods: {
-    addNodeClick() {
-      this.$store.commit('setAddModal', !this.$store.state.addModal)
-    },
-    viewNodeClick(deceasedId) {
-      this.$router.push({ name: 'memoriam-slug', params: { slug: deceasedId } })
-    },
-  },
-}
+export default {}
 </script>
 
 <style lang="scss">

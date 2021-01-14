@@ -1,18 +1,17 @@
 <template>
-  <div class="chart-background">
-    <svg
-      id="chart"
-      width="400"
-      height="400"
-      viewBox="0 0 400 400"
-      perserveAspectRatio="xMinYMid"
-    ></svg>
-  </div>
+  <svg
+    id="chart"
+    width="400"
+    height="400"
+    viewBox="0 0 400 400"
+    perserveAspectRatio="xMinYMid"
+  ></svg>
 </template>
 
 <script>
 import * as d3 from 'd3'
 import { gsap, Sine } from 'gsap'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -21,14 +20,15 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      bNumDots: 50,
-      bgDotBlur: 5,
-      bgDotMaxRadius: 18,
-      bgDotMinRadius: 6,
-      fNumDots: 200,
+      bNumDots: 25,
+      bDotMaxRadius: 36,
+      bDotMinRadius: 12,
+      fNumDots: 150,
       fDotRadius: 20,
-      fZoomLevel: null,
-      fPadding: 100,
+      fMinZoomLevel: null,
+      fMaxZoomLevel: null,
+      fDotPadding: 2,
+      inViewportPadding: 100,
       colours: [
         '#890608',
         '#d4700c',
@@ -45,20 +45,26 @@ export default {
       randomTime2: this.random(3, 6),
     }
   },
+  computed: mapState(['overviewTransition']),
+  watch: {
+    overviewTransition() {
+      this.$store.commit('setOverview', true)
+    },
+  },
   mounted() {
     // initialize the chart and variables
     const chart = this.initializeChart()
     const longestEdge = Math.max(this.currentWidth, this.currentHeight)
     const fBoxSize = longestEdge
-    const bBoxSize = longestEdge / 2
+    const bBoxSize = longestEdge
 
     // create the background dots
     const bG = chart.append('g')
     const data = this.generateData(
       bBoxSize,
       bBoxSize,
-      this.bgDotMinRadius,
-      this.bgDotMaxRadius,
+      this.bDotMinRadius,
+      this.bDotMaxRadius,
       this.bNumDots,
       false
     )
@@ -76,32 +82,41 @@ export default {
       this.fNumDots,
       true
     )
+    this.humanData = this.data.filter((el) => el.human)
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
+    // zoom/pan function
     this.fZoom = d3
       .zoom()
-      .scaleExtent([this.fZoomLevel, this.fZoomLevel])
-      .on('zoom', function (event) {
-        const transform = event.transform
-        const scale = transform.k
+      .scaleExtent([this.fMaxZoomLevel - 0.1, this.fMaxZoomLevel])
+      .on(
+        'zoom',
+        function (event) {
+          const transform = event.transform
+          const scale = transform.k
+          if (transform.k <= this.fMaxZoomLevel - 0.1) {
+            this.$store.commit('setOverview', true)
+          }
 
-        const fScaleFactor = fBoxSize * scale
-        const fdx = transform.x % fScaleFactor
-        const fdy = transform.y % fScaleFactor
-        fG.attr(
-          'transform',
-          'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
-        )
+          const fScaleFactor = fBoxSize * scale
+          const fdx = transform.x % fScaleFactor
+          const fdy = transform.y % fScaleFactor
+          fG.attr(
+            'transform',
+            'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
+          )
 
-        const bScaleFactor = bBoxSize * scale
-        const bdx = (transform.x / 2) % bScaleFactor
-        const bdy = (transform.y / 2) % bScaleFactor
-        bG.attr(
-          'transform',
-          'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
-        )
-      })
+          const bScale = transform.k / 2
+          const bScaleFactor = bBoxSize * bScale
+          const bdx = (transform.x / 2) % bScaleFactor
+          const bdy = (transform.y / 2) % bScaleFactor
+          bG.attr(
+            'transform',
+            'translate(' + bdx + ',' + bdy + ')scale(' + bScale + ')'
+          )
+        }.bind(this)
+      )
       .on(
         'end',
         function (event) {
@@ -110,19 +125,14 @@ export default {
       )
     chart
       .call(this.fZoom)
-      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
 
+    chart.transition().duration(3000).attr('opacity', '1')
     this.downloadInitialDeceased(fDots)
   },
   methods: {
     initializeChart() {
-      const chart = d3.select('#chart')
-      chart
-        .append('defs')
-        .append('filter')
-        .attr('id', 'blur')
-        .append('feGaussianBlur')
-        .attr('stdDeviation', this.bgDotBlur)
+      const chart = d3.select('#chart').attr('opacity', '0')
 
       this.resizeChart(chart)
       window.addEventListener(
@@ -140,15 +150,25 @@ export default {
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
 
+      const pixelRatio = window.devicePixelRatio
+      if (pixelRatio > 1) this.fNumDots = Math.floor(this.fNumDots / pixelRatio)
+
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
-      this.fZoomLevel = -1 / (-shortestEdge / 800)
+      this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
+      this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
 
       if (this.bZoom) {
-        chart.call(this.bZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+        chart.call(
+          this.bZoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
       }
 
       if (this.fZoom)
-        chart.call(this.fZoom.transform, d3.zoomIdentity.scale(this.fZoomLevel))
+        chart.call(
+          this.fZoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
     },
     generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []
@@ -160,16 +180,24 @@ export default {
         const y = Math.floor(Math.random() * ySize)
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
-        const human = generateHuman ? Math.random() < 0.7 : false
+        const human = generateHuman ? Math.random() < 0.85 : false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
             const dY = (node.y - y) * (node.y - y)
+            const distance = Math.sqrt(dX + dY)
             const dR = node.radius + radius
-            if (Math.sqrt(dX + dY) < dR * 2 + 10) {
+            const padding = dR + this.fDotPadding
+            if (
+              distance < padding ||
+              x > xSize - this.fDotRadius ||
+              x < this.fDotRadius ||
+              y > ySize - this.fDotRadius ||
+              y < this.fDotRadius
+            ) {
               collides = true
               attempts++
-              if (attempts > 2) {
+              if (attempts > 100) {
                 i++
               }
             }
@@ -192,7 +220,6 @@ export default {
 
           const node = bG
             .append('g')
-            // .attr('filter', 'url(#blur)')
             .selectAll('circle')
             .data(bNodes)
             .enter()
@@ -204,9 +231,8 @@ export default {
             .attr('r', (d, i) => d.radius)
             .attr('cx', (d, i) => d.x)
             .attr('cy', (d, i) => d.y)
-            .attr('fill', '#000000')
+            .attr('fill', '#DDDDDD')
             .attr('class', 'b-node')
-            .style('opacity', 0.1)
         }
       }
       return bG
@@ -273,7 +299,7 @@ export default {
       return fG
     },
     updateDeceasedNodes(fDots) {
-      for (const d of this.data.filter((el) => el.human)) {
+      for (const d of this.humanData) {
         const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
         let visible = false
         for (const dot of dotsToCheck) {
@@ -332,10 +358,10 @@ export default {
     isElementInViewport(el) {
       const bounds = el.getBoundingClientRect()
       return (
-        bounds.top >= -this.fPadding &&
-        bounds.left >= -this.fPadding &&
-        bounds.bottom <= this.currentHeight + this.fPadding &&
-        bounds.right <= this.currentWidth + this.fPadding
+        bounds.top >= -this.inViewportPadding &&
+        bounds.left >= -this.inViewportPadding &&
+        bounds.bottom <= this.currentHeight + this.inViewportPadding &&
+        bounds.right <= this.currentWidth + this.inViewportPadding
       )
     },
     setupBackgroundAnimation() {
@@ -344,7 +370,6 @@ export default {
         gsap.set(dot, {
           x: this.randomX(-1),
           y: this.randomX(1),
-          force3D: true,
         })
 
         this.moveX(dot, 1)
@@ -357,7 +382,6 @@ export default {
         ease: Sine.easeInOut,
         onComplete: this.moveX,
         onCompleteParams: [target, direction * -1],
-        force3D: true,
       })
     },
     moveY(target, direction) {
@@ -366,7 +390,6 @@ export default {
         ease: Sine.easeInOut,
         onComplete: this.moveY,
         onCompleteParams: [target, direction * -1],
-        force3D: true,
       })
     },
     random(min, max) {
@@ -378,12 +401,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.chart-background {
-  width: 100vw;
-  height: 100vh;
-  background-color: $background;
-}
-
 #chart {
   background-color: $background;
 }
