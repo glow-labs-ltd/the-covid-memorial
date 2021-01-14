@@ -56,7 +56,7 @@ export default {
         'base-uri': ["'self'"],
         'font-src': ["'self'", 'https://fonts.gstatic.com'],
         'frame-ancestors': ["'self'"],
-        'connect-src': ["'self'", 'blob:'],
+        'connect-src': ["'self'", 'blob:', 'https://corona-api.com'],
         'manifest-src': ["'self'"],
         'img-src': [
           "'self'",
