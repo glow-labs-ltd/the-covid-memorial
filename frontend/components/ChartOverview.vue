@@ -15,8 +15,8 @@ export default {
       opacityScale: null,
       canvas: null,
       zoom: null,
-      minZoom: 1,
-      maxZoom: 2,
+      minZoom: null,
+      maxZoom: null,
       maxDots: 2000,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,
@@ -113,6 +113,7 @@ export default {
     calculateZoomLevels() {
       const shortestEdge = Math.min(this.width, this.height)
       this.minZoom = shortestEdge / 800
+      this.maxZoom = this.minZoom * 5
     },
     spawnMoreDots(interval, nodes, simulation) {
       setInterval(
