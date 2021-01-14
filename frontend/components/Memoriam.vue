@@ -41,12 +41,16 @@ export default {
     },
   },
   async fetch() {
-    const data = await this.$axios.$get(
-      this.code
+    try {
+      const url = this.code
         ? `deceased/${this.slug}/?c=${this.code}`
         : `deceased/${this.slug}/`
-    )
-    this.memoriam = data
+
+      const data = await this.$axios.$get(url)
+      this.memoriam = data
+    } catch (e) {
+      console.error(e)
+    }
   },
   data() {
     return {
