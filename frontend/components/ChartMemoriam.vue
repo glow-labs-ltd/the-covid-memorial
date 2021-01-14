@@ -23,7 +23,7 @@ export default {
       bNumDots: 20,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
-      fNumDots: 200,
+      fNumDots: 150,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
@@ -82,6 +82,7 @@ export default {
       this.fNumDots,
       true
     )
+    this.humanData = this.data.filter((el) => el.human)
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
@@ -149,6 +150,10 @@ export default {
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
 
+      console.log(window.devicePixelRatio)
+      const pixelRatio = window.devicePixelRatio
+      if (pixelRatio > 1) this.fNumDots = Math.floor(this.fNumDots / pixelRatio)
+
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
       this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
       this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
@@ -186,10 +191,10 @@ export default {
             const padding = dR + this.fDotPadding
             if (
               distance < padding ||
-              x > xSize - padding ||
-              x < padding ||
-              y > ySize - padding ||
-              y < padding
+              x > xSize - this.fDotRadius ||
+              x < this.fDotRadius ||
+              y > ySize - this.fDotRadius ||
+              y < this.fDotRadius
             ) {
               collides = true
               attempts++
@@ -295,7 +300,7 @@ export default {
       return fG
     },
     updateDeceasedNodes(fDots) {
-      for (const d of this.data.filter((el) => el.human)) {
+      for (const d of this.humanData) {
         const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
         let visible = false
         for (const dot of dotsToCheck) {
