@@ -20,12 +20,10 @@ export default {
   computed: {
     deathRate() {
       if (this.last2) {
-        const data0 = this.last2[0]
-        const data1 = this.last2[1]
-        const date0 = new Date(data0.date)
-        const date1 = new Date(data1.date)
+        const date0 = new Date(this.last2[0].date)
+        const date1 = new Date(this.last2[1].date)
         const seconds = Math.ceil(date0 - date1)
-        return (data0.deaths - data1.deaths) / seconds
+        return (this.last2[0].deaths - this.last2[1].deaths) / seconds
       }
       return null
     },
