@@ -55,23 +55,13 @@ export default {
         'zoom',
         function (event) {
           this.transform = event.transform
-          if (this.transform.k > this.maxZoom - 0.1) {
+          if (this.transform.k >= this.maxZoom) {
             this.$emit('zoomIn')
           }
           this.ticked(context, nodes)
         }.bind(this)
       )
-
     d3.select(canvas.node()).call(zoom)
-    this.transform.k = this.maxZoom - 0.11
-    this.ticked(context, nodes)
-
-    setInterval(
-      function () {
-        this.addNode(nodes, simulation)
-      }.bind(this),
-      2000
-    )
 
     window.addEventListener(
       'resize',
@@ -79,8 +69,30 @@ export default {
         this.resizeCanvas(canvas)
       }.bind(this)
     )
+
+    canvas
+      .call(zoom.transform, d3.zoomIdentity.scale(this.maxZoom - 0.01))
+      .transition()
+      .delay(1500)
+      .duration(3000)
+      .call(zoom.transform, d3.zoomIdentity.scale(this.minZoom))
+
+    setTimeout(
+      function () {
+        this.spawnMoreDots(100, nodes, simulation)
+      }.bind(this),
+      3000
+    )
   },
   methods: {
+    spawnMoreDots(interval, nodes, simulation) {
+      setInterval(
+        function () {
+          this.addNode(nodes, simulation)
+        }.bind(this),
+        interval
+      )
+    },
     addNode(nodes, sim) {
       if (nodes.length < this.maxDots) {
         nodes.push({ r: this.radius() })

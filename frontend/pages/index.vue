@@ -1,6 +1,7 @@
 <template>
   <div>
     <AddButton class="add-button" />
+    <OverviewButton class="overview-button" />
     <AddMemoriam />
   </div>
 </template>
@@ -18,6 +19,12 @@ export default {
 .add-button {
   position: absolute;
   top: 5rem;
+  right: 5rem;
+}
+
+.overview-button {
+  position: absolute;
+  top: 16rem;
   right: 5rem;
 }
 </style>

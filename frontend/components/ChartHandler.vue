@@ -2,16 +2,16 @@
   <div class="chart-background">
     <transition-group name="fade-slow" tag="div" class="chart-wrapper">
       <ChartOverview
-        v-if="zoomedOut"
+        v-if="$store.state.overview"
         key="overview"
-        @zoomIn="zoomedOut = false"
+        @zoomIn="$store.commit('setOverview', false)"
       />
       <ChartMemoriam
         v-else
         key="memoriam"
         @add="addNodeClick"
         @view="viewNodeClick"
-        @zoomOut="zoomedOut = true"
+        @zoomOut="$store.commit('setOverview', true)"
       />
     </transition-group>
   </div>
@@ -19,11 +19,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      zoomedOut: false,
-    }
-  },
   methods: {
     addNodeClick() {
       this.$store.commit('setAddModal', !this.$store.state.addModal)

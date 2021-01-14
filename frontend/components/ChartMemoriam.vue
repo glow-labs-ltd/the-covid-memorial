@@ -19,16 +19,14 @@ export default {
       currentWidth: 0,
       currentHeight: 0,
       data: [],
-      bNumDots: 50,
-      bgDotMaxRadius: 36,
-      bgDotMinRadius: 12,
+      bNumDots: 30,
+      bDotMaxRadius: 36,
+      bDotMinRadius: 12,
       fNumDots: 300,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
-      fDotPadding: 2,
-      oNumDots: 300,
-      oDotRadius: 4,
+      fDotPadding: 4,
       inViewportPadding: 100,
       colours: [
         '#890608',
@@ -58,8 +56,8 @@ export default {
     const data = this.generateData(
       bBoxSize,
       bBoxSize,
-      this.bgDotMinRadius,
-      this.bgDotMaxRadius,
+      this.bDotMinRadius,
+      this.bDotMaxRadius,
       this.bNumDots,
       false
     )
@@ -83,14 +81,13 @@ export default {
     // zoom/pan function
     this.fZoom = d3
       .zoom()
-      .scaleExtent([this.fMinZoomLevel, this.fMaxZoomLevel])
+      .scaleExtent([this.fMaxZoomLevel - 0.1, this.fMaxZoomLevel])
       .on(
         'zoom',
         function (event) {
           const transform = event.transform
           const scale = transform.k
-
-          if (transform.k < this.fMinZoomLevel + 0.1) {
+          if (transform.k < this.fMaxZoomLevel - 0.01) {
             this.$emit('zoomOut')
           }
 
@@ -99,15 +96,16 @@ export default {
           const fdy = transform.y % fScaleFactor
           fG.attr(
             'transform',
-            'translate(' + fdx + ', ' + fdy + ')scale(' + scale + ')'
+            'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
           )
 
-          const bScaleFactor = bBoxSize * scale
-          const bdx = (transform.x * 0.5) % bScaleFactor
-          const bdy = (transform.y * 0.5) % bScaleFactor
+          const bScale = transform.k / 2
+          const bScaleFactor = bBoxSize * bScale
+          const bdx = (transform.x / 2) % bScaleFactor
+          const bdy = (transform.y / 2) % bScaleFactor
           bG.attr(
             'transform',
-            'translate(' + bdx + ',' + bdy + ')scale(' + scale + ')'
+            'translate(' + bdx + ',' + bdy + ')scale(' + bScale + ')'
           )
         }.bind(this)
       )
@@ -119,7 +117,7 @@ export default {
       )
     chart
       .call(this.fZoom)
-      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMinZoomLevel))
+      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
 
     this.downloadInitialDeceased(fDots)
   },
