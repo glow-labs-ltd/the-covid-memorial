@@ -11,7 +11,7 @@ export default {
   computed: {
     text() {
       return this.$store.state.overview
-        ? 'Go to the memorial'
+        ? 'Enter the memorial'
         : 'Go to overview'
     },
   },
