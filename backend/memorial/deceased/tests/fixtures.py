@@ -34,6 +34,7 @@ def deceased_factory():
             city='Milton Keynes',
             colour=3,
             message='Test message',
+            approved=True,
         )
 
     return _make
