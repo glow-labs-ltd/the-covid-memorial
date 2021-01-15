@@ -10,8 +10,9 @@
         </NuxtLink>
         <div class="links">
           <NuxtLink to="/about">About</NuxtLink>
-          <a href="">Data sources</a>
-          <a href="">Terms &amp; Privacy</a>
+          <NuxtLink to="/thank-yous">Thanks you's</NuxtLink>
+          <NuxtLink to="/data-sources">Data sources</NuxtLink>
+          <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
           <a href="">Contact TCM</a>
         </div>
         <div class="foot">
