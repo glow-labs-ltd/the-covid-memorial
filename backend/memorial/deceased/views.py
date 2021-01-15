@@ -10,13 +10,13 @@ from .serializers import (CommentSerializer, DeceasedPreviewSerializer,
 
 class DeceasedAPIViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                          mixins.CreateModelMixin, GenericViewSet):
-    queryset = Deceased.objects.approved().order_by('?')
+    queryset = Deceased.objects.all()
     pagination_class = None
     lookup_field = 'slug'
 
     def get_queryset(self):
         if self.action == 'list':
-            return self.queryset[:10]
+            return Deceased.objects.approved().order_by('?')[:20]
 
         return self.queryset
 
