@@ -119,8 +119,23 @@ label {
   color: $error;
 }
 
-.info-page {
-  margin-top: 6rem;
+.info-wrapper {
+  padding: 2rem;
+
+  @media (min-width: $tablet) {
+    padding: 6rem;
+  }
+
+  .close {
+    img {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 0 1rem auto;
+    }
+  }
+}
+
+.info {
   padding: 6rem;
   background-color: $surface;
 
@@ -140,14 +155,6 @@ label {
 
     li {
       margin: 0.5rem 0;
-    }
-  }
-
-  .close {
-    img {
-      width: 4rem;
-      height: 4rem;
-      margin: 0 0 1rem auto;
     }
   }
 }
