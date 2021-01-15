@@ -42,7 +42,6 @@ export default {
       randomX: this.random(1, 5),
       randomY: this.random(1, 5),
       randomTime: this.random(1, 3),
-      randomTime2: this.random(3, 6),
     }
   },
   computed: mapState(['overviewTransition']),
@@ -86,54 +85,12 @@ export default {
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
-    // zoom/pan function
-    this.fZoom = d3
-      .zoom()
-      .scaleExtent([this.fMaxZoomLevel - 0.1, this.fMaxZoomLevel])
-      .on(
-        'zoom',
-        function (event) {
-          const transform = event.transform
-          const scale = transform.k
-          if (transform.k <= this.fMaxZoomLevel - 0.1) {
-            this.$store.commit('setOverview', true)
-          }
-
-          const fScaleFactor = fBoxSize * scale
-          const fdx = transform.x % fScaleFactor
-          const fdy = transform.y % fScaleFactor
-          fG.attr(
-            'transform',
-            'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
-          )
-
-          const bScale = transform.k / 2
-          const bScaleFactor = bBoxSize * bScale
-          const bdx = (transform.x / 2) % bScaleFactor
-          const bdy = (transform.y / 2) % bScaleFactor
-          bG.attr(
-            'transform',
-            'translate(' + bdx + ',' + bdy + ')scale(' + bScale + ')'
-          )
-        }.bind(this)
-      )
-      .on(
-        'end',
-        function (event) {
-          this.updateDeceasedNodes(fDots)
-        }.bind(this)
-      )
-    chart
-      .call(this.fZoom)
-      .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
-
-    chart.transition().duration(3000).attr('opacity', '1')
-    this.downloadInitialDeceased(fDots)
+    this.setupZoom(chart, fDots, fG, bG, fBoxSize, bBoxSize)
+    this.animateIn(chart, fDots)
   },
   methods: {
     initializeChart() {
       const chart = d3.select('#chart').attr('opacity', '0')
-
       this.resizeChart(chart)
       window.addEventListener(
         'resize',
@@ -156,19 +113,6 @@ export default {
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
       this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
       this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
-
-      if (this.bZoom) {
-        chart.call(
-          this.bZoom.transform,
-          d3.zoomIdentity.scale(this.fMaxZoomLevel)
-        )
-      }
-
-      if (this.fZoom)
-        chart.call(
-          this.fZoom.transform,
-          d3.zoomIdentity.scale(this.fMaxZoomLevel)
-        )
     },
     generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []
@@ -180,7 +124,7 @@ export default {
         const y = Math.floor(Math.random() * ySize)
         const radius =
           Math.floor(Math.random() * (maxRadius - minRadius + 1)) + minRadius
-        const human = generateHuman ? Math.random() < 0.85 : false
+        const human = generateHuman ? Math.random() < 0.8 : false
         if (data.length > 0) {
           for (const node of data) {
             const dX = (node.x - x) * (node.x - x)
@@ -218,21 +162,17 @@ export default {
           const dx = x > 0 ? boxSize : x < 0 ? -boxSize : 0
           const dy = y > 0 ? boxSize : y < 0 ? -boxSize : 0
 
-          const node = bG
-            .append('g')
+          bG.append('g')
             .selectAll('circle')
             .data(bNodes)
             .enter()
-            .append('g')
-            .attr('transform', (d, i) => `translate(${d.x + dx}, ${d.y + dy})`)
-
-          node
             .append('circle')
             .attr('r', (d, i) => d.radius)
-            .attr('cx', (d, i) => d.x)
-            .attr('cy', (d, i) => d.y)
+            .attr('cx', (d, i) => d.x + dx)
+            .attr('cy', (d, i) => d.y + dy)
             .attr('fill', '#DDDDDD')
             .attr('class', 'b-node')
+            .attr('style', 'will-change: transform;')
         }
       }
       return bG
@@ -298,6 +238,63 @@ export default {
       }
       return fG
     },
+    setupZoom(chart, fDots, fG, bG, fBoxSize, bBoxSize) {
+      this.fZoom = d3
+        .zoom()
+        .scaleExtent([this.fMaxZoomLevel - 0.1, this.fMaxZoomLevel])
+        .on(
+          'zoom',
+          function (event) {
+            const transform = event.transform
+            const scale = transform.k
+            if (transform.k <= this.fMaxZoomLevel - 0.1) {
+              this.$store.commit('setOverview', true)
+            }
+
+            const fScaleFactor = fBoxSize * scale
+            const fdx = transform.x % fScaleFactor
+            const fdy = transform.y % fScaleFactor
+            fG.attr(
+              'transform',
+              'translate(' + fdx + ',' + fdy + ')scale(' + scale + ')'
+            )
+
+            const bScale = transform.k / 2
+            const bScaleFactor = bBoxSize * bScale
+            const bdx = (transform.x / 2) % bScaleFactor
+            const bdy = (transform.y / 2) % bScaleFactor
+            bG.attr(
+              'transform',
+              'translate(' + bdx + ',' + bdy + ')scale(' + bScale + ')'
+            )
+          }.bind(this)
+        )
+        .on(
+          'end',
+          function (event) {
+            if (event.sourceEvent) this.updateDeceasedNodes(fDots)
+          }.bind(this)
+        )
+      chart
+        .call(this.fZoom)
+        .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
+    },
+    animateIn(chart, fDots) {
+      chart
+        .transition()
+        .duration(3000)
+        .attr('opacity', '1')
+        .on('end', function () {
+          chart.attr('opacity', '1')
+        })
+
+      setTimeout(
+        function () {
+          this.updateDeceasedNodes(fDots)
+        }.bind(this),
+        1000
+      )
+    },
     updateDeceasedNodes(fDots) {
       for (const d of this.humanData) {
         const dotsToCheck = fDots.selectAll(`.node-${d.id.toString()}`)
@@ -335,12 +332,6 @@ export default {
         }
       }
     },
-    async downloadInitialDeceased(fDots) {
-      if (this.$store.state.deceased.length === 0) {
-        await this.$store.dispatch('getDeceased')
-      }
-      this.updateDeceasedNodes(fDots)
-    },
     downloadDeceased() {
       if (
         this.$store.state.deceased.length === 0 &&
@@ -365,6 +356,7 @@ export default {
       )
     },
     setupBackgroundAnimation() {
+      gsap.ticker.fps(24)
       const dotsToAnimate = gsap.utils.toArray('.b-node')
       dotsToAnimate.forEach((dot) => {
         gsap.set(dot, {

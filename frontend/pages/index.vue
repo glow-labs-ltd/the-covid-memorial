@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="button-wrapper">
-      <AddButton v-if="!$store.state.overview" class="add-button" />
+      <transition name="fade-fast" mode="out-in">
+        <AddButton v-if="!$store.state.overview" class="add-button" />
+      </transition>
       <OverviewButton class="overview-button" />
     </div>
     <AddMemoriam />
@@ -32,7 +34,7 @@ export default {
   }
 
   > * {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 }
 </style>
