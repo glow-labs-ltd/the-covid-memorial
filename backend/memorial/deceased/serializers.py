@@ -15,7 +15,7 @@ class DeceasedPreviewSerializer(serializers.ModelSerializer):
 
 
 class DeceasedSerializer(serializers.ModelSerializer):
-    country = CountryField(required=False)
+    country = CountryField(required=False, name_only=True)
     can_comment = serializers.ReadOnlyField()
 
     class Meta:
@@ -38,7 +38,7 @@ class DeceasedSerializer(serializers.ModelSerializer):
 
 
 class DeceasedSerializerWithCode(DeceasedSerializer):
-    country = CountryField(required=False)
+    country = CountryField(required=False, name_only=True)
 
     class Meta:
         model = Deceased

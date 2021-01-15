@@ -13,8 +13,8 @@
           <div class="colour-bar" :class="colourClass"></div>
           <div class="details">
             <h1 class="name">{{ name }}</h1>
+            <h3 class="dates">{{ dates }}</h3>
             <h2 class="city">{{ cityCountry }}</h2>
-            <p class="dates">2000-2020</p>
           </div>
         </div>
         <div class="right">
@@ -84,7 +84,7 @@ export default {
       const age = this.memoriam?.age
 
       if (birth & death) {
-        const age = Math.floor((birth - death) / (1000 * 60 * 60 * 24 * 365))
+        const age = Math.floor((death - birth) / (1000 * 60 * 60 * 24 * 365))
         return `${birth.getFullYear()} - ${death.getFullYear()} (${age} years)`
       }
 
@@ -166,9 +166,11 @@ export default {
     font-size: 2.25rem;
   }
 
-  .age,
+  .dates,
   .city {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 400;
+    margin: 1rem 0;
   }
 
   .left {
