@@ -96,9 +96,7 @@ export default {
     },
     message() {
       const message = this.memoriam?.message
-      if (message) {
-        return `"${message.getFullYear()}"`
-      }
+      if (message) return `"${message}"`
       return null
     },
     image() {
@@ -124,11 +122,6 @@ export default {
   @media (min-width: $tablet) {
     padding: 8rem 0;
   }
-}
-
-.limit-width {
-  max-width: 100rem;
-  margin: 0 auto;
 }
 
 .share {

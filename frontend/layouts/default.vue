@@ -56,6 +56,11 @@ body {
   max-height: calc(100vh - 10rem); // nav bar is height: 10rem
 }
 
+.limit-width {
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
 img {
   display: block;
 }
@@ -112,6 +117,39 @@ label {
 .error {
   font-weight: 600;
   color: $error;
+}
+
+.info-page {
+  margin-top: 6rem;
+  padding: 6rem;
+  background-color: $surface;
+
+  h2 {
+    font-size: 2.5rem;
+    margin: 3rem 0 2rem;
+  }
+
+  p {
+    margin: 2rem 0;
+    line-height: 1.5;
+  }
+
+  ul.list {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .close {
+    img {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 0 1rem auto;
+    }
+  }
 }
 
 .colour--0 {
