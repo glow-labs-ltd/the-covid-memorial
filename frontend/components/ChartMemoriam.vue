@@ -85,12 +85,12 @@ export default {
     const fNodes = this.data.map((d) => Object.create(d))
     const fDots = this.setupForegroundNodes(fG, fNodes, fBoxSize)
 
-    this.setupZoom(chart, fDots, fG, bG, fBoxSize, bBoxSize)
+    this.zoom = this.setupZoom(chart, fDots, fG, bG, fBoxSize, bBoxSize)
     this.animateIn(chart, fDots)
   },
   methods: {
     initializeChart() {
-      const chart = d3.select('#chart').attr('opacity', '0')
+      const chart = d3.select('#chart').attr('opacity', 0)
       this.resizeChart(chart)
       window.addEventListener(
         'resize',
@@ -239,7 +239,7 @@ export default {
       return fG
     },
     setupZoom(chart, fDots, fG, bG, fBoxSize, bBoxSize) {
-      this.fZoom = d3
+      const zoom = d3
         .zoom()
         .scaleExtent([this.fMaxZoomLevel - 0.1, this.fMaxZoomLevel])
         .on(
@@ -276,20 +276,15 @@ export default {
           }.bind(this)
         )
       chart
-        .call(this.fZoom)
-        .call(this.fZoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
+        .call(zoom)
+        .call(zoom.transform, d3.zoomIdentity.scale(this.fMaxZoomLevel))
+      return zoom
     },
     animateIn(chart, fDots) {
-      chart
-        .transition()
-        .duration(3000)
-        .attr('opacity', '1')
-        .on('end', function () {
-          chart.attr('opacity', '1')
-        })
-
+      chart.transition().duration(1500).ease(d3.easeLinear).attr('opacity', 1)
       setTimeout(
         function () {
+          chart.attr('opacity', 1)
           this.updateDeceasedNodes(fDots)
         }.bind(this),
         1000
