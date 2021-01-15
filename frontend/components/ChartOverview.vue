@@ -103,7 +103,6 @@ export default {
             this.ticked(context, nodes)
           }.bind(this)
         )
-      d3.select(this.canvas.node()).call(zoom)
       return zoom
     },
     animateIn() {
@@ -117,6 +116,7 @@ export default {
           'end',
           function () {
             this.$store.commit('setOverviewTransition', false)
+            d3.select(this.canvas.node()).call(this.zoom)
           }.bind(this)
         )
     },

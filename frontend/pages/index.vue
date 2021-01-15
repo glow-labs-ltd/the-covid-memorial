@@ -4,7 +4,12 @@
       <transition name="fade-slow" mode="out-in">
         <AddButton v-if="!$store.state.overview" class="add-button" />
       </transition>
-      <OverviewButton class="overview-button" />
+      <transition name="fade-slow" mode="out-in">
+        <OverviewButton
+          v-if="!$store.state.overviewTransition"
+          class="overview-button"
+        />
+      </transition>
     </div>
     <AddMemoriam />
   </div>

@@ -282,7 +282,6 @@ export default {
     },
     animateIn(chart, fDots) {
       chart.transition().duration(1500).ease(d3.easeLinear).attr('opacity', 1)
-
       setTimeout(
         function () {
           chart.attr('opacity', 1)
