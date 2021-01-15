@@ -1,8 +1,8 @@
 from django.db import migrations
-from deceased.models import Deceased
 
 
 def create_slugs_forward(apps, schema_editor):
+    Deceased = apps.get_model('deceased', 'Deceased')
     for instance in Deceased.objects.all():
         print("Generating slug for {}".format(instance))
         try:
