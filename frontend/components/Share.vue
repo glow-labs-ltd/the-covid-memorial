@@ -1,83 +1,94 @@
 <template>
   <div class="share shadow">
-    <h2>Share your memoriam</h2>
-    <p>
-      In order to protect your comments we only allow people to comment if you
-      give them the special link to do it.
-    </p>
-    <p>
-      <strong>
-        NOTE: Please make sure you make a note of the commenting link as it
-        won’t be available after you leave this screen.
-      </strong>
-    </p>
-    <client-only>
-      <div class="links">
-        <div>
-          <h3>Share: Allow comments</h3>
-          <div class="url">
-            <input type="text" :value="linkComments" readonly />
-            <CopyButton @click="copy(linkComments)" />
+    <h2 @click="expandToggle">
+      Share memoriam
+      <img
+        src="~/assets/images/expand-icon.svg"
+        alt="expand"
+        :class="{ expanded }"
+      />
+    </h2>
+    <transition name="share">
+      <div v-show="expanded">
+        <p>
+          In order to protect your comments we only allow people to comment if
+          you give them the special link to do it.
+        </p>
+        <p>
+          <strong>
+            NOTE: Please make sure you make a note of the commenting link as it
+            won’t be available after you leave this screen.
+          </strong>
+        </p>
+        <client-only>
+          <div class="links">
+            <div>
+              <h3>Share: Allow comments</h3>
+              <div class="url">
+                <input type="text" :value="linkComments" readonly />
+                <CopyButton @click="copy(linkComments)" />
+              </div>
+              <div class="social">
+                <a
+                  v-if="facebookCommentsShare"
+                  :href="facebookCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/facebook-icon.svg"
+                    alt="facebook share with comments"
+                  />
+                </a>
+                <a
+                  v-if="twitterCommentsShare"
+                  :href="twitterCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/twitter-icon.svg"
+                    alt="twitter share with comments"
+                  />
+                </a>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <h3>Share: No comments</h3>
+              <div class="url">
+                <input type="text" :value="linkNoComments" readonly />
+                <CopyButton @click="copy(linkNoComments)" />
+              </div>
+              <div class="social">
+                <a
+                  v-if="facebookNoCommentsShare"
+                  :href="facebookNoCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/facebook-icon.svg"
+                    alt="facebook share without comments"
+                  />
+                </a>
+                <a
+                  v-if="twitterNoCommentsShare"
+                  :href="twitterNoCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/twitter-icon.svg"
+                    alt="twitter share without comments"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="social">
-            <a
-              v-if="facebookCommentsShare"
-              :href="facebookCommentsShare"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="~/assets/images/facebook-icon.svg"
-                alt="facebook share with comments"
-              />
-            </a>
-            <a
-              v-if="twitterCommentsShare"
-              :href="twitterCommentsShare"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="~/assets/images/twitter-icon.svg"
-                alt="twitter share with comments"
-              />
-            </a>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div>
-          <h3>Share: No comments</h3>
-          <div class="url">
-            <input type="text" :value="linkNoComments" readonly />
-            <CopyButton @click="copy(linkNoComments)" />
-          </div>
-          <div class="social">
-            <a
-              v-if="facebookNoCommentsShare"
-              :href="facebookNoCommentsShare"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="~/assets/images/facebook-icon.svg"
-                alt="facebook share without comments"
-              />
-            </a>
-            <a
-              v-if="twitterNoCommentsShare"
-              :href="twitterNoCommentsShare"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="~/assets/images/twitter-icon.svg"
-                alt="twitter share without comments"
-              />
-            </a>
-          </div>
-        </div>
+        </client-only>
       </div>
-    </client-only>
+    </transition>
   </div>
 </template>
 
@@ -90,6 +101,11 @@ export default {
       type: String,
       default: null,
     },
+  },
+  data() {
+    return {
+      expanded: false,
+    }
   },
   computed: {
     linkComments() {
@@ -130,6 +146,9 @@ export default {
     twitterShare(link) {
       return `https://twitter.com/intent/tweet?text=${this.shareText}&url=${link}`
     },
+    expandToggle() {
+      this.expanded = !this.expanded
+    },
   },
 }
 </script>
@@ -140,7 +159,23 @@ export default {
   padding: 2rem;
 
   h2 {
-    font-size: 3.75rem;
+    font-size: 3.25rem;
+
+    @media (min-width: $phone) {
+      font-size: 3.75rem;
+    }
+
+    img {
+      display: inline-block;
+      width: 3rem;
+      height: 2.5rem;
+      margin-left: 2rem;
+      transition: transform $slow;
+    }
+
+    .expanded {
+      transform: rotate(180deg);
+    }
   }
 
   p {
@@ -152,7 +187,7 @@ export default {
     display: grid;
     grid-template: auto / 1fr;
     grid-gap: 1rem;
-    margin: 2rem 0;
+    margin: 2rem 0 0;
 
     @media (min-width: $phone) {
       grid-template: auto / 1fr auto 1fr;
@@ -189,5 +224,20 @@ export default {
       }
     }
   }
+}
+
+.share-enter-active,
+.share-leave-active {
+  transition: all $slow $standard-easing;
+  max-height: 46rem;
+
+  @media (min-width: $phone) {
+    max-height: 26rem;
+  }
+}
+.share-enter,
+.share-leave-to {
+  opacity: 0;
+  max-height: 0px;
 }
 </style>
