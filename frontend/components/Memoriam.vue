@@ -13,14 +13,15 @@
           <div class="colour-bar" :class="colourClass"></div>
           <div class="details">
             <h1 class="name">{{ name }}</h1>
-            <h2 class="city">{{ city }}</h2>
-            <p class="age"></p>
+            <h3 class="dates">{{ dates }}</h3>
+            <h2 class="city">{{ cityCountry }}</h2>
           </div>
         </div>
         <div class="right">
           <div>
             <p class="message">{{ message }}</p>
             <Comments v-if="id" :deceased-id="id" :code="codeVerified" />
+            <h2 v-if="error">Memorial not found</h2>
           </div>
         </div>
       </div>
@@ -41,16 +42,21 @@ export default {
     },
   },
   async fetch() {
-    const data = await this.$axios.$get(
-      this.code
-        ? `deceased/${this.slug}/?c=${this.code}`
-        : `deceased/${this.slug}/`
-    )
-    this.memoriam = data
+    try {
+      const data = await this.$axios.$get(
+        this.code
+          ? `deceased/${this.slug}/?c=${this.code}`
+          : `deceased/${this.slug}/`
+      )
+      this.memoriam = data
+    } catch (e) {
+      this.error = e?.response?.status ?? 'error'
+    }
   },
   data() {
     return {
       memoriam: null,
+      error: null,
     }
   },
   computed: {
@@ -60,14 +66,37 @@ export default {
     name() {
       return this.memoriam?.name
     },
-    city() {
-      return this.memoriam?.city
+    cityCountry() {
+      const city = this.memoriam?.city ?? ''
+      const country = this.memoriam?.country ?? ''
+      if (city & country) {
+        return `${city}, ${country}`
+      }
+      return `${city} ${country}`
+    },
+    dates() {
+      const birth = this.memoriam?.birth_date
+        ? new Date(this.memoriam?.birth_date)
+        : null
+      const death = this.memoriam?.death_date
+        ? new Date(this.memoriam?.death_date)
+        : null
+      const age = this.memoriam?.age
+
+      if (birth & death) {
+        const age = Math.floor((death - birth) / (1000 * 60 * 60 * 24 * 365))
+        return `${birth.getFullYear()} - ${death.getFullYear()} (${age} years)`
+      }
+
+      let dates = ''
+      if (birth) dates = `Born ${birth.getFullYear()}`
+      if (death) dates = `Died ${death.getFullYear()}`
+      if (age) dates += ` (${age} years)`
+      return dates
     },
     message() {
       const message = this.memoriam?.message
-      if (message) {
-        return `"${message}"`
-      }
+      if (message) return `"${message}"`
       return null
     },
     image() {
@@ -93,11 +122,6 @@ export default {
   @media (min-width: $tablet) {
     padding: 8rem 0;
   }
-}
-
-.limit-width {
-  max-width: 100rem;
-  margin: 0 auto;
 }
 
 .share {
@@ -135,9 +159,11 @@ export default {
     font-size: 2.25rem;
   }
 
-  .age,
+  .dates,
   .city {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 400;
+    margin: 1rem 0;
   }
 
   .left {
