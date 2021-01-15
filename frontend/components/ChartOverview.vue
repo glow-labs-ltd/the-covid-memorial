@@ -1,5 +1,10 @@
 <template>
-  <canvas></canvas>
+  <div>
+    <transition name="fade-slow" mode="out-in">
+      <OverviewInfo v-if="!overviewTransition" />
+    </transition>
+    <canvas></canvas>
+  </div>
 </template>
 
 <script>
@@ -18,7 +23,7 @@ export default {
       simulation: null,
       minZoom: null,
       maxZoom: null,
-      maxDots: 10000,
+      maxDots: 7500,
       dotSpawner: null,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,
@@ -75,12 +80,13 @@ export default {
       return d3
         .forceSimulation(nodes)
         .alphaTarget(0.2)
+        .alphaDecay(0.9)
         .velocityDecay(0.5)
-        .force('x', d3.forceX().strength(0.001))
-        .force('y', d3.forceY().strength(0.001))
+        .force('x', d3.forceX().strength(0.0005))
+        .force('y', d3.forceY().strength(0.0005))
         .force(
           'collide',
-          d3.forceCollide().radius((d) => d.r + 1)
+          d3.forceCollide().radius((d) => d.r + 1.5)
         )
         .on(
           'tick',

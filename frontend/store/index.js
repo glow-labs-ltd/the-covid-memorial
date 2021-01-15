@@ -12,6 +12,7 @@ export const state = () => ({
   searchPage: 1,
   overview: true,
   overviewTransition: false,
+  firstTime: true,
 })
 
 export const mutations = {
@@ -52,6 +53,9 @@ export const mutations = {
   },
   setOverviewTransition(state, value) {
     state.overviewTransition = value
+  },
+  setFirstTime(state, value) {
+    state.firstTime = value
   },
   appendDeceased(state, value) {
     state.deceased = state.deceased.concat(value)
