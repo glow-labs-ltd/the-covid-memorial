@@ -19,6 +19,7 @@ export default {
       minZoom: null,
       maxZoom: null,
       maxDots: 10000,
+      dotSpawner: null,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,
     }
@@ -52,6 +53,10 @@ export default {
       }.bind(this),
       3000
     )
+  },
+  beforeDestroy() {
+    clearInterval(this.dotSpawner)
+    this.simulation = null
   },
   methods: {
     resizeCanvas() {
@@ -127,7 +132,7 @@ export default {
         )
     },
     spawnMoreDots(interval, nodes, simulation) {
-      setInterval(
+      this.dotSpawner = setInterval(
         function () {
           if (this.$store.state.overview) this.addNode(nodes, simulation)
         }.bind(this),
