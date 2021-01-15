@@ -27,7 +27,7 @@ export default {
   computed: mapState(['overviewTransition']),
   watch: {
     overviewTransition() {
-      this.animateOut()
+      if (this.overviewTransition) this.animateOut()
     },
   },
   mounted() {
@@ -49,14 +49,10 @@ export default {
 
     setTimeout(
       function () {
-        this.spawnMoreDots(100, nodes, this.simulation)
+        this.spawnMoreDots(100, nodes)
       }.bind(this),
       3000
     )
-  },
-  beforeDestroy() {
-    clearInterval(this.dotSpawner)
-    this.simulation = null
   },
   methods: {
     resizeCanvas() {
@@ -102,7 +98,7 @@ export default {
           function (event) {
             this.transform = event.transform
             if (this.transform.k >= this.maxZoom) {
-              this.$store.commit('setOverview', false)
+              this.navigateToMemoriam()
             }
             this.ticked(context, nodes)
           }.bind(this)
@@ -117,6 +113,12 @@ export default {
         .delay(1500)
         .duration(this.transitionTime)
         .call(this.zoom.transform, d3.zoomIdentity.scale(this.minZoom))
+        .on(
+          'end',
+          function () {
+            this.$store.commit('setOverviewTransition', false)
+          }.bind(this)
+        )
     },
     animateOut() {
       this.canvas
@@ -126,23 +128,28 @@ export default {
         .on(
           'end',
           function () {
-            this.simulation.stop()
-            this.$store.commit('setOverview', false)
+            this.navigateToMemoriam()
           }.bind(this)
         )
     },
-    spawnMoreDots(interval, nodes, simulation) {
+    navigateToMemoriam() {
+      this.simulation.stop()
+      clearInterval(this.dotSpawner)
+      this.$store.commit('setOverviewTransition', false)
+      this.$store.commit('setOverview', false)
+    },
+    spawnMoreDots(interval, nodes) {
       this.dotSpawner = setInterval(
         function () {
-          if (this.$store.state.overview) this.addNode(nodes, simulation)
+          if (this.$store.state.overview) this.addNode(nodes)
         }.bind(this),
         interval
       )
     },
-    addNode(nodes, sim) {
+    addNode(nodes) {
       if (nodes.length < this.maxDots) {
         nodes.push({ r: this.radius() })
-        sim.nodes(nodes)
+        this.simulation.nodes(nodes)
       }
     },
     ticked(context, nodes) {

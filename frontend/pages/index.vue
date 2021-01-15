@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="button-wrapper">
-      <transition name="fade-fast" mode="out-in">
+      <transition name="fade-slow" mode="out-in">
         <AddButton v-if="!$store.state.overview" class="add-button" />
       </transition>
       <OverviewButton class="overview-button" />
