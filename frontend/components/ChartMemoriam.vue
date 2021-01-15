@@ -26,7 +26,7 @@ export default {
       bNumDots: 25,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
-      fNumDots: 150,
+      fNumDots: 250,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
@@ -116,6 +116,12 @@ export default {
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
       this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
       this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
+
+      if (this.zoom)
+        chart.call(
+          this.zoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
     },
     generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []
@@ -292,7 +298,7 @@ export default {
           chart.attr('opacity', 1)
           this.updateDeceasedNodes(fDots)
         }.bind(this),
-        1000
+        1500
       )
     },
     updateDeceasedNodes(fDots) {
