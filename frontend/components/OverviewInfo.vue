@@ -1,11 +1,15 @@
 <template>
-  <div class="info">
+  <div class="overview-info">
     <div>
       <button @click="buttonClick">
         <img src="~/assets/images/info-icon.svg" />
       </button>
       <transition name="fade-slow" mode="out-in">
-        <div v-if="showInfo" v-on-clickaway="buttonClick" class="info-panel">
+        <div
+          v-if="showInfo"
+          v-on-clickaway="buttonClick"
+          class="overview-info-panel"
+        >
           <h2>What am I looking at?</h2>
           <p>
             You are seeing a graphical representation of the growing number of
@@ -37,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.info {
+.overview-info {
   position: absolute;
   left: 3rem;
   bottom: 12rem;
