@@ -1,11 +1,14 @@
 <template>
-  <svg
-    id="chart"
-    width="400"
-    height="400"
-    viewBox="0 0 400 400"
-    perserveAspectRatio="xMinYMid"
-  ></svg>
+  <div>
+    <ChartInstructions />
+    <svg
+      id="chart"
+      width="400"
+      height="400"
+      viewBox="0 0 400 400"
+      perserveAspectRatio="xMinYMid"
+    ></svg>
+  </div>
 </template>
 
 <script>
@@ -245,11 +248,13 @@ export default {
         .on(
           'zoom',
           function (event) {
+            if (event.sourceEvent && this.$store.state.firstTime)
+              this.$store.commit('setFirstTime', false)
+
             const transform = event.transform
             const scale = transform.k
-            if (transform.k <= this.fMaxZoomLevel - 0.1) {
+            if (transform.k <= this.fMaxZoomLevel - 0.1)
               this.$store.commit('setOverview', true)
-            }
 
             const fScaleFactor = fBoxSize * scale
             const fdx = transform.x % fScaleFactor

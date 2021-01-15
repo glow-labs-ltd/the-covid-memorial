@@ -1,20 +1,13 @@
 <template>
   <div>
     <button @click="buttonClick">
-      <span v-if="$store.state.overview">{{ text }} </span>
+      <img src="~/assets/images/zoom-out-icon.svg" />
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  computed: {
-    text() {
-      return this.$store.state.overview
-        ? 'Enter the memorial'
-        : 'Go to overview'
-    },
-  },
   methods: {
     buttonClick() {
       this.$store.commit('setOverviewTransition', true)
@@ -25,17 +18,13 @@ export default {
 
 <style lang="scss" scoped>
 button {
-  font-size: 2rem;
   padding: 1rem;
 
-  @media (min-width: $tablet) {
-    font-size: 2.25rem;
-    padding: 2rem;
-  }
-
-  span {
+  img {
+    width: 6.25rem;
+    height: 6.25rem;
+    display: inline;
     vertical-align: middle;
-    margin: 0 1rem;
   }
 }
 </style>

@@ -18,7 +18,7 @@ export default {
       simulation: null,
       minZoom: null,
       maxZoom: null,
-      maxDots: 10000,
+      maxDots: 7500,
       dotSpawner: null,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,

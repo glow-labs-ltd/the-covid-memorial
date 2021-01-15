@@ -1,14 +1,21 @@
 <template>
   <div>
-    <div class="button-wrapper">
+    <div class="button-wrapper button-wrapper__left">
       <transition name="fade-slow" mode="out-in">
-        <AddButton v-if="!$store.state.overview" class="add-button" />
+        <ZoomOutButton
+          v-if="!$store.state.overviewTransition && !$store.state.overview"
+        />
       </transition>
+    </div>
+    <div class="button-wrapper button-wrapper__right">
       <transition name="fade-slow" mode="out-in">
         <OverviewButton
-          v-if="!$store.state.overviewTransition"
+          v-if="!$store.state.overviewTransition && $store.state.overview"
           class="overview-button"
         />
+      </transition>
+      <transition name="fade-slow" mode="out-in">
+        <AddButton v-if="!$store.state.overview" class="add-button" />
       </transition>
     </div>
     <AddMemoriam />
@@ -28,14 +35,27 @@ export default {
 .button-wrapper {
   position: absolute;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
   flex-direction: column;
   top: 5rem;
-  right: 3rem;
 
-  @media (min-width: $tablet) {
-    right: 5rem;
+  &__right {
+    justify-content: flex-end;
+    align-items: flex-end;
+    right: 3rem;
+
+    @media (min-width: $tablet) {
+      right: 5rem;
+    }
+  }
+
+  &__left {
+    justify-content: flex-start;
+    align-items: flex-start;
+    left: 3rem;
+
+    @media (min-width: $tablet) {
+      left: 5rem;
+    }
   }
 
   > * {
