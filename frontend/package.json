@@ -22,6 +22,7 @@
     "nuxt": "^2.14.6",
     "nuxt-helmet": "^2.0.0",
     "nuxt-vue-select": "^0.1.4",
+    "vue-clickaway": "^2.2.2",
     "vue-cropperjs": "^4.2.0"
   },
   "devDependencies": {

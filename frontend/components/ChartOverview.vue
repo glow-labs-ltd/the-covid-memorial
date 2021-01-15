@@ -1,5 +1,10 @@
 <template>
-  <canvas></canvas>
+  <div>
+    <transition name="fade-slow" mode="out-in">
+      <OverviewInfo v-if="!overviewTransition" />
+    </transition>
+    <canvas></canvas>
+  </div>
 </template>
 
 <script>

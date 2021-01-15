@@ -21,10 +21,15 @@ button {
   padding: 1rem;
 
   img {
-    width: 6.25rem;
-    height: 6.25rem;
+    width: 4.25rem;
+    height: 4.25rem;
     display: inline;
     vertical-align: middle;
+
+    @media (min-width: $tablet) {
+      width: 6.25rem;
+      height: 6.25rem;
+    }
   }
 }
 </style>
