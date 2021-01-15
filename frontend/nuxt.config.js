@@ -7,14 +7,15 @@ export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     htmlAttrs: { lang: 'en' },
-    title: 'the-covid-memorial',
+    title: 'The COVID Memorial',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: 'The COVID Memorial',
+        content:
+          'The COVID Memorial is a place to put a face and story to every number, and to commemorate all those who have sadly lost their lives due to the pandemic, either directly or indirectly.',
       },
     ],
     link: [
