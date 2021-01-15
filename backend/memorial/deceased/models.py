@@ -11,6 +11,11 @@ from storages.backends.gcloud import GoogleCloudStorage
 from .helpers import compress_and_assign_image, get_image_path, random_string
 
 
+class DeceasedManager(models.Manager):
+    def approved(self):
+        return super().get_queryset().filter(approved=True)
+
+
 class Deceased(models.Model):
     name = models.TextField(max_length=254, null=False, blank=False)
     birth_date = models.DateField(null=True, blank=True)
@@ -45,6 +50,8 @@ class Deceased(models.Model):
     )
     approved = models.BooleanField(default=False, null=False)
     date_created = models.DateTimeField(auto_now=True)
+
+    objects = DeceasedManager()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
