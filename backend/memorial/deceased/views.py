@@ -10,7 +10,7 @@ from .serializers import (CommentSerializer, DeceasedPreviewSerializer,
 
 class DeceasedAPIViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                          mixins.CreateModelMixin, GenericViewSet):
-    queryset = Deceased.objects.all().order_by('?')
+    queryset = Deceased.objects.approved().order_by('?')
     pagination_class = None
     lookup_field = 'slug'
 
@@ -57,7 +57,7 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
         if not query or not query.strip():
             return Deceased.objects.none()
 
-        return Deceased.objects.all()
+        return Deceased.objects.approved()
 
 
 class CommentsAPIViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,

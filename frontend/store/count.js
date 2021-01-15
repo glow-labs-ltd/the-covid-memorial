@@ -23,6 +23,7 @@ export const getters = {
       const date0 = new Date(state.last2[0].date)
       const date1 = new Date(state.last2[1].date)
       const time = Math.ceil(date0 - date1)
+      if (time === 0) return 0
       return (state.last2[0].deaths - state.last2[1].deaths) / time
     }
     return null

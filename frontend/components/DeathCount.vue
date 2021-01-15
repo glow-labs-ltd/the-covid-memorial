@@ -20,7 +20,7 @@ export default {
     },
     start() {
       const deathRate = this.$store.getters['count/deathRate']
-      if (deathRate) {
+      if (deathRate > 0) {
         setInterval(() => this.$store.commit('count/increment'), 1 / deathRate)
       }
     },
