@@ -30,7 +30,7 @@ export default {
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
-      fDotPadding: 2,
+      fDotPadding: 6,
       inViewportPadding: 100,
       colours: [
         '#890608',
