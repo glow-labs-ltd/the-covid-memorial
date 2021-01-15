@@ -15,6 +15,7 @@
 import * as d3 from 'd3'
 import { gsap, Sine } from 'gsap'
 import { mapState } from 'vuex'
+import { getViewportSize } from '@/utilities/visual'
 
 export default {
   data() {
@@ -105,8 +106,9 @@ export default {
     },
     resizeChart(chart) {
       this.container = chart.node().parentNode
-      this.currentWidth = window.innerWidth
-      this.currentHeight = window.innerHeight
+      const size = getViewportSize()
+      this.currentWidth = size.width
+      this.currentHeight = size.height
       chart.attr('width', this.currentWidth)
       chart.attr('height', this.currentHeight)
 

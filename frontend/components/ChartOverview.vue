@@ -10,6 +10,7 @@
 <script>
 import * as d3 from 'd3'
 import { mapState } from 'vuex'
+import { getViewportSize } from '@/utilities/visual'
 
 export default {
   data() {
@@ -52,6 +53,13 @@ export default {
     this.zoom = this.setupZoom(context, nodes)
     this.animateIn()
 
+    window.addEventListener(
+      'resize',
+      function () {
+        this.resizeCanvas()
+      }.bind(this)
+    )
+
     setTimeout(
       function () {
         this.spawnMoreDots(100, nodes)
@@ -61,20 +69,14 @@ export default {
   },
   methods: {
     resizeCanvas() {
-      this.width = window.innerWidth
-      this.height = window.innerHeight - 80
+      const size = getViewportSize()
+      this.width = size.width
+      this.height = size.height - 80
       this.canvas.attr('width', this.width).attr('height', this.height)
 
       const shortestEdge = Math.min(this.width, this.height)
       this.minZoom = shortestEdge / 800
       this.maxZoom = this.minZoom * 6
-
-      window.addEventListener(
-        'resize',
-        function () {
-          this.resizeCanvas()
-        }.bind(this)
-      )
     },
     setupSimulation(context, nodes) {
       return d3
