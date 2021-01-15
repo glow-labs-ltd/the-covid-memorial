@@ -9,13 +9,13 @@
     <DeathCount />
     <img
       src="~/assets/images/search-icon.svg"
-      class="search"
+      class="nav-item search"
       alt="Search"
       @click="searchClick"
     />
     <img
       src="~/assets/images/menu-icon.svg"
-      class="menu"
+      class="nav-item menu"
       alt="Menu"
       @click="menuClick"
     />
@@ -73,6 +73,10 @@ export default {
       width: 13rem;
       max-height: 6rem;
     }
+  }
+
+  .nav-item {
+    cursor: pointer;
   }
 
   .search {
