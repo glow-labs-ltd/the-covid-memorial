@@ -69,10 +69,13 @@ export const mutations = {
 
 export const actions = {
   async getDeceased({ commit }) {
-    commit('setDeceasedLoading', true)
-    const deceased = await this.$axios.$get('deceased/')
-    commit('appendDeceased', deceased)
-    commit('setDeceasedLoading', false)
+    try {
+      commit('setDeceasedLoading', true)
+      const deceased = await this.$axios.$get('deceased/')
+      commit('appendDeceased', deceased)
+    } finally {
+      commit('setDeceasedLoading', false)
+    }
   },
 
   nextDeceased({ state, commit }) {
