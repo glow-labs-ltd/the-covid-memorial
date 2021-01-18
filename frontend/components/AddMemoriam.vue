@@ -19,12 +19,22 @@
           <div class="row dates">
             <div>
               <label for="birth_date">Date of birth</label>
-              <input v-model="birth_date" type="date" name="birth_date" />
+              <input
+                v-model="birth_date"
+                type="date"
+                name="birth_date"
+                :max="maxDate"
+              />
             </div>
 
             <div>
               <label for="death_date">Date of death</label>
-              <input v-model="death_date" type="date" name="death_date" />
+              <input
+                v-model="death_date"
+                type="date"
+                name="death_date"
+                :max="maxDate"
+              />
             </div>
 
             <div>
@@ -154,6 +164,10 @@ export default {
         return `colour--${this.colour.value}`
       }
       return null
+    },
+    maxDate() {
+      const now = new Date()
+      return now.toISOString().split('T')[0]
     },
   },
   methods: {
