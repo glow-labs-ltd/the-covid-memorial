@@ -50,7 +50,11 @@
 
           <div class="row">
             <label for="country">Country</label>
-            <v-select v-model="country" :options="countries" />
+            <v-select
+              v-model="country"
+              :options="countries"
+              class="country-select"
+            />
           </div>
 
           <div class="row">
@@ -222,16 +226,30 @@ label {
 
 .colour-select {
   width: 20rem;
+  border-radius: 1rem;
 
   ::v-deep {
     .vs__selected {
       color: $surface;
+    }
+  }
+}
+
+.colour-select,
+.country-select {
+  ::v-deep {
+    .vs__selected {
       font-weight: 600;
     }
 
     .vs__open-indicator,
     .vs__clear {
       fill: $secondary;
+    }
+
+    .vs__dropdown-toggle {
+      border: 2px solid $primary;
+      border-radius: 1rem;
     }
   }
 }

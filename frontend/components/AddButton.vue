@@ -2,7 +2,7 @@
   <div>
     <button @click="addButtonClick">
       <img src="~/assets/images/add-icon.svg" />
-      <span>Add memoriam</span>
+      <span>Add memorial</span>
     </button>
   </div>
 </template>

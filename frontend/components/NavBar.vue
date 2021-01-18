@@ -56,10 +56,14 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 2rem;
+  padding: 1.6rem;
   grid-gap: 2rem;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
   height: 10rem;
+
+  @media (min-width: $phone) {
+    padding: 2rem;
+  }
 
   @media (min-width: $tablet) {
     grid-template: auto / auto 1fr auto auto;
@@ -76,8 +80,8 @@ export default {
     max-height: 3rem;
 
     @media (min-width: $phone) {
-      width: 10rem;
-      max-height: 5rem;
+      width: 8rem;
+      max-height: 4rem;
     }
 
     @media (min-width: $tablet) {

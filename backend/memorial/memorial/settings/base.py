@@ -166,11 +166,3 @@ LOGGING = {
         },
     },
 }
-
-# Content-Security-Policy for admin
-CSP_DEFAULT_SRC = ("'self'", )
-CSP_STYLE_SRC = ("'self'", )
-CSP_SCRIPT_SRC = ("'self'", )
-CSP_FONT_SRC = ("'self'", )
-CSP_IMG_SRC = ("'self'", "data:", 'https://storage.googleapis.com')
-CSP_OBJECT_SRC = ("'none'", )

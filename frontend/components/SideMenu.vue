@@ -13,7 +13,9 @@
           <NuxtLink to="/thank-yous">Thanks you's</NuxtLink>
           <NuxtLink to="/data-sources">Data sources</NuxtLink>
           <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
-          <a href="">Contact TCM</a>
+          <a href="mailto:contact@thecovidmemorial.com" target="_blank"
+            >Contact TCM</a
+          >
         </div>
         <div class="foot">
           <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
@@ -58,14 +60,9 @@ aside {
   display: grid;
   grid-template: auto auto 1fr / 1fr;
   grid-gap: 4rem;
-  padding: 4rem 4rem 10rem;
+  padding: 4rem 4rem 2rem;
   height: 100vh;
-  max-height: calc(100vh - 10rem);
-
-  @media (min-width: $desktop) {
-    right: 0;
-    max-height: none;
-  }
+  max-height: calc(100% - 10rem);
 
   .logo {
     width: 50%;
