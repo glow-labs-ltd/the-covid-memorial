@@ -94,8 +94,8 @@
           We have made this memorial available to everyone and we encourage you
           to include memorials of people who have died as either a direct or
           indirect result of COVID-19. Therefore, the actual number of
-          individual memorials may exceed the official death count figure, which
-          only accounts for direct deaths.
+          individual memorials on this site may exceed the official death count
+          figure, which only accounts for direct deaths.
         </p>
         <p>
           Indirect deaths are those that have occured because of the wider
