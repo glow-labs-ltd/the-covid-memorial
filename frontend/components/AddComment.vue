@@ -22,13 +22,15 @@
           required
         />
 
-        <div class="submit-wrapper">
-          <input
-            type="submit"
-            :value="loading ? 'Loading' : 'Submit'"
-            class="submit"
-          />
-        </div>
+        <transition name="fade-fast" mode="out-in">
+          <div v-if="message" class="submit-wrapper">
+            <input
+              type="submit"
+              :value="loading ? 'Loading' : 'Submit'"
+              class="submit"
+            />
+          </div>
+        </transition>
         <p v-if="error" class="error">{{ error }}</p>
       </form>
 
