@@ -26,20 +26,22 @@
           <li>Sam Carty</li>
         </ul>
 
+        <!--
         <h2>For publicising The COVID Memorial</h2>
         <ul class="list">
           <li></li>
         </ul>
+        -->
 
-        <h2>For providing pro bono legal advice</h2>
+        <h2>For providing legal advice to The COVID Memorial</h2>
         <ul class="list">
-          <li></li>
+          <li>
+            <a href="https://www.freeths.co.uk/" target="_blank">Freeths LLP</a>
+          </li>
+          <li>Will Richmond-Coggan</li>
         </ul>
 
-        <!-- <h2>Thank you to our Donors</h2>
-        <ul class="list">
-          <li></li>
-        </ul> -->
+        <h2>And thank you to all of our kind donors.</h2>
       </div>
     </div>
   </div>

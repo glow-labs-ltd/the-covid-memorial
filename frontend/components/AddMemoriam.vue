@@ -59,12 +59,21 @@
           </div>
 
           <div class="row">
-            <label for="country">Country</label>
+            <label for="country">Country <span class="required">*</span></label>
             <v-select
               v-model="country"
               :options="countries"
               class="country-select"
-            />
+            >
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!country"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
           </div>
 
           <div class="row">
@@ -73,14 +82,18 @@
           </div>
 
           <div class="row">
-            <label for="message">Your message</label>
+            <label for="message"
+              >Your message <span class="required">*</span></label
+            >
             <textarea
               v-model="message"
               type="text"
               name="message"
               rows="6"
               maxlength="2500"
+              required
             />
+            <p class="note">{{ messageLength }} / 2500 character limit</p>
           </div>
 
           <div class="row">
@@ -108,12 +121,31 @@
                   value="terms"
                   required
                 />
-                <label for="terms">I have read and understood the terms.</label>
+                <label for="terms"
+                  >I have read and agreed to the terms of service.</label
+                >
+              </div>
+              <div>
+                <input
+                  id="privacy"
+                  v-model="privacy"
+                  type="checkbox"
+                  name="privacy"
+                  value="privacy"
+                  required
+                />
+                <label for="privacy"
+                  >I have read and agreed to the privacy notice.</label
+                >
               </div>
             </div>
           </div>
 
           <div class="row">
+            <p class="submit-disclaimer">
+              Please be aware that it may take up to 24 hours for your
+              submission to appear in search results.
+            </p>
             <input type="submit" value="Submit" class="submit" />
           </div>
         </form>
@@ -143,6 +175,7 @@ export default {
       message: null,
       amend: false,
       terms: false,
+      privacy: false,
       colours: [
         { value: 0, label: 'Red' },
         { value: 1, label: 'Orange' },
@@ -168,6 +201,9 @@ export default {
     maxDate() {
       const now = new Date()
       return now.toISOString().split('T')[0]
+    },
+    messageLength() {
+      return this.message?.length || 0
     },
   },
   methods: {
@@ -290,6 +326,7 @@ label {
     margin-left: 1rem;
     text-align: left;
     vertical-align: middle;
+    cursor: pointer;
   }
 }
 
@@ -298,6 +335,12 @@ label {
   color: $surface;
   font-size: 2.5rem;
   font-weight: 600;
+  cursor: pointer;
+
+  &-disclaimer {
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
 }
 
 .error {

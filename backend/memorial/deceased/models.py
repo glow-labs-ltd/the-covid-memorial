@@ -21,7 +21,7 @@ class Deceased(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     death_date = models.DateField(null=True, blank=True)
     age = models.PositiveIntegerField(blank=True, null=True)
-    country = CountryField(null=True, blank=True)
+    country = CountryField(null=False, blank=False, default="GB")
     city = models.TextField(max_length=120, null=True, blank=True)
     image = models.ImageField(
         storage=GoogleCloudStorage(
@@ -37,7 +37,8 @@ class Deceased(models.Model):
         null=True,
         validators=[MaxValueValidator(7)],
     )
-    message = models.TextField(max_length=2500, null=True, blank=True)
+    message = models.TextField(
+        max_length=2500, null=False, blank=False, default="")
     slug = AutoSlugField(
         populate_from='name',
         unique=True,
