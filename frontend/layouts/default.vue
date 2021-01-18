@@ -97,6 +97,7 @@ input[type='checkbox'] {
   display: inline-block;
   width: 3rem;
   height: 2rem;
+  border-radius: 0;
   vertical-align: middle;
 }
 
