@@ -13,17 +13,28 @@
       alt="Search"
       @click="searchClick"
     />
-    <img
-      src="~/assets/images/menu-icon.svg"
-      class="nav-item menu"
-      alt="Menu"
-      @click="menuClick"
-    />
+    <transition name="slide" mode="out-in">
+      <img
+        :key="menuIcon"
+        :src="menuIcon"
+        class="nav-item menu"
+        alt="Menu"
+        @click="menuClick"
+      />
+    </transition>
   </nav>
 </template>
 
 <script>
 export default {
+  computed: {
+    menuIcon() {
+      if (!this.$store.state.sideMenuOpen) {
+        return require('~/assets/images/menu-icon.svg')
+      }
+      return require('~/assets/images/menu-close-icon.svg')
+    },
+  },
   methods: {
     menuClick() {
       this.$store.commit('toggleSideMenu')
@@ -88,5 +99,18 @@ export default {
     width: 5.75rem;
     height: 3.75rem;
   }
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: $fast;
+}
+.slide-enter {
+  transform: translate(25%, 0);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translate(-25%, 0);
+  opacity: 0;
 }
 </style>

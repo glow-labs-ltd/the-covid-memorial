@@ -161,6 +161,11 @@ export default {
       margin: 1rem 0 0;
       max-width: 32rem;
     }
+
+    button {
+      margin: 1rem 0;
+      min-width: 22rem;
+    }
   }
 }
 
