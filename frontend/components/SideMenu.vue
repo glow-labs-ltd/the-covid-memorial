@@ -13,9 +13,7 @@
           <NuxtLink to="/thank-yous">Thank you's</NuxtLink>
           <NuxtLink to="/data-sources">Data sources</NuxtLink>
           <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
-          <a href="mailto:contact@thecovidmemorial.com" target="_blank"
-            >Contact</a
-          >
+          <a href="mailto:contact@thecovid.memorial" target="_blank">Contact</a>
         </div>
         <div class="foot">
           <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
