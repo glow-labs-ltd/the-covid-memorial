@@ -12,8 +12,10 @@
         >
           <h2>What am I looking at?</h2>
           <p>
-            You are seeing a graphical representation of the growing number of
-            people who have sadly lost their lives due to COVID-19.
+            You are seeing a graphical representation of the global impact of
+            COVID-19. Every dot represents a person who has sadly lost their
+            life due to the pandemic. Enter the memorial to discover their
+            stories, told by their loved ones.
           </p>
         </div>
       </transition>

@@ -92,7 +92,7 @@
         <h2>Individual Memorials</h2>
         <p>
           We have made this memorial available to everyone and we encourage you
-          to include memorials of people who have died as either a direct or
+          to include the stories of people who have died as either a direct or
           indirect result of COVID-19. Therefore, the actual number of
           individual memorials on this site may exceed the official death count
           figure, which only accounts for direct deaths.
