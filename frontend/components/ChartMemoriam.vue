@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="memoriam-wrapper">
     <ChartInstructions />
     <svg
       id="chart"
@@ -27,11 +27,11 @@ export default {
       bNumDots: 25,
       bDotMaxRadius: 36,
       bDotMinRadius: 12,
-      fNumDots: 150,
+      fNumDots: 250,
       fDotRadius: 20,
       fMinZoomLevel: null,
       fMaxZoomLevel: null,
-      fDotPadding: 2,
+      fDotPadding: 6,
       inViewportPadding: 100,
       colours: [
         '#890608',
@@ -118,6 +118,12 @@ export default {
       const shortestEdge = Math.min(this.currentWidth, this.currentHeight)
       this.fMaxZoomLevel = -1 / (-shortestEdge / 800)
       this.fMinZoomLevel = this.fMaxZoomLevel * 0.25
+
+      if (this.zoom)
+        chart.call(
+          this.zoom.transform,
+          d3.zoomIdentity.scale(this.fMaxZoomLevel)
+        )
     },
     generateData(xSize, ySize, minRadius, maxRadius, numDots, generateHuman) {
       const data = []
@@ -288,14 +294,11 @@ export default {
       return zoom
     },
     animateIn(chart, fDots) {
+      this.updateDeceasedNodes(fDots)
       chart.transition().duration(1500).ease(d3.easeLinear).attr('opacity', 1)
-      setTimeout(
-        function () {
-          chart.attr('opacity', 1)
-          this.updateDeceasedNodes(fDots)
-        }.bind(this),
-        1000
-      )
+      setTimeout(function () {
+        chart.attr('opacity', 1)
+      }, 1500)
     },
     updateDeceasedNodes(fDots) {
       for (const d of this.humanData) {
@@ -397,5 +400,13 @@ export default {
 <style lang="scss" scoped>
 #chart {
   background-color: $background;
+}
+
+.memoriam-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>

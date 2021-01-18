@@ -10,11 +10,11 @@
         </NuxtLink>
         <div class="links">
           <NuxtLink to="/about">About</NuxtLink>
-          <NuxtLink to="/thank-yous">Thanks you's</NuxtLink>
+          <NuxtLink to="/thank-yous">Thank you's</NuxtLink>
           <NuxtLink to="/data-sources">Data sources</NuxtLink>
           <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
           <a href="mailto:contact@thecovidmemorial.com" target="_blank"
-            >Contact TCM</a
+            >Contact</a
           >
         </div>
         <div class="foot">

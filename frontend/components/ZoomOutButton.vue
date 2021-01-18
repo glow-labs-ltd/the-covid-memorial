@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="buttonClick">
+    <button aria-label="Zoom out to overview" @click="buttonClick">
       <img src="~/assets/images/zoom-out-icon.svg" />
     </button>
   </div>
