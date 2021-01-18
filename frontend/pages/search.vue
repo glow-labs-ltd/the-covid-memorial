@@ -9,8 +9,8 @@
       <form class="query shadow" @submit.prevent="search(false)">
         <h1>Search</h1>
         <input ref="searchField" v-model="searchQuery" type="text" />
+        <h3>{{ count }}</h3>
       </form>
-      <h3>{{ count }}</h3>
       <div class="results">
         <transition-group name="fade-group" class="transition">
           <div
@@ -136,7 +136,7 @@ export default {
   }
 
   h3 {
-    padding-bottom: 1rem;
+    padding-top: 2rem;
   }
 
   .close {

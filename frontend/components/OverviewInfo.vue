@@ -1,7 +1,7 @@
 <template>
   <div class="overview-info">
     <div>
-      <button @click="buttonClick">
+      <button aria-label="What am I looking at?" @click="buttonClick">
         <img src="~/assets/images/info-icon.svg" />
       </button>
       <transition name="fade-slow" mode="out-in">

@@ -97,6 +97,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
 }
+REST_SESSION_LOGIN = False
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -166,3 +167,11 @@ LOGGING = {
         },
     },
 }
+
+# Content-Security-Policy for admin
+CSP_DEFAULT_SRC = ("'self'", )
+CSP_STYLE_SRC = ("'self'", )
+CSP_SCRIPT_SRC = ("'self'", )
+CSP_FONT_SRC = ("'self'", )
+CSP_IMG_SRC = ("'self'", "data:", 'https://storage.googleapis.com')
+CSP_OBJECT_SRC = ("'none'", )

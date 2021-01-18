@@ -1,7 +1,9 @@
 <template>
   <div>
     <AddComment v-if="code" :deceased-id="deceasedId" :code="code" />
-    <div class="comments">
+    <hr v-else-if="hasContent" />
+    <div v-if="comments.length > 0" class="comments">
+      <h3>Comments</h3>
       <div v-for="comment in comments" :key="comment.id" class="comment">
         <h4 class="author">{{ comment.author }}</h4>
         <p class="message">{{ comment.message }}</p>
@@ -25,6 +27,10 @@ export default {
     code: {
       type: String,
       default: null,
+    },
+    hasContent: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {
@@ -53,6 +59,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.comments {
+  h3 {
+    font-size: 2.2rem;
+  }
+}
+
 .comment {
   color: $primary;
   margin: 2rem 0;
@@ -76,5 +88,9 @@ export default {
     background-color: $secondary;
     color: $surface;
   }
+}
+
+hr {
+  margin: 2rem 0;
 }
 </style>
