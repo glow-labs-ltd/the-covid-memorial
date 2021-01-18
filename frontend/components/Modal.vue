@@ -46,6 +46,7 @@ export default {
   border-radius: 2rem;
   padding: 0;
   margin: auto;
+  max-width: 600px;
 
   &__backdrop {
     position: fixed;
