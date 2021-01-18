@@ -83,7 +83,7 @@
 
           <div class="row">
             <label for="message"
-              >Your message <span class="required">*</span></label
+              >Tell their story <span class="required">*</span></label
             >
             <textarea
               v-model="message"
