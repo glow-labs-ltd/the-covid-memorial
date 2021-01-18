@@ -9,7 +9,7 @@
       <Share v-if="codeVerified" :name="name" class="share" />
       <div class="memoriam shadow">
         <div class="left">
-          <img class="portrait" :src="image" />
+          <img v-if="image" class="portrait" :src="image" />
           <div class="colour-bar" :class="colourClass"></div>
           <div class="details">
             <h1 class="name">{{ name }}</h1>
@@ -105,13 +105,21 @@ export default {
       return null
     },
     image() {
-      return this.memoriam?.image || require('~/assets/images/placeholder.jpg')
+      return this.memoriam?.image
     },
     colourClass() {
+      const cssClass = []
       if (this.memoriam?.colour) {
-        return `colour--${this.memoriam.colour}`
+        cssClass.push(`colour--${this.memoriam.colour}`)
+      } else {
+        cssClass.push('colour--7')
       }
-      return 'colour--7'
+
+      if (!this.memoriam?.image) {
+        cssClass.push('colour-large')
+      }
+
+      return cssClass
     },
     codeVerified() {
       return this.memoriam?.can_comment ? this.code : null
@@ -154,6 +162,10 @@ export default {
 
   .colour-bar {
     height: 1rem;
+  }
+
+  .colour-large {
+    height: 50rem;
   }
 
   .details {
