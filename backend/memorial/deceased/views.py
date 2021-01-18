@@ -48,6 +48,7 @@ class SearchAPIViewSet(ReadOnlyModelViewSet):
             'fields': ['name', 'city', 'country'],
         },
     ]
+    min_rank = 0.2
     filter_backends = [SimilarityFilter]
     serializer_class = DeceasedSerializer
 

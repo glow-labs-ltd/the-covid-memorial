@@ -2,6 +2,7 @@ import operator
 from functools import reduce
 
 from django.contrib.postgres.search import TrigramSimilarity
+from django.db import connection
 from django.db.models import FloatField, Q, Value
 from django.db.models.functions import Greatest
 from rest_framework.filters import SearchFilter
@@ -9,6 +10,10 @@ from rest_framework.filters import SearchFilter
 
 class SimilarityFilter(SearchFilter):
     def search_queryset(self, queryset, param_search_terms, min_rank):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                'SET pg_trgm.similarity_threshold = {}'.format(min_rank))
+
         queries = []
         order_by = []
         ranks = []
@@ -46,7 +51,7 @@ class SimilarityFilter(SearchFilter):
             if filters:
                 queryset = queryset.filter(*filters)
 
-            min_rank = getattr(view, 'min_rank', 0.05)
+            min_rank = getattr(view, 'min_rank', 0.2)
             queryset = self.search_queryset(
                 queryset=queryset,
                 param_search_terms=param_search_terms,
