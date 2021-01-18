@@ -326,6 +326,7 @@ label {
     margin-left: 1rem;
     text-align: left;
     vertical-align: middle;
+    cursor: pointer;
   }
 }
 
@@ -334,6 +335,7 @@ label {
   color: $surface;
   font-size: 2.5rem;
   font-weight: 600;
+  cursor: pointer;
 
   &-disclaimer {
     margin-bottom: 2rem;

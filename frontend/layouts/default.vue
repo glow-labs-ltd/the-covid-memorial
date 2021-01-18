@@ -100,6 +100,7 @@ input[type='checkbox'] {
   height: 2rem;
   border-radius: 0;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 textarea {
