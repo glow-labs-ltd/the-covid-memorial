@@ -1,20 +1,13 @@
 <template>
   <div>
     <button @click="buttonClick">
-      <span v-if="$store.state.overview">{{ text }} </span>
+      <span>Enter the memorial</span>
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  computed: {
-    text() {
-      return this.$store.state.overview
-        ? 'Enter the memorial'
-        : 'Go to overview'
-    },
-  },
   methods: {
     buttonClick() {
       this.$store.commit('setOverviewTransition', true)
