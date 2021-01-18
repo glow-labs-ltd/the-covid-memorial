@@ -13,8 +13,7 @@
           <h2>What am I looking at?</h2>
           <p>
             You are seeing a graphical representation of the growing number of
-            people who have sadly been lost either directly, or indirectly due
-            to the COVID-19 virus.
+            people who have sadly lost their lives due to COVID-19.
           </p>
         </div>
       </transition>

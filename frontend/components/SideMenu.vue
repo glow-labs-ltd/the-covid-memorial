@@ -14,11 +14,23 @@
           <NuxtLink to="/data-sources">Data sources</NuxtLink>
           <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
           <NuxtLink to="/donate">Donate</NuxtLink>
-          <a href="mailto:contact@thecovid.memorial" target="_blank">Contact</a>
         </div>
         <div class="foot">
-          <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
-          <img src="~/assets/images/twitter-icon.svg" alt="Twitter" />
+          <a
+            href="mailto:contact@thecovid.memorial"
+            target="_blank"
+            class="foot__contact"
+            >contact@thecovid.memorial</a
+          >
+          <a
+            href="https://www.instagram.com/thecovid.memorial/"
+            target="_blank"
+          >
+            <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
+          </a>
+          <a href="https://www.twitter.com/covidmemorialhq" target="_blank">
+            <img src="~/assets/images/twitter-icon.svg" alt="Twitter" />
+          </a>
           <span>© The COVID Memorial is Copyright 2021</span>
         </div>
       </aside>
@@ -92,6 +104,14 @@ aside {
     span {
       font-size: 1.75rem;
       margin: auto;
+    }
+
+    &__contact {
+      grid-column: 1 / -1;
+      font-size: 2rem;
+      text-align: right;
+      text-decoration: none;
+      color: $primary;
     }
   }
 }
