@@ -20,7 +20,12 @@
         <div class="right">
           <div>
             <p class="message">{{ message }}</p>
-            <Comments v-if="id" :deceased-id="id" :code="codeVerified" />
+            <Comments
+              v-if="id"
+              :deceased-id="id"
+              :code="codeVerified"
+              :has-content="message != null"
+            />
             <h2 v-if="error">Memorial not found</h2>
           </div>
         </div>

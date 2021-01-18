@@ -160,6 +160,7 @@ export default {
 
   h2 {
     font-size: 3.25rem;
+    cursor: pointer;
 
     @media (min-width: $phone) {
       font-size: 3.75rem;

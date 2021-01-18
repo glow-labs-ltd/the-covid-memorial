@@ -125,6 +125,7 @@ export default {
     color: $surface;
     max-width: 40%;
     margin-left: auto;
+    cursor: pointer;
   }
 
   .thanks {
