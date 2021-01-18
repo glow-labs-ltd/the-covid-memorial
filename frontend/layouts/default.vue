@@ -133,6 +133,8 @@ label {
       width: 4rem;
       height: 4rem;
       margin: 0 0 1rem auto;
+      border: 3px solid $surface;
+      border-radius: 50%;
     }
   }
 }
