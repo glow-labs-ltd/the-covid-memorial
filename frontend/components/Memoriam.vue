@@ -74,7 +74,7 @@ export default {
     cityCountry() {
       const city = this.memoriam?.city ?? ''
       const country = this.memoriam?.country ?? ''
-      if (city & country) {
+      if (city && country) {
         return `${city}, ${country}`
       }
       return `${city} ${country}`

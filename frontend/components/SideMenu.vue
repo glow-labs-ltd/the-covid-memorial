@@ -10,10 +10,10 @@
         </NuxtLink>
         <div class="links">
           <NuxtLink to="/about">About</NuxtLink>
-          <NuxtLink to="/thank-yous">Thanks you's</NuxtLink>
+          <NuxtLink to="/thank-yous">Thank you's</NuxtLink>
           <NuxtLink to="/data-sources">Data sources</NuxtLink>
           <NuxtLink to="/terms">Terms &amp; Privacy</NuxtLink>
-          <a href="">Contact TCM</a>
+          <a href="">Contact</a>
         </div>
         <div class="foot">
           <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
