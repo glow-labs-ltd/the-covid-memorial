@@ -8,7 +8,12 @@
       </div>
       <form class="query shadow" @submit.prevent="search(false)">
         <h1>Search</h1>
-        <input ref="searchField" v-model="searchQuery" type="text" />
+        <input
+          ref="searchField"
+          v-model="searchQuery"
+          type="text"
+          autocomplete="off"
+        />
         <h3>{{ count }}</h3>
       </form>
       <div class="results">
