@@ -67,7 +67,7 @@ img {
 
 button {
   display: inline-block;
-  border: 4px solid black;
+  border: 4px solid $primary;
   background: $surface;
   border-radius: 6rem;
   font-size: 2rem;
@@ -80,13 +80,14 @@ button {
 
 input,
 textarea {
-  border: 2px solid black;
+  border: 2px solid $primary;
   border-radius: 6rem;
   font-size: 2rem;
   font-family: inherit;
   padding: 1rem 2rem;
   min-height: 2.7em;
   width: 100%;
+  background-color: transparent;
 }
 
 textarea {
