@@ -53,7 +53,7 @@ body {
 
 .scroll {
   overflow-y: auto;
-  max-height: calc(100vh - 10rem); // nav bar is height: 10rem
+  max-height: calc(100% - 10rem);
 }
 
 .limit-width {
