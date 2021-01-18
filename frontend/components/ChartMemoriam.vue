@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="memoriam-wrapper">
     <ChartInstructions />
     <svg
       id="chart"
@@ -294,14 +294,11 @@ export default {
       return zoom
     },
     animateIn(chart, fDots) {
+      this.updateDeceasedNodes(fDots)
       chart.transition().duration(1500).ease(d3.easeLinear).attr('opacity', 1)
-      setTimeout(
-        function () {
-          chart.attr('opacity', 1)
-          this.updateDeceasedNodes(fDots)
-        }.bind(this),
-        1500
-      )
+      setTimeout(function () {
+        chart.attr('opacity', 1)
+      }, 1500)
     },
     updateDeceasedNodes(fDots) {
       for (const d of this.humanData) {
@@ -403,5 +400,13 @@ export default {
 <style lang="scss" scoped>
 #chart {
   background-color: $background;
+}
+
+.memoriam-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>
