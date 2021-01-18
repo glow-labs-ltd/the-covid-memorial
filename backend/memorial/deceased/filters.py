@@ -46,7 +46,7 @@ class SimilarityFilter(SearchFilter):
             if filters:
                 queryset = queryset.filter(*filters)
 
-            min_rank = getattr(view, 'min_rank', 0.1)
+            min_rank = getattr(view, 'min_rank', 0.05)
             queryset = self.search_queryset(
                 queryset=queryset,
                 param_search_terms=param_search_terms,
