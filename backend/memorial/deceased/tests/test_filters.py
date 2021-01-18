@@ -13,6 +13,7 @@ class SimilarityListView(generics.ListAPIView):
     queryset = Deceased.objects.all()
     serializer_class = DeceasedSerializer
     filter_backends = [SimilarityFilter]
+    min_rank = 0.3
     param_search_fields = [
         {
             'param': 'name',
