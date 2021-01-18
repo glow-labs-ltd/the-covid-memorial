@@ -2,11 +2,13 @@
   <div class="share shadow">
     <h2 @click="expandToggle">
       Share memoriam
-      <img
-        src="~/assets/images/expand-icon.svg"
-        alt="expand"
-        :class="{ expanded }"
-      />
+      <button :aria-label="expanded ? 'Close share panel' : 'Open share panel'">
+        <img
+          src="~/assets/images/expand-icon.svg"
+          alt="expand"
+          :class="{ expanded }"
+        />
+      </button>
     </h2>
     <transition name="share">
       <div v-show="expanded">
@@ -166,11 +168,14 @@ export default {
       font-size: 3.75rem;
     }
 
-    img {
-      display: inline-block;
-      width: 3rem;
-      height: 2.5rem;
+    button {
       margin-left: 2rem;
+      padding: 1rem;
+    }
+
+    img {
+      width: 2.5rem;
+      height: 2.5rem;
       transition: transform $slow;
     }
 
