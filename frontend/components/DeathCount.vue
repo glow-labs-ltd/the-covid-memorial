@@ -31,11 +31,11 @@ export default {
 <style lang="scss" scoped>
 .lost-count {
   text-align: center;
-  font-size: 2.75rem;
+  font-size: 2rem;
   font-weight: 400;
 
   @media (min-width: $phone) {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 
   @media (min-width: $tablet) {
@@ -43,7 +43,13 @@ export default {
   }
 
   span {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    display: block;
+
+    @media (min-width: $tablet) {
+      font-size: 2.5rem;
+      display: inline-block;
+    }
   }
 }
 </style>
