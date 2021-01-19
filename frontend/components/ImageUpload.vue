@@ -73,7 +73,7 @@ export default {
     return {
       file: null,
       previewUrl: null,
-      maxWidth: 800,
+      maxWidth: 1024,
       dragging: 0,
     }
   },
