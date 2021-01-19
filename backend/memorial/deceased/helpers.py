@@ -29,11 +29,7 @@ def compress_image(image, max_width=1024, max_height=1024, quality=85):
 def compress_and_assign_image(model, instance, field_name='image'):
     image = getattr(instance, field_name)
     if image:
-        image.save(
-            'image.jpg',
-            compress_image(image=image, max_width=512),
-            save=False,
-        )
+        image.save('image.jpg', compress_image(image=image), save=False)
 
 
 def random_string():
