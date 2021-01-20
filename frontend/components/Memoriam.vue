@@ -26,7 +26,22 @@
               :code="codeVerified"
               :has-content="message != null"
             />
-            <h2 v-if="error">Memorial not found</h2>
+            <div v-if="error" class="not-found">
+              <h2>Memorial not found</h2>
+              <p>Thank you for visiting The COVID Memorial.</p>
+              <p>
+                Unfortunately, the individual memorial you are looking for does
+                not exist. Please check you have the correct link.
+              </p>
+              <p>
+                The memorial you are looking for may have been removed due to
+                one of the following reasons:
+              </p>
+              <ul>
+                <li>The memorial violated our terms of service</li>
+                <li>We received a request to delete the memorial</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -211,6 +226,21 @@ export default {
     margin: 0 0 1rem auto;
     border: 3px solid $surface;
     border-radius: 50%;
+  }
+}
+
+.not-found {
+  h2 {
+    margin-bottom: 2rem;
+  }
+
+  p {
+    margin-bottom: 2rem;
+    line-height: 1.4;
+  }
+
+  li {
+    margin-bottom: 1rem;
   }
 }
 </style>

@@ -11,72 +11,24 @@
         <h2>COVID-19 Death Count</h2>
         <p>
           We use the
-          <a href="https://about-corona.net/" target="_blank"
-            >About-Corona.Net</a
-          >
+          <a href="https://disease.sh/" target="_blank">disease.sh</a>
           API to collect and display the total number of people who have sadly
           passed in each country, as a result of COVID-19.
         </p>
         <p>
           The data we receive via the
-          <a href="https://about-corona.net/" target="_blank"
-            >About-Corona.Net</a
-          >
-          API, originates from the following sources:
+          <a href="https://disease.sh/" target="_blank">disease.sh</a>
+          API, originates from
+          <a href="https://github.com/disease-sh/API#sources" target="_blank"
+            >these sources</a
+          >.
         </p>
-        <ul class="list">
-          <li>
-            <a
-              href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports"
-              target="_blank"
-              >WHO Situation Reports</a
-            >
-          </li>
-          <li>
-            <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank"
-              >Data Repository by Johns Hopkins CSSE</a
-            >
-          </li>
-          <li>
-            <a
-              href="http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml"
-              target="_blank"
-              >National Health Commission of the People’s Republic of China
-              (NHC)</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases"
-              target="_blank"
-              >European Centre for Disease Prevention and Control (ECDC)</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://www.cdc.gov/coronavirus/2019-ncov/index.html"
-              target="_blank"
-              >US CDC</a
-            >
-          </li>
-          <li>
-            <a
-              href="http://weekly.chinacdc.cn/news/TrackingtheEpidemic.htm"
-              target="_blank"
-              >China CDC (CCDC)</a
-            >
-          </li>
-          <li>
-            <a href="http://dxy.cn/" target="_blank">DXY.cn.</a>
-            <a href="http://3g.dxy.cn/newh5/view/pneumonia" target="_blank"
-              >Pneumonia. 2020</a
-            >
-          </li>
-        </ul>
         <p>
           Therefore, the total number of deaths we display on the Memorial when
-          you first load the page, is the most recent figure compiled from these
-          sources. This is updated daily.
+          you first load the page, is the most recent figure compiled from
+          <a href="https://github.com/disease-sh/API#sources" target="_blank"
+            >these sources</a
+          >. This is updated daily.
         </p>
         <p>
           To provide a visual reminder of the ongoing situation, the number of
