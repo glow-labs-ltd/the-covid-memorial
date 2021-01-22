@@ -31,10 +31,11 @@
 
         <h3>Who We Are and How to Contact Us</h3>
         <p>
-          The Website is operated by Glow Labs Limited (We or Us), a limited
-          company registered in England under company number 12241399, whose
-          registered address is Freeths Routeco Business Park, Davy Avenue,
-          Knowlhill, Milton Keynes, Buckinghamshire, United Kingdom, MK5 8HJ.
+          The Website is operated by The COVID Memorial Limited (We or Us), a
+          limited company registered in England under company number 13152416,
+          whose registered address is Freeths Routeco Business Park, Davy
+          Avenue, Knowlhill, Milton Keynes, Buckinghamshire, United Kingdom, MK5
+          8HJ.
         </p>
         <p>
           For all queries about The COVID Memorial, please email
@@ -462,8 +463,8 @@
 
         <h2 id="privacy">The COVID Memorial Privacy Notice</h2>
         <p>
-          This website is operated by Glow Labs Limited (company number
-          12241399), and referred to as "The COVID Memorial", "we", "us" or
+          This website is operated by The COVID Memorial Limited (company number
+          13152416), and referred to as "The COVID Memorial", "we", "us" or
           "our" in this privacy notice. The COVID Memorial is the data
           controller and is responsible for your personal data. Personal data is
           information, or a combination of pieces of information, about an
