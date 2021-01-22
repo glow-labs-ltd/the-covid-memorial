@@ -2,7 +2,7 @@
   <div class="overview-info">
     <div>
       <button aria-label="What am I looking at?" @click="buttonClick">
-        <img src="~/assets/images/info-icon.svg" />
+        <img src="~/assets/images/info-icon.svg" alt="Info" />
       </button>
       <transition name="fade-slow" mode="out-in">
         <div
