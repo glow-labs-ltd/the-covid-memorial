@@ -5,6 +5,7 @@ from .base import *
 
 ALLOWED_HOSTS = [
     '.appspot.com',
+    '.thecovid.memorial'
 ]
 
 DEBUG = False
