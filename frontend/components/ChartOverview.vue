@@ -65,7 +65,7 @@ export default {
       }.bind(this)
     )
 
-    const interval = 300000 / this.difference
+    const interval = 900000 / this.difference
     setTimeout(
       function () {
         this.spawnMoreDots(interval, nodes)
