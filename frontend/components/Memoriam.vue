@@ -5,7 +5,7 @@
         <button v-if="codeVerified" @click="toggleShareExpanded">
           Share this memorial
         </button>
-        <a href="#" @click.prevent="$emit('close')"
+        <a href="" @click.prevent="$emit('close')"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>

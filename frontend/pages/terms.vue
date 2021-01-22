@@ -2,7 +2,7 @@
   <div class="container scroll">
     <div class="info-wrapper limit-width">
       <div class="close">
-        <a href="#" @click.prevent="$router.push('/')"
+        <a href="" @click.prevent="$router.push('/')"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
@@ -908,6 +908,19 @@ export default {
   transition: {
     name: 'fade-slow',
     mode: '',
+  },
+  mounted() {
+    if (this.$route.hash) {
+      setTimeout(() => this.scrollTo(this.$route.hash), 1)
+    }
+  },
+  methods: {
+    scrollTo(hash) {
+      const id = hash.substring(1)
+      document.getElementById(id).scrollIntoView({
+        behavior: 'smooth',
+      })
+    },
   },
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="search-results scroll">
       <div class="close">
-        <a href="#" @click.prevent="close"
+        <a href="" @click.prevent="close"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>

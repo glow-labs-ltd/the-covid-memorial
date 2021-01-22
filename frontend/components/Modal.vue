@@ -11,10 +11,10 @@
         <header class="modal__header">
           <slot name="header">Modal header</slot>
           <a
-            href="#"
+            href=""
             aria-label="Close modal"
             class="modal__exit"
-            @click="$emit('close')"
+            @click.prevent="$emit('close')"
             ><img src="~/assets/images/close-icon.svg" alt="Close"
           /></a>
         </header>
