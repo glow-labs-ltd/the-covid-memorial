@@ -82,6 +82,11 @@
           </div>
 
           <div class="row">
+            <label for="occupation">Occupation</label>
+            <input v-model="occupation" type="text" name="occupation" />
+          </div>
+
+          <div class="row">
             <label for="message"
               >Tell their story <span class="required">*</span></label
             >
@@ -172,6 +177,7 @@ export default {
       colour: null,
       country: null,
       city: null,
+      occupation: null,
       message: null,
       amend: false,
       terms: false,
@@ -219,6 +225,7 @@ export default {
         colour: this.colour?.value,
         country: this.country?.value,
         city: this.city,
+        occupation: this.occupation,
         message: this.message,
       }
 
