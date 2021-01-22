@@ -3,7 +3,7 @@
     <div class="limit-width">
       <div class="close">
         <button v-if="codeVerified" @click="toggleShareExpanded">
-          Share this memoriam
+          Share this memorial
         </button>
         <a href="#" @click.prevent="$emit('close')"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
