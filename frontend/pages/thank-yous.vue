@@ -26,17 +26,27 @@
           <li>Sam Carty</li>
         </ul>
 
-        <!--
         <h2>For publicising The COVID Memorial</h2>
         <ul class="list">
-          <li></li>
+          <li>
+            <a
+              href="https://www.shapehistory.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Shape History</a
+            >
+          </li>
         </ul>
-        -->
 
         <h2>For providing legal advice to The COVID Memorial</h2>
         <ul class="list">
           <li>
-            <a href="https://www.freeths.co.uk/" target="_blank">Freeths LLP</a>
+            <a
+              href="https://www.freeths.co.uk/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Freeths LLP</a
+            >
           </li>
           <li>Will Richmond-Coggan</li>
         </ul>

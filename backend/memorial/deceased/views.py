@@ -10,7 +10,7 @@ from .serializers import (CommentSerializer, DeceasedPreviewSerializer,
 
 class DeceasedAPIViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                          mixins.CreateModelMixin, GenericViewSet):
-    queryset = Deceased.objects.all()
+    queryset = Deceased.objects.filter(archived=False)
     pagination_class = None
     lookup_field = 'slug'
 

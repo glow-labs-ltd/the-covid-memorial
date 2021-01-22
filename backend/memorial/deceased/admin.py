@@ -11,10 +11,12 @@ class DeceasedAdmin(admin.ModelAdmin):
         'short_message',
         'image_tag',
         'approved',
+        'archived',
         'date_created',
     )
     list_filter = (
         'approved',
+        'archived',
     )
     search_fields = (
         'id',
@@ -25,6 +27,9 @@ class DeceasedAdmin(admin.ModelAdmin):
     actions = (
         'make_approved',
         'make_unapproved',
+    )
+    readonly_fields = (
+        'comment_url',
     )
 
     def make_approved(self, request, queryset):

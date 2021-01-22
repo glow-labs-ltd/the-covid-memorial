@@ -13,7 +13,7 @@ from .helpers import compress_and_assign_image, get_image_path, random_string
 
 class DeceasedManager(models.Manager):
     def approved(self):
-        return super().get_queryset().filter(approved=True)
+        return super().get_queryset().filter(approved=True, archived=False)
 
 
 class Deceased(models.Model):
@@ -23,6 +23,7 @@ class Deceased(models.Model):
     age = models.PositiveIntegerField(blank=True, null=True)
     country = CountryField(null=False, blank=False, default="GB")
     city = models.TextField(max_length=120, null=True, blank=True)
+    occupation = models.TextField(max_length=120, null=True, blank=True)
     image = models.ImageField(
         storage=GoogleCloudStorage(
             bucket_name=settings.GS_PUBLIC_BUCKET_NAME,
@@ -50,6 +51,7 @@ class Deceased(models.Model):
         editable=False
     )
     approved = models.BooleanField(default=False, null=False)
+    archived = models.BooleanField(default=False, null=False)
     date_created = models.DateTimeField(auto_now=True)
 
     objects = DeceasedManager()
@@ -67,7 +69,11 @@ class Deceased(models.Model):
 
     @property
     def short_message(self):
-        return truncatechars(self.message, 1000)
+        return truncatechars(self.message, 500)
+
+    @property
+    def comment_url(self):
+        return '/memoriam/{}/{}'.format(self.slug, self.code)
 
     def comments(self):
         return self.comment_set()
