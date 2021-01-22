@@ -1,8 +1,5 @@
 const production = process.env.NODE_ENV === 'production'
 
-const app = (process.env.GAE_APPLICATION || '').split('~')
-const appEngineURL = app.length === 2 ? `https://${app[1]}.appspot.com` : null
-
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
@@ -84,7 +81,9 @@ export default {
   },
 
   axios: {
-    baseURL: production ? `${appEngineURL}/api/` : 'http://localhost:3000/api/',
+    baseURL: production
+      ? `https://thecovid.memorial/api/`
+      : 'http://localhost:3000/api/',
     browserBaseURL: production ? '/api/' : 'http://localhost:3000/api/',
     proxy: !production, // enable proxy for development
     prefix: '/api/', // used only when proxy is enabled
