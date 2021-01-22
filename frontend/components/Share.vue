@@ -2,109 +2,111 @@
   <div>
     <transition name="share">
       <div v-if="expanded" class="share shadow">
-        <p>
-          <strong>
-            Please bookmark this page or make a note of these links, as they
-            will no longer be available once you leave this screen.
-          </strong>
-        </p>
-        <client-only>
-          <div class="links">
-            <div>
-              <h3>Share: Allow comments</h3>
-              <p>
-                Only the people you share this link with can leave comments on
-                this memorial.
-              </p>
-              <div class="url">
-                <input type="text" :value="linkComments" readonly />
-                <CopyButton @click="copy(linkComments)" />
+        <div class="share__content">
+          <p>
+            <strong>
+              Please bookmark this page or make a note of these links, as they
+              will no longer be available once you leave this screen.
+            </strong>
+          </p>
+          <client-only>
+            <div class="links">
+              <div>
+                <h3>Share: Allow comments</h3>
+                <p>
+                  Only the people you share this link with can leave comments on
+                  this memorial.
+                </p>
+                <div class="url">
+                  <input type="text" :value="linkComments" readonly />
+                  <CopyButton @click="copy(linkComments)" />
+                </div>
+                <div class="social">
+                  <a
+                    v-if="facebookCommentsShare"
+                    :href="facebookCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/facebook-icon.svg"
+                      alt="facebook share with comments"
+                    />
+                  </a>
+                  <a
+                    v-if="twitterCommentsShare"
+                    :href="twitterCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/twitter-icon.svg"
+                      alt="twitter share with comments"
+                    />
+                  </a>
+                  <a
+                    v-if="whatsappCommentsShare"
+                    :href="whatsappCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/whatsapp-icon.svg"
+                      alt="whatsapp share with comments"
+                    />
+                  </a>
+                </div>
               </div>
-              <div class="social">
-                <a
-                  v-if="facebookCommentsShare"
-                  :href="facebookCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/facebook-icon.svg"
-                    alt="facebook share with comments"
-                  />
-                </a>
-                <a
-                  v-if="twitterCommentsShare"
-                  :href="twitterCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/twitter-icon.svg"
-                    alt="twitter share with comments"
-                  />
-                </a>
-                <a
-                  v-if="whatsappCommentsShare"
-                  :href="whatsappCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/whatsapp-icon.svg"
-                    alt="whatsapp share with comments"
-                  />
-                </a>
+              <div class="divider"></div>
+              <div>
+                <h3>Share: No comments</h3>
+                <p>
+                  This link allows people to view this memorial but prevents
+                  them from leaving comments.
+                </p>
+                <div class="url">
+                  <input type="text" :value="linkNoComments" readonly />
+                  <CopyButton @click="copy(linkNoComments)" />
+                </div>
+                <div class="social">
+                  <a
+                    v-if="facebookNoCommentsShare"
+                    :href="facebookNoCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/facebook-icon.svg"
+                      alt="facebook share without comments"
+                    />
+                  </a>
+                  <a
+                    v-if="twitterNoCommentsShare"
+                    :href="twitterNoCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/twitter-icon.svg"
+                      alt="twitter share without comments"
+                    />
+                  </a>
+                  <a
+                    v-if="whatsappNoCommentsShare"
+                    :href="whatsappNoCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/whatsapp-icon.svg"
+                      alt="whatsapp share without comments"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
-            <div class="divider"></div>
-            <div>
-              <h3>Share: No comments</h3>
-              <p>
-                This link allows people to view this memorial but prevents them
-                from leaving comments.
-              </p>
-              <div class="url">
-                <input type="text" :value="linkNoComments" readonly />
-                <CopyButton @click="copy(linkNoComments)" />
-              </div>
-              <div class="social">
-                <a
-                  v-if="facebookNoCommentsShare"
-                  :href="facebookNoCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/facebook-icon.svg"
-                    alt="facebook share without comments"
-                  />
-                </a>
-                <a
-                  v-if="twitterNoCommentsShare"
-                  :href="twitterNoCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/twitter-icon.svg"
-                    alt="twitter share without comments"
-                  />
-                </a>
-                <a
-                  v-if="whatsappNoCommentsShare"
-                  :href="whatsappNoCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/whatsapp-icon.svg"
-                    alt="whatsapp share without comments"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </client-only>
+          </client-only>
+        </div>
       </div>
     </transition>
   </div>
@@ -179,8 +181,10 @@ export default {
 <style lang="scss" scoped>
 .share {
   background-color: $surface;
-  box-sizing: content-box;
-  padding: 2rem;
+
+  &__content {
+    padding: 2rem;
+  }
 
   h2 {
     font-size: 3.25rem;
@@ -257,10 +261,10 @@ export default {
 .share-enter-active,
 .share-leave-active {
   transition: all $slow $standard-easing;
-  max-height: 46rem;
+  max-height: 48rem;
 
-  @media (min-width: $phone) {
-    max-height: 26rem;
+  @media (min-width: $tablet) {
+    max-height: 32rem;
   }
 }
 .share-enter,
