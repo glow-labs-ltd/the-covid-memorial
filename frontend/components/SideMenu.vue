@@ -16,24 +16,28 @@
           <NuxtLink to="/donate">Donate</NuxtLink>
         </div>
         <div class="foot">
+          <div class="icons">
+            <div></div>
+
+            <a href="https://www.instagram.com/covidmemorials/" target="_blank">
+              <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
+            </a>
+            <a href="https://www.twitter.com/covidmemorials" target="_blank">
+              <img src="~/assets/images/twitter-icon.svg" alt="Twitter" />
+            </a>
+            <a
+              href="https://www.facebook.com/The-Covid-Memorial-100915478635289"
+              target="_blank"
+            >
+              <img src="~/assets/images/facebook-icon.svg" alt="Facebook" />
+            </a>
+          </div>
           <a
             href="mailto:contact@thecovid.memorial"
             target="_blank"
             class="foot__contact"
             >contact@thecovid.memorial</a
           >
-          <a href="https://www.instagram.com/covidmemorials/" target="_blank">
-            <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
-          </a>
-          <a href="https://www.twitter.com/covidmemorials" target="_blank">
-            <img src="~/assets/images/twitter-icon.svg" alt="Twitter" />
-          </a>
-          <a
-            href="https://www.facebook.com/The-Covid-Memorial-100915478635289"
-            target="_blank"
-          >
-            <img src="~/assets/images/facebook-icon.svg" alt="Facebook" />
-          </a>
           <span
             >© The COVID Memorial Limited<br />Company number: 13152416</span
           >
@@ -96,10 +100,18 @@ aside {
   }
 
   .foot {
-    margin: auto 0 2rem;
+    margin: auto 0 0;
     display: grid;
-    grid-template: auto / auto auto auto 1fr;
-    grid-gap: 1rem;
+
+    > * {
+      margin: 0.75rem 0;
+    }
+
+    .icons {
+      display: grid;
+      grid-template: auto / 1fr auto auto auto;
+      grid-gap: 1rem;
+    }
 
     img {
       width: 4.25rem;
@@ -108,7 +120,7 @@ aside {
 
     span {
       font-size: 1.75rem;
-      margin: auto;
+      margin-left: auto;
       text-align: right;
     }
 
