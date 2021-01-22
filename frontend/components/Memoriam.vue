@@ -15,6 +15,7 @@
             <h1 class="name">{{ name }}</h1>
             <h3 class="dates">{{ dates }}</h3>
             <h2 class="city">{{ cityCountry }}</h2>
+            <h2 class="occupation">{{ occupation }}</h2>
           </div>
         </div>
         <div class="right">
@@ -38,8 +39,11 @@
                 one of the following reasons:
               </p>
               <ul>
-                <li>The memorial violated our terms of service</li>
                 <li>We received a request to delete the memorial</li>
+                <li>
+                  The memorial violated our
+                  <NuxtLink to="/terms">terms of service</NuxtLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -85,6 +89,9 @@ export default {
     },
     name() {
       return this.memoriam?.name
+    },
+    occupation() {
+      return this.memoriam?.occupation
     },
     cityCountry() {
       const city = this.memoriam?.city ?? ''
@@ -192,7 +199,8 @@ export default {
   }
 
   .dates,
-  .city {
+  .city,
+  .occupation {
     font-size: 1.75rem;
     font-weight: 400;
     margin: 1rem 0;

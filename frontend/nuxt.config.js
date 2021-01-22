@@ -18,7 +18,7 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'The COVID Memorial is a place to commemorate all those around the world who have sadly lost their lives due to the pandemic.',
+          'The COVID Memorial is a place to commemorate all those around the world, who have sadly lost their lives due to the pandemic.',
       },
     ],
     link: [

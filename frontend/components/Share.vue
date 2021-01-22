@@ -13,19 +13,19 @@
     <transition name="share">
       <div v-show="expanded">
         <p>
-          In order to protect your comments we only allow people to comment if
-          you give them the special link to do it.
-        </p>
-        <p>
           <strong>
-            NOTE: Please make sure you make a note of the commenting link as it
-            won’t be available after you leave this screen.
+            Please bookmark this page or make a note of these links, as they
+            will no longer be available once you leave this screen.
           </strong>
         </p>
         <client-only>
           <div class="links">
             <div>
               <h3>Share: Allow comments</h3>
+              <p>
+                Only the people you share this link with can leave comments on
+                this memorial.
+              </p>
               <div class="url">
                 <input type="text" :value="linkComments" readonly />
                 <CopyButton @click="copy(linkComments)" />
@@ -53,11 +53,26 @@
                     alt="twitter share with comments"
                   />
                 </a>
+                <a
+                  v-if="whatsappCommentsShare"
+                  :href="whatsappCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/whatsapp-icon.svg"
+                    alt="whatsapp share with comments"
+                  />
+                </a>
               </div>
             </div>
             <div class="divider"></div>
             <div>
               <h3>Share: No comments</h3>
+              <p>
+                This link allows people to view this memorial but prevents them
+                from leaving comments.
+              </p>
               <div class="url">
                 <input type="text" :value="linkNoComments" readonly />
                 <CopyButton @click="copy(linkNoComments)" />
@@ -83,6 +98,17 @@
                   <img
                     src="~/assets/images/twitter-icon.svg"
                     alt="twitter share without comments"
+                  />
+                </a>
+                <a
+                  v-if="whatsappNoCommentsShare"
+                  :href="whatsappNoCommentsShare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="~/assets/images/whatsapp-icon.svg"
+                    alt="whatsapp share without comments"
                   />
                 </a>
               </div>
@@ -137,6 +163,12 @@ export default {
     twitterNoCommentsShare() {
       return process.client ? this.twitterShare(this.linkNoComments) : null
     },
+    whatsappCommentsShare() {
+      return process.client ? this.whatsappShare(this.linkComments) : null
+    },
+    whatsappNoCommentsShare() {
+      return process.client ? this.whatsappShare(this.linkNoComments) : null
+    },
   },
   methods: {
     copy(link) {
@@ -147,6 +179,9 @@ export default {
     },
     twitterShare(link) {
       return `https://twitter.com/intent/tweet?text=${this.shareText}&url=${link}`
+    },
+    whatsappShare(link) {
+      return `https://api.whatsapp.com/send?text=${this.shareText}%0D%0A${link}`
     },
     expandToggle() {
       this.expanded = !this.expanded
