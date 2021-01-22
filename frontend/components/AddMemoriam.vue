@@ -2,7 +2,7 @@
   <div>
     <Modal :visible="$store.state.addModal" @close="close">
       <h2 id="modalTitle" slot="header" class="generic-modal__header">
-        Add memoriam
+        Add memorial
       </h2>
       <div slot="body" class="generic-modal__wrapper">
         <hr />
@@ -127,7 +127,8 @@
                   required
                 />
                 <label for="terms"
-                  >I have read and agreed to the terms of service.</label
+                  >I have read and agreed to the
+                  <a href="/terms" target="_blank">terms of service</a>.</label
                 >
               </div>
               <div>
@@ -140,7 +141,9 @@
                   required
                 />
                 <label for="privacy"
-                  >I have read and agreed to the privacy notice.</label
+                  >I have read and agreed to the
+                  <a href="/terms#privacy" target="_blank">privacy notice</a
+                  >.</label
                 >
               </div>
             </div>
