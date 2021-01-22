@@ -24,13 +24,18 @@ export default {
       simulation: null,
       minZoom: null,
       maxZoom: null,
-      maxDots: 7500,
       dotSpawner: null,
+      startingNumDots: 400,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,
     }
   },
-  computed: mapState(['overviewTransition']),
+  computed: {
+    ...mapState(['overviewTransition']),
+    difference() {
+      return this.$store.state.count.today - this.$store.state.count.yesterday
+    },
+  },
   watch: {
     overviewTransition() {
       if (this.overviewTransition) this.animateOut()
@@ -41,7 +46,7 @@ export default {
     this.resizeCanvas()
     const context = this.canvas.node().getContext('2d')
 
-    const radii = Array.from({ length: 800 }, this.radius)
+    const radii = Array.from({ length: this.startingNumDots }, this.radius)
     const nodes = radii.map((r) => ({ r }))
     this.transform = d3.zoomIdentity
     this.opacityScale = d3
@@ -60,9 +65,10 @@ export default {
       }.bind(this)
     )
 
+    const interval = 300000 / this.difference
     setTimeout(
       function () {
-        this.spawnMoreDots(100, nodes)
+        this.spawnMoreDots(interval, nodes)
       }.bind(this),
       3000
     )
@@ -155,7 +161,7 @@ export default {
       )
     },
     addNode(nodes) {
-      if (nodes.length < this.maxDots) {
+      if (nodes.length < this.difference + this.startingNumDots) {
         nodes.push({ r: this.radius() })
         this.simulation.nodes(nodes)
       }
