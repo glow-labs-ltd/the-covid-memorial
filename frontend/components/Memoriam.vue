@@ -9,12 +9,7 @@
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
-      <Share
-        v-if="codeVerified"
-        :name="name"
-        :expanded="shareExpanded"
-        class="share-panel"
-      />
+      <Share :name="name" :expanded="shareExpanded" class="share-panel" />
       <div class="memoriam shadow">
         <div class="left">
           <img v-if="image" class="portrait" :src="image" />
@@ -251,6 +246,10 @@ export default {
   @media (min-width: $tablet) {
     align-items: flex-end;
     margin: 0;
+  }
+
+  a {
+    margin-left: auto;
   }
 
   img {
