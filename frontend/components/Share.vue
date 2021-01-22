@@ -1,94 +1,86 @@
 <template>
-  <div class="share shadow">
-    <h2 @click="expandToggle">
-      Share memoriam
-      <button :aria-label="expanded ? 'Close share panel' : 'Open share panel'">
-        <img
-          src="~/assets/images/expand-icon.svg"
-          alt="expand"
-          :class="{ expanded }"
-        />
-      </button>
-    </h2>
+  <div>
     <transition name="share">
-      <div v-show="expanded">
-        <p>
-          In order to protect your comments we only allow people to comment if
-          you give them the special link to do it.
-        </p>
-        <p>
-          <strong>
-            NOTE: Please make sure you make a note of the commenting link as it
-            won’t be available after you leave this screen.
-          </strong>
-        </p>
-        <client-only>
-          <div class="links">
-            <div>
-              <h3>Share: Allow comments</h3>
-              <div class="url">
-                <input type="text" :value="linkComments" readonly />
-                <CopyButton @click="copy(linkComments)" />
+      <div v-if="expanded" class="share shadow">
+        <div class="share__content">
+          <p>
+            In order to protect your comments we only allow people to comment if
+            you give them the special link to do it.
+          </p>
+          <p>
+            <strong>
+              NOTE: Please make sure you make a note of the commenting link as
+              it won’t be available after you leave this screen.
+            </strong>
+          </p>
+          <client-only>
+            <div class="links">
+              <div>
+                <h3>Share: Allow comments</h3>
+                <div class="url">
+                  <input type="text" :value="linkComments" readonly />
+                  <CopyButton @click="copy(linkComments)" />
+                </div>
+                <div class="social">
+                  <a
+                    v-if="facebookCommentsShare"
+                    :href="facebookCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/facebook-icon.svg"
+                      alt="facebook share with comments"
+                    />
+                  </a>
+                  <a
+                    v-if="twitterCommentsShare"
+                    :href="twitterCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/twitter-icon.svg"
+                      alt="twitter share with comments"
+                    />
+                  </a>
+                </div>
               </div>
-              <div class="social">
-                <a
-                  v-if="facebookCommentsShare"
-                  :href="facebookCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/facebook-icon.svg"
-                    alt="facebook share with comments"
-                  />
-                </a>
-                <a
-                  v-if="twitterCommentsShare"
-                  :href="twitterCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/twitter-icon.svg"
-                    alt="twitter share with comments"
-                  />
-                </a>
+              <div class="divider"></div>
+              <div>
+                <h3>Share: No comments</h3>
+                <div class="url">
+                  <input type="text" :value="linkNoComments" readonly />
+                  <CopyButton @click="copy(linkNoComments)" />
+                </div>
+                <div class="social">
+                  <a
+                    v-if="facebookNoCommentsShare"
+                    :href="facebookNoCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/facebook-icon.svg"
+                      alt="facebook share without comments"
+                    />
+                  </a>
+                  <a
+                    v-if="twitterNoCommentsShare"
+                    :href="twitterNoCommentsShare"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="~/assets/images/twitter-icon.svg"
+                      alt="twitter share without comments"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
-            <div class="divider"></div>
-            <div>
-              <h3>Share: No comments</h3>
-              <div class="url">
-                <input type="text" :value="linkNoComments" readonly />
-                <CopyButton @click="copy(linkNoComments)" />
-              </div>
-              <div class="social">
-                <a
-                  v-if="facebookNoCommentsShare"
-                  :href="facebookNoCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/facebook-icon.svg"
-                    alt="facebook share without comments"
-                  />
-                </a>
-                <a
-                  v-if="twitterNoCommentsShare"
-                  :href="twitterNoCommentsShare"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="~/assets/images/twitter-icon.svg"
-                    alt="twitter share without comments"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </client-only>
+          </client-only>
+        </div>
       </div>
     </transition>
   </div>
@@ -103,11 +95,10 @@ export default {
       type: String,
       default: null,
     },
-  },
-  data() {
-    return {
-      expanded: false,
-    }
+    expanded: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     linkComments() {
@@ -148,9 +139,6 @@ export default {
     twitterShare(link) {
       return `https://twitter.com/intent/tweet?text=${this.shareText}&url=${link}`
     },
-    expandToggle() {
-      this.expanded = !this.expanded
-    },
   },
 }
 </script>
@@ -158,7 +146,10 @@ export default {
 <style lang="scss" scoped>
 .share {
   background-color: $surface;
-  padding: 2rem;
+
+  &__content {
+    padding: 2rem;
+  }
 
   h2 {
     font-size: 3.25rem;

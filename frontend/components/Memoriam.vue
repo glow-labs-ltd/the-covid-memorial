@@ -2,11 +2,19 @@
   <div class="wrapper scroll">
     <div class="limit-width">
       <div class="close">
+        <button v-if="codeVerified" @click="toggleShareExpanded">
+          Share this memoriam
+        </button>
         <a href="#" @click.prevent="$emit('close')"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
-      <Share v-if="codeVerified" :name="name" class="share" />
+      <Share
+        v-if="codeVerified"
+        :name="name"
+        :expanded="shareExpanded"
+        class="share-panel"
+      />
       <div class="memoriam shadow">
         <div class="left">
           <img v-if="image" class="portrait" :src="image" />
@@ -77,6 +85,7 @@ export default {
     return {
       memoriam: null,
       error: null,
+      shareExpanded: false,
     }
   },
   computed: {
@@ -140,6 +149,11 @@ export default {
       return this.memoriam?.can_comment ? this.code : null
     },
   },
+  methods: {
+    toggleShareExpanded() {
+      this.shareExpanded = !this.shareExpanded
+    },
+  },
 }
 </script>
 
@@ -152,7 +166,8 @@ export default {
   }
 }
 
-.share {
+.share-panel {
+  margin-top: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -220,10 +235,19 @@ export default {
 }
 
 .close {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 2rem;
+
+  @media (min-width: $tablet) {
+    align-items: flex-end;
+    margin: 0;
+  }
+
   img {
     width: 4rem;
     height: 4rem;
-    margin: 0 0 1rem auto;
     border: 3px solid $surface;
     border-radius: 50%;
   }
