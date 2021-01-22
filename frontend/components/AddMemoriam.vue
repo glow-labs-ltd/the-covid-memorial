@@ -151,7 +151,12 @@
               Please be aware that it may take up to 24 hours for your
               submission to appear in search results.
             </p>
-            <input type="submit" value="Submit" class="submit" />
+            <input
+              type="submit"
+              :value="submitText"
+              :disabled="loading"
+              class="submit"
+            />
           </div>
         </form>
 
@@ -195,6 +200,7 @@ export default {
       countries: Object.entries(
         countryList.getNames('en')
       ).map(([key, value]) => ({ value: key, label: value })),
+      loading: false,
     }
   },
   computed: {
@@ -210,6 +216,9 @@ export default {
     },
     messageLength() {
       return this.message?.length || 0
+    },
+    submitText() {
+      return !this.loading ? 'Submit' : 'Loading...'
     },
   },
   methods: {
@@ -238,6 +247,7 @@ export default {
       if (croppedImage)
         formData.append('image', croppedImage.blob, croppedImage.fileName)
 
+      this.loading = true
       const response = await this.$store.dispatch('postDeceased', formData)
       if (response) {
         this.$store.commit('setAddModal', false)
@@ -246,6 +256,7 @@ export default {
           params: { slug: response.slug, code: response.code },
         })
       }
+      this.loading = false
     },
   },
 }
