@@ -218,7 +218,7 @@ export default {
           node
             .append('defs')
             .append('clipPath')
-            .attr('id', 'clip-circle')
+            .attr('id', (d, i) => `clip-circle-${i}-${x}${y}`)
             .append('circle')
             .attr('r', (d, i) =>
               d.human ? this.fDotRadius - 2 : this.fDotRadius * 0.75
@@ -242,7 +242,7 @@ export default {
               d.human ? diameter - 2 : diameter * 0.75
             )
             .attr('preserveAspectRatio', 'xMidYMid slice')
-            .attr('clip-path', 'url(#clip-circle)')
+            .attr('clip-path', (d, i) => `url(#clip-circle-${i}-${x}${y})`)
             .attr('style', 'pointer-events: none;')
             .attr('class', 'dot-image')
         }
