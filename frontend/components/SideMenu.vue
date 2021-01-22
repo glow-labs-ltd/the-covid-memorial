@@ -22,16 +22,21 @@
             class="foot__contact"
             >contact@thecovid.memorial</a
           >
-          <a
-            href="https://www.instagram.com/thecovid.memorial/"
-            target="_blank"
-          >
+          <a href="https://www.instagram.com/covidmemorials/" target="_blank">
             <img src="~/assets/images/instagram-icon.svg" alt="Instagram" />
           </a>
-          <a href="https://www.twitter.com/covidmemorialhq" target="_blank">
+          <a href="https://www.twitter.com/covidmemorials" target="_blank">
             <img src="~/assets/images/twitter-icon.svg" alt="Twitter" />
           </a>
-          <span>© The COVID Memorial is Copyright 2021</span>
+          <a
+            href="https://www.facebook.com/The-Covid-Memorial-100915478635289"
+            target="_blank"
+          >
+            <img src="~/assets/images/facebook-icon.svg" alt="Facebook" />
+          </a>
+          <span
+            >© The COVID Memorial Limited<br />Company number: 13152416</span
+          >
         </div>
       </aside>
     </transition>
@@ -93,7 +98,7 @@ aside {
   .foot {
     margin: auto 0 2rem;
     display: grid;
-    grid-template: auto / auto auto 1fr;
+    grid-template: auto / auto auto auto 1fr;
     grid-gap: 1rem;
 
     img {
@@ -104,6 +109,7 @@ aside {
     span {
       font-size: 1.75rem;
       margin: auto;
+      text-align: right;
     }
 
     &__contact {

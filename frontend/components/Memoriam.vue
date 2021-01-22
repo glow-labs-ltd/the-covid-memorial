@@ -38,8 +38,11 @@
                 one of the following reasons:
               </p>
               <ul>
-                <li>The memorial violated our terms of service</li>
                 <li>We received a request to delete the memorial</li>
+                <li>
+                  The memorial violated our
+                  <NuxtLink to="/terms">terms of service</NuxtLink>
+                </li>
               </ul>
             </div>
           </div>

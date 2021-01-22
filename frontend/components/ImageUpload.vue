@@ -40,7 +40,10 @@
     <div class="instruction">
       <template v-if="!file">
         <h3>Add their photograph</h3>
-        <p>Try to use a photo where the person is in the centre of the image</p>
+        <p>
+          Please try to use a photo where the person is in the centre of the
+          image.
+        </p>
       </template>
       <template v-else>
         <button @click.prevent="$refs.fileInput.click()">

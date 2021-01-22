@@ -25,8 +25,7 @@
         </p>
         <p>
           The COVID Memorial is also a reminder that our actions can prevent
-          further deaths. Complacency kills. Please be mindful, wear a mask,
-          distance and respect local lockdowns.
+          further deaths. Please be mindful, wear a mask and distance.
         </p>
       </div>
     </div>
