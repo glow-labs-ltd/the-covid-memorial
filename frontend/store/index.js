@@ -77,6 +77,9 @@ export const actions = {
       commit('setDeceasedLoading', true)
       const deceased = await this.$axios.$get('deceased/')
       commit('appendDeceased', deceased)
+    } catch (e) {
+      // for not, not much to do
+      if (e.response.status === 429) return
     } finally {
       commit('setDeceasedLoading', false)
     }
