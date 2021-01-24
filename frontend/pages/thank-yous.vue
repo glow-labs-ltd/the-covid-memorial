@@ -2,7 +2,7 @@
   <div class="container scroll">
     <div class="info-wrapper limit-width">
       <div class="close">
-        <a href="#" @click.prevent="$router.push('/')"
+        <a href="" @click.prevent="$router.push('/')"
           ><img src="~/assets/images/close-icon.svg" alt="Close"
         /></a>
       </div>
