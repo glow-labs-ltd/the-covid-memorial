@@ -46,6 +46,7 @@ REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
     'rest_framework.renderers.BrowsableAPIRenderer'
 )
 REST_FRAMEWORK['DEFAULT_METADATA_CLASS'] = 'rest_framework.metadata.SimpleMetadata'
+REST_FRAMEWORK['DEFAULT_THROTTLE_CLASSES'] = []
 
 GS_PUBLIC_BUCKET_NAME = 'tcm-test-989aa9b5-319a-470e-876c-d9ba2131c1c1'
 
