@@ -313,20 +313,26 @@ export default {
 
         if (visible && !d.deceasedId) {
           const deceasedToAdd = this.$store.state.deceased[0]
-          this.$store.commit('shiftDeceased')
           if (deceasedToAdd) {
-            dotsToCheck
-              .select('.dot-background')
-              .attr('fill', this.colours[deceasedToAdd.colour])
-            dotsToCheck
-              .select('.dot-image')
-              .attr('xlink:href', deceasedToAdd.image)
-            dotsToCheck
-              .transition()
-              .attr('opacity', 1)
-              .duration(1000)
-              .delay(500)
-            d.deceasedId = deceasedToAdd.slug
+            this.$store.commit('shiftDeceased')
+            // check if this is in the current dots?
+            const exists = this.data.some(
+              (d) => d.deceasedId === deceasedToAdd?.slug
+            )
+            if (!exists) {
+              dotsToCheck
+                .select('.dot-background')
+                .attr('fill', this.colours[deceasedToAdd.colour])
+              dotsToCheck
+                .select('.dot-image')
+                .attr('xlink:href', deceasedToAdd.image)
+              dotsToCheck
+                .transition()
+                .attr('opacity', 1)
+                .duration(1000)
+                .delay(500)
+              d.deceasedId = deceasedToAdd.slug
+            }
           }
           this.downloadDeceased()
         } else if (!visible && d.deceasedId) {
