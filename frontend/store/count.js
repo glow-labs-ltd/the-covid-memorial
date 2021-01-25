@@ -5,8 +5,8 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setFigures(state, { today, yesterday }) {
-    state.count = today
+  setFigures(state, { today, yesterday, latest }) {
+    state.count = latest
     state.today = today
     state.yesterday = yesterday
   },
@@ -34,8 +34,9 @@ export const actions = {
     const yesterday = await yesterdayAPI
 
     commit('setFigures', {
-      today: today.deaths,
-      yesterday: yesterday.deaths,
+      today: yesterday.deaths,
+      yesterday: yesterday.deaths - yesterday?.todayDeaths ?? 0,
+      latest: today.deaths,
     })
   },
 }
