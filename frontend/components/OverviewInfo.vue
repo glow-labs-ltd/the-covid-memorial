@@ -31,12 +31,20 @@ export default {
   mixins: [clickaway],
   data() {
     return {
-      showInfo: false,
+      showInfo: null,
     }
+  },
+  mounted() {
+    setTimeout(
+      function () {
+        if (this.showInfo === null) this.showInfo = true
+      }.bind(this),
+      10000
+    )
   },
   methods: {
     buttonClick() {
-      this.showInfo = !this.showInfo
+      this.showInfo = !this?.showInfo ?? false
     },
   },
 }
