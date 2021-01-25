@@ -23,6 +23,7 @@
                 v-model="birth_date"
                 type="date"
                 name="birth_date"
+                placeholder="yyyy-mm-dd"
                 :max="maxDate"
               />
             </div>
@@ -33,6 +34,7 @@
                 v-model="death_date"
                 type="date"
                 name="death_date"
+                placeholder="yyyy-mm-dd"
                 :max="maxDate"
               />
             </div>
