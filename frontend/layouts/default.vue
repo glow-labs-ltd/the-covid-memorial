@@ -104,6 +104,10 @@ input[type='checkbox'] {
   cursor: pointer;
 }
 
+input[type='text'] {
+  -webkit-appearance: none;
+}
+
 textarea {
   border-radius: 1rem;
 }

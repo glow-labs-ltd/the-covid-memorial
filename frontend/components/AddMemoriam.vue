@@ -23,6 +23,7 @@
                 v-model="birth_date"
                 type="date"
                 name="birth_date"
+                placeholder="yyyy-mm-dd"
                 :max="maxDate"
               />
             </div>
@@ -33,6 +34,7 @@
                 v-model="death_date"
                 type="date"
                 name="death_date"
+                placeholder="yyyy-mm-dd"
                 :max="maxDate"
               />
             </div>
@@ -103,49 +105,44 @@
 
           <div class="row">
             <div class="ticks">
-              <div>
-                <input
-                  id="amend"
-                  v-model="amend"
-                  type="checkbox"
-                  name="amend"
-                  value="amend"
-                  required
-                />
-                <label for="amend"
-                  >I understand I am not able to amend my memorium once it has
-                  been submitted.</label
-                >
-              </div>
-              <div>
-                <input
-                  id="terms"
-                  v-model="terms"
-                  type="checkbox"
-                  name="terms"
-                  value="terms"
-                  required
-                />
-                <label for="terms"
-                  >I have read and agreed to the
-                  <a href="/terms" target="_blank">terms of service</a>.</label
-                >
-              </div>
-              <div>
-                <input
-                  id="privacy"
-                  v-model="privacy"
-                  type="checkbox"
-                  name="privacy"
-                  value="privacy"
-                  required
-                />
-                <label for="privacy"
-                  >I have read and agreed to the
-                  <a href="/terms#privacy" target="_blank">privacy notice</a
-                  >.</label
-                >
-              </div>
+              <input
+                id="amend"
+                v-model="amend"
+                type="checkbox"
+                name="amend"
+                value="amend"
+                required
+              />
+              <label for="amend"
+                >I understand I am not able to amend my memorial once it has
+                been submitted.</label
+              >
+              <input
+                id="terms"
+                v-model="terms"
+                type="checkbox"
+                name="terms"
+                value="terms"
+                required
+              />
+              <label for="terms"
+                >I have read and agreed to the
+                <a href="/terms" target="_blank">terms of service</a>
+                (opens in new window).</label
+              >
+              <input
+                id="privacy"
+                v-model="privacy"
+                type="checkbox"
+                name="privacy"
+                value="privacy"
+                required
+              />
+              <label for="privacy"
+                >I have read and agreed to the
+                <a href="/terms#privacy" target="_blank">privacy notice</a>
+                (opens in new window).</label
+              >
             </div>
           </div>
 
@@ -334,19 +331,18 @@ label {
 
 .ticks {
   display: grid;
-  grid-template: auto auto / auto;
+  grid-template: auto / auto auto;
+  grid-gap: 1rem;
 
-  > * {
-    justify-self: left;
+  input {
+    margin: auto;
   }
 
   label {
-    display: inline;
     font-size: 1.5rem;
     font-weight: 400;
-    margin-left: 1rem;
     text-align: left;
-    vertical-align: middle;
+    margin: auto 0;
     cursor: pointer;
   }
 }

@@ -2,7 +2,8 @@
   <transition name="fade-slow" mode="out-in">
     <div v-if="showInstructions" class="instructions">
       <img src="~/assets/images/mouse-icon.svg" />
-      <span>Click and drag to explore</span>
+      <span class="touch">Drag to explore</span>
+      <span class="mouse">Click and drag to explore</span>
     </div>
   </transition>
 </template>
@@ -25,7 +26,7 @@ export default {
         this.timerRunning = false
         this.$store.commit('setFirstTime', false)
       }.bind(this),
-      10000
+      8000
     )
   },
 }
@@ -37,7 +38,6 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 1rem;
   font-size: 3rem;
   font-weight: 700;
   padding: 3rem;
@@ -45,21 +45,41 @@ export default {
   border-radius: 12rem;
   pointer-events: none;
   z-index: 10;
-
-  @media (max-width: $tablet) {
-    display: none;
-  }
+  text-align: center;
+  min-width: 53rem;
 
   img {
     width: 5rem;
     height: 5rem;
     display: inline;
     vertical-align: middle;
+
+    @media (pointer: coarse) {
+      width: 4rem;
+      height: 4rem;
+      content: url('~assets/images/touch-icon.svg');
+    }
   }
 
   span {
     vertical-align: middle;
     margin: 0 1rem;
+  }
+
+  span.touch {
+    display: none;
+  }
+
+  @media (pointer: coarse) {
+    min-width: 40rem;
+
+    span.touch {
+      display: inline;
+    }
+
+    span.mouse {
+      display: none;
+    }
   }
 }
 </style>
