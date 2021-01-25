@@ -1,11 +1,13 @@
 <template>
   <nav class="navbar">
-    <NuxtLink to="/" class="logo">
-      <img
-        src="~/assets/images/the-covid-memorial-logo.svg"
-        alt="The COVID Memorial"
-      />
-    </NuxtLink>
+    <component :is="$route.name === 'index' ? 'h1' : 'h2'">
+      <NuxtLink to="/" class="logo">
+        <img
+          src="~/assets/images/the-covid-memorial-logo.svg"
+          alt="The COVID Memorial"
+        />
+      </NuxtLink>
+    </component>
     <DeathCount />
     <img
       src="~/assets/images/search-icon.svg"
@@ -76,17 +78,21 @@ export default {
   }
 
   .logo {
-    width: 6rem;
-    max-height: 3rem;
+    display: block;
 
-    @media (min-width: $phone) {
-      width: 8rem;
-      max-height: 4rem;
-    }
+    img {
+      width: 6rem;
+      max-height: 3rem;
 
-    @media (min-width: $tablet) {
-      width: 13rem;
-      max-height: 6rem;
+      @media (min-width: $phone) {
+        width: 8rem;
+        max-height: 4rem;
+      }
+
+      @media (min-width: $tablet) {
+        width: 13rem;
+        max-height: 6rem;
+      }
     }
   }
 
