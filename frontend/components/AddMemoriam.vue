@@ -332,10 +332,13 @@ label {
 .ticks {
   display: grid;
   grid-template: auto / auto auto;
-  grid-gap: 0.5rem 2rem;
+  grid-gap: 1rem;
+
+  input {
+    margin: auto;
+  }
 
   label {
-    display: inline;
     font-size: 1.5rem;
     font-weight: 400;
     text-align: left;
