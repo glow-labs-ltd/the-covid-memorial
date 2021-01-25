@@ -37,7 +37,6 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 1rem;
   font-size: 3rem;
   font-weight: 700;
   padding: 3rem;
@@ -45,6 +44,8 @@ export default {
   border-radius: 12rem;
   pointer-events: none;
   z-index: 10;
+  text-align: center;
+  min-width: 50rem;
 
   @media (max-width: $tablet) {
     display: none;
