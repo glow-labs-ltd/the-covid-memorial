@@ -586,8 +586,8 @@
 
         <h4>1.6 Employees, candidates and third-party providers</h4>
         <p>
-          If we engage with you in your capacity as an employee of Glow Labs
-          Limited, a candidate or third-party service provider, we may collect
+          If we engage with you in your capacity as an employee of The COVID
+          Memorial, a candidate or third-party service provider, we may collect
           the following information, whether from you directly or from a third
           party:
         </p>
@@ -616,8 +616,10 @@
           available and for the purposes of the memorial set out on the website.
         </p>
         <p>
-          We must have a legal basis on which to process this personal
-          information. The legal bases on which we rely are:
+          To the extent that the personal information you supply involves
+          personal data of living individuals (which we discourage), we must
+          have a legal basis on which to process this personal information. The
+          legal bases on which we rely are:
         </p>
         <ul>
           <li>
@@ -683,7 +685,7 @@
 
         <h3>4. Information sharing</h3>
         <p>
-          We may share the deceased’s personal information with third parties
+          We may share any personal information you supply with third parties
           under the following circumstances:
         </p>
         <ul>
@@ -897,7 +899,7 @@
           website at any time.
         </p>
         <p>We may modify or update this privacy notice from time to time.</p>
-        <p>This notice was last updated on 17 January 2021.</p>
+        <p>This notice was last updated on 26 January 2021.</p>
       </div>
     </div>
   </div>
