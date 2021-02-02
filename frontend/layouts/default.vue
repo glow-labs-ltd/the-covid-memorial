@@ -77,6 +77,7 @@ button {
   padding: 2rem;
   font-family: inherit;
   cursor: pointer;
+  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.3);
 }
 
 input,
@@ -133,15 +134,21 @@ label {
   @media (min-width: $tablet) {
     padding: 6rem;
   }
+}
 
-  .close {
-    img {
-      width: 4rem;
-      height: 4rem;
-      margin: 0 0 1rem auto;
-      border: 3px solid $surface;
-      border-radius: 50%;
-    }
+.close {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 0 1rem auto;
+
+  a {
+    display: block;
+    border-radius: 50%;
+    border: 3px solid $surface;
+  }
+
+  img {
+    border-radius: 50%;
   }
 }
 

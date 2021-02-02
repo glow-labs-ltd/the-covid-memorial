@@ -175,7 +175,7 @@ export default {
 
 .memoriam {
   display: grid;
-  grid-template: auto / 1fr;
+  grid-template: auto / 100%;
   height: 100%;
   width: 100%;
   text-align: left;
@@ -230,6 +230,7 @@ export default {
     text-align: justify;
     text-justify: inter-word;
     white-space: pre-line;
+    overflow-wrap: break-word;
   }
 
   .comment-section {
@@ -238,25 +239,10 @@ export default {
 }
 
 .close {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 2rem;
+  margin: 0 1rem 1rem auto;
 
   @media (min-width: $tablet) {
-    align-items: flex-end;
-    margin: 0;
-  }
-
-  a {
-    margin-left: auto;
-  }
-
-  img {
-    width: 4rem;
-    height: 4rem;
-    border: 3px solid $surface;
-    border-radius: 50%;
+    margin: 0 0 1rem auto;
   }
 }
 

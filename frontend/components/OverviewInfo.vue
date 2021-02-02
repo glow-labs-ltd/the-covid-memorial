@@ -8,16 +8,23 @@
         <div
           v-if="showInfo"
           v-on-clickaway="buttonClick"
-          class="overview-info-panel"
+          class="overview-info-panel__wrapper"
         >
-          <h2>What am I looking at?</h2>
-          <p>
-            You are viewing a graphical representation of the global impact of
-            COVID-19. The growing number of dots represents the number of people
-            around the world who sadly died in the last 24 hours as a result of
-            COVID. Enter the memorial to discover their stories, told by their
-            loved ones.
-          </p>
+          <div class="close">
+            <a href="" @click.prevent="buttonClick"
+              ><img src="~/assets/images/close-icon.svg" alt="Close"
+            /></a>
+          </div>
+          <div class="overview-info-panel">
+            <h2>What am I looking at?</h2>
+            <p>
+              You are viewing a graphical representation of the global impact of
+              COVID-19. The growing number of dots represents the number of
+              people around the world who sadly died in the last 24 hours as a
+              result of COVID. Enter the memorial to discover their stories,
+              told by their loved ones.
+            </p>
+          </div>
         </div>
       </transition>
     </div>
@@ -39,7 +46,7 @@ export default {
       function () {
         if (this.showInfo === null) this.showInfo = true
       }.bind(this),
-      10000
+      5000
     )
   },
   methods: {
@@ -63,20 +70,34 @@ export default {
   p {
     margin-top: 1rem;
     font-size: 1.6rem;
+    line-height: 1.5;
   }
 
-  &-panel {
+  .close {
+    position: absolute;
+    top: -5rem;
+    right: 0;
+  }
+
+  &-panel__wrapper {
     position: absolute;
     bottom: 10rem;
     width: calc(100vw - 6rem);
-    padding: 4rem;
-    background-color: $surface;
-    box-shadow: 0px 0px 16px 1px rgba($color: #090446, $alpha: 0.25);
 
     @media (min-width: $tablet) {
       left: 8rem;
       bottom: 8rem;
       width: 48rem;
+    }
+  }
+
+  &-panel {
+    padding: 3rem;
+    background-color: $surface;
+    box-shadow: 0px 0px 16px 1px rgba($color: #090446, $alpha: 0.25);
+
+    @media (min-width: $tablet) {
+      padding: 4rem;
     }
   }
 }

@@ -143,14 +143,6 @@ export default {
   h3 {
     padding-top: 2rem;
   }
-
-  .close {
-    img {
-      width: 4rem;
-      height: 4rem;
-      margin: 0 0 1rem auto;
-    }
-  }
 }
 
 .results > .transition {
