@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'rest_framework',
+    'cache_fallback',
     'deceased',
 ]
 
@@ -166,6 +167,27 @@ LOGGING = {
             'propagate': False,
         },
     },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'cache_fallback.FallbackCache',
+    },
+    'main_cache': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://{}:{}/0'.format(
+            os.environ.get('REDIS_HOST', '127.0.0.1'),
+            os.environ.get('REDIS_PORT', '6379'),
+        ),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
+    'fallback_cache': {
+        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique'
+    }
 }
 
 # Content-Security-Policy for admin

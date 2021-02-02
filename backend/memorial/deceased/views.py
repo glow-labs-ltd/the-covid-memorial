@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import mixins, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
@@ -39,6 +41,10 @@ class DeceasedAPIViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class SearchAPIViewSet(ReadOnlyModelViewSet):
