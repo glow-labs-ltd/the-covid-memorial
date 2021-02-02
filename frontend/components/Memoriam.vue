@@ -1,13 +1,15 @@
 <template>
   <div class="wrapper scroll">
     <div class="limit-width">
-      <div class="close">
+      <div class="top-actions">
         <button v-if="codeVerified" @click="toggleShareExpanded">
           Share this memorial
         </button>
-        <a href="" @click.prevent="$emit('close')"
-          ><img src="~/assets/images/close-icon.svg" alt="Close"
-        /></a>
+        <div class="close">
+          <a href="" @click.prevent="$emit('close')"
+            ><img src="~/assets/images/close-icon.svg" alt="Close"
+          /></a>
+        </div>
       </div>
       <Share :name="name" :expanded="shareExpanded" class="share-panel" />
       <div class="memoriam shadow">
@@ -238,11 +240,16 @@ export default {
   }
 }
 
+.top-actions {
+  display: grid;
+  grid-template: auto / auto 1fr;
+}
+
 .close {
-  margin: 0 1rem 1rem auto;
+  margin: auto 1rem 0 auto;
 
   @media (min-width: $tablet) {
-    margin: 0 0 1rem auto;
+    margin: auto 0 0 auto;
   }
 }
 
