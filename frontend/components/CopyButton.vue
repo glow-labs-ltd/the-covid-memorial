@@ -41,6 +41,7 @@ export default {
     padding: 0;
     border-radius: 0;
     font-size: 1rem;
+    box-shadow: none;
 
     img {
       width: 2.1rem;

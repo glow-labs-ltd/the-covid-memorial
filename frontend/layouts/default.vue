@@ -20,6 +20,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
   padding: env(safe-area-inset);
 }
@@ -36,6 +37,10 @@ body {
 *::after {
   box-sizing: border-box;
   margin: 0;
+}
+
+:hover {
+  outline: none;
 }
 
 :focus {
@@ -77,6 +82,7 @@ button {
   padding: 2rem;
   font-family: inherit;
   cursor: pointer;
+  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.3);
 }
 
 input,
@@ -133,15 +139,22 @@ label {
   @media (min-width: $tablet) {
     padding: 6rem;
   }
+}
 
-  .close {
-    img {
-      width: 4rem;
-      height: 4rem;
-      margin: 0 0 1rem auto;
-      border: 3px solid $surface;
-      border-radius: 50%;
-    }
+.close {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 0 1rem auto;
+
+  a {
+    display: block;
+    border-radius: 50%;
+    border: 3px solid $surface;
+    box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  img {
+    border-radius: 50%;
   }
 }
 

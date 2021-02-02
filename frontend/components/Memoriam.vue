@@ -1,13 +1,15 @@
 <template>
   <div class="wrapper scroll">
     <div class="limit-width">
-      <div class="close">
+      <div class="top-actions">
         <button v-if="codeVerified" @click="toggleShareExpanded">
           Share this memorial
         </button>
-        <a href="" @click.prevent="$emit('close')"
-          ><img src="~/assets/images/close-icon.svg" alt="Close"
-        /></a>
+        <div class="close">
+          <a href="" @click.prevent="$emit('close')"
+            ><img src="~/assets/images/close-icon.svg" alt="Close"
+          /></a>
+        </div>
       </div>
       <Share :name="name" :expanded="shareExpanded" class="share-panel" />
       <div class="memoriam shadow">
@@ -175,7 +177,7 @@ export default {
 
 .memoriam {
   display: grid;
-  grid-template: auto / 1fr;
+  grid-template: auto / 100%;
   height: 100%;
   width: 100%;
   text-align: left;
@@ -230,6 +232,7 @@ export default {
     text-align: justify;
     text-justify: inter-word;
     white-space: pre-line;
+    overflow-wrap: break-word;
   }
 
   .comment-section {
@@ -237,26 +240,16 @@ export default {
   }
 }
 
+.top-actions {
+  display: grid;
+  grid-template: auto / auto 1fr;
+}
+
 .close {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 2rem;
+  margin: auto 1rem 0 auto;
 
   @media (min-width: $tablet) {
-    align-items: flex-end;
-    margin: 0;
-  }
-
-  a {
-    margin-left: auto;
-  }
-
-  img {
-    width: 4rem;
-    height: 4rem;
-    border: 3px solid $surface;
-    border-radius: 50%;
+    margin: auto 0 0 auto;
   }
 }
 

@@ -104,7 +104,7 @@ export default {
 
   input {
     font-size: 3rem;
-    padding: 1rem;
+    padding: 1rem 0;
     border: none;
     border-bottom: 2px solid $secondary;
     border-radius: 0;
@@ -142,14 +142,6 @@ export default {
 
   h3 {
     padding-top: 2rem;
-  }
-
-  .close {
-    img {
-      width: 4rem;
-      height: 4rem;
-      margin: 0 0 1rem auto;
-    }
   }
 }
 
