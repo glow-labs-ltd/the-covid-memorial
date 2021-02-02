@@ -123,7 +123,7 @@ export default {
       this.canvas
         .call(this.zoom.transform, d3.zoomIdentity.scale(this.maxZoom - 0.01))
         .transition()
-        .delay(1500)
+        .delay(500)
         .duration(this.transitionTime)
         .call(this.zoom.transform, d3.zoomIdentity.scale(this.minZoom))
         .on(
