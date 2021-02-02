@@ -246,6 +246,7 @@ export default {
 }
 
 .close {
+  grid-column: 2 / 3;
   margin: auto 1rem 0 auto;
 
   @media (min-width: $tablet) {
