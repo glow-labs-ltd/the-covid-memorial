@@ -145,6 +145,7 @@ label {
     display: block;
     border-radius: 50%;
     border: 3px solid $surface;
+    box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.3);
   }
 
   img {
