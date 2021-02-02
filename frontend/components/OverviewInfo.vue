@@ -83,6 +83,7 @@ export default {
     position: absolute;
     bottom: 10rem;
     width: calc(100vw - 6rem);
+    z-index: 1;
 
     @media (min-width: $tablet) {
       left: 8rem;
