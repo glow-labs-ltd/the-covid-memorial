@@ -20,6 +20,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
   padding: env(safe-area-inset);
 }
@@ -36,6 +37,10 @@ body {
 *::after {
   box-sizing: border-box;
   margin: 0;
+}
+
+:hover {
+  outline: none;
 }
 
 :focus {
