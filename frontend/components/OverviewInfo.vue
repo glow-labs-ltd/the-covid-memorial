@@ -67,10 +67,22 @@ export default {
     padding: 0;
   }
 
+  h2 {
+    font-size: 2.5rem;
+
+    @media (min-width: $tablet) {
+      font-size: 3rem;
+    }
+  }
+
   p {
     margin-top: 1rem;
     font-size: 1.6rem;
     line-height: 1.5;
+
+    @media (min-width: $tablet) {
+      font-size: 1.8rem;
+    }
   }
 
   .close {

@@ -104,7 +104,7 @@ export default {
 
   input {
     font-size: 3rem;
-    padding: 1rem;
+    padding: 1rem 0;
     border: none;
     border-bottom: 2px solid $secondary;
     border-radius: 0;
