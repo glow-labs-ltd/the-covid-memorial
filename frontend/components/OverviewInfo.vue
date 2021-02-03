@@ -18,10 +18,19 @@
           <div class="overview-info-panel">
             <h2>What am I looking at?</h2>
             <p>
-              You are viewing a graphical representation of the global impact of
-              COVID-19. The growing number of dots represents the number of
-              people around the world who sadly died in the last 24 hours as a
-              result of COVID. Enter the memorial to discover their stories,
+              Every person who has lost their life as a result of Covid-19
+              deserves to be remembered for who they were and not just as a
+              statistic. This is the reason we created The Covid Memorial. It is
+              a place not only to put a face and story to every person who has
+              died but also to commemorate everyone who has lost their lives due
+              to the pandemic, either directly or indirectly.
+            </p>
+            <p>
+              The Memorial is a live graphical representation of the global
+              impact of Covid-19. The growing number of dots represents the
+              number of people around the world who have sadly died within the
+              last 24 hours, as a result of the pandemic. Please enter the
+              Memorial to celebrate their lives and discover their stories as
               told by their loved ones.
             </p>
           </div>
@@ -68,7 +77,7 @@ export default {
   }
 
   h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 
     @media (min-width: $tablet) {
       font-size: 3rem;
@@ -93,14 +102,11 @@ export default {
 
   &-panel__wrapper {
     position: absolute;
-    bottom: 10rem;
+    bottom: 9rem;
     width: calc(100vw - 6rem);
-    z-index: 1;
 
     @media (min-width: $tablet) {
-      left: 8rem;
-      bottom: 8rem;
-      width: 48rem;
+      width: 60rem;
     }
   }
 
@@ -108,8 +114,12 @@ export default {
     padding: 3rem;
     background-color: $surface;
     box-shadow: 0px 0px 16px 1px rgba($color: #090446, $alpha: 0.25);
+    max-height: 40vh;
+    overflow-y: scroll;
 
     @media (min-width: $tablet) {
+      overflow-y: auto;
+      max-height: none;
       padding: 4rem;
     }
   }
