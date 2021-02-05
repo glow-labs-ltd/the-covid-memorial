@@ -1,7 +1,7 @@
 <template>
   <div class="overview-info">
     <div>
-      <button aria-label="What am I looking at?" @click="buttonClick">
+      <button aria-label="People, not numbers" @click="buttonClick">
         <img src="~/assets/images/info-icon.svg" alt="Info" />
       </button>
       <transition name="fade-slow" mode="out-in">
@@ -16,7 +16,7 @@
             /></a>
           </div>
           <div class="overview-info-panel">
-            <h2>What am I looking at?</h2>
+            <h2>People, not numbers</h2>
             <p>
               Every person who has lost their life as a result of Covid-19
               deserves to be remembered for who they were and not just as a
