@@ -28,6 +28,16 @@ export default {
       startingNumDots: 400,
       radius: d3.randomInt(4, 16),
       transitionTime: 3000,
+      colors: [
+        'rgb(163,221,203)',
+        'rgb(232,233,161)',
+        'rgb(230,181,102)',
+        'rgb(229,112,126)',
+        'rgb(141,181,150)',
+        'rgb(198,169,163)',
+        'rgb(161,202,226)',
+        'rgb(174,225,225)',
+      ],
     }
   },
   computed: {
@@ -46,15 +56,15 @@ export default {
     this.resizeCanvas()
     const context = this.canvas.node().getContext('2d')
 
-    const radii = Array.from({ length: this.startingNumDots }, this.radius)
-    const nodes = radii.map((r) => ({ r }))
+    const nodes = []
+    this.simulation = this.setupSimulation(context, nodes)
+    for (let i = 0; i < this.startingNumDots; i++) this.addNode(nodes)
+
     this.transform = d3.zoomIdentity
     this.opacityScale = d3
       .scaleLinear()
       .domain([this.minZoom, this.maxZoom])
       .range([1, 0])
-
-    this.simulation = this.setupSimulation(context, nodes)
     this.zoom = this.setupZoom(context, nodes)
     this.animateIn()
 
@@ -162,7 +172,10 @@ export default {
     },
     addNode(nodes) {
       if (nodes.length < this.difference + this.startingNumDots) {
-        nodes.push({ r: this.radius() })
+        nodes.push({
+          r: this.radius(),
+          color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        })
         this.simulation.nodes(nodes)
       }
     },
@@ -175,11 +188,12 @@ export default {
       context.scale(this.transform.k, this.transform.k)
       context.beginPath()
       for (const d of nodes) {
-        context.moveTo(d.x + d.r, d.y)
+        context.beginPath()
         context.arc(d.x, d.y, d.r, 0, 2 * Math.PI)
+        context.closePath()
+        context.fillStyle = d.color
+        context.fill()
       }
-      context.fillStyle = '#333333'
-      context.fill()
       context.restore()
     },
   },
