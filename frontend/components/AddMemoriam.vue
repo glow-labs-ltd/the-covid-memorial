@@ -197,9 +197,9 @@ export default {
         { value: 6, label: 'Pink' },
         { value: 7, label: 'Black' },
       ],
-      countries: Object.entries(
-        countryList.getNames('en')
-      ).map(([key, value]) => ({ value: key, label: value })),
+      countries: Object.entries(countryList.getNames('en')).map(
+        ([key, value]) => ({ value: key, label: value })
+      ),
       loading: false,
     }
   },

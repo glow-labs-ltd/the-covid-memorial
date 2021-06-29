@@ -367,7 +367,6 @@ export default {
       )
     },
     setupBackgroundAnimation() {
-      gsap.ticker.fps(24)
       const dotsToAnimate = gsap.utils.toArray('.b-node')
       dotsToAnimate.forEach((dot) => {
         gsap.set(dot, {
