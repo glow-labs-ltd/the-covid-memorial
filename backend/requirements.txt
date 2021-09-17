@@ -4,5 +4,5 @@ django-countries==7.2.1
 django-storages[google]==1.11.1
 djangorestframework==3.12.4
 gunicorn==20.1.0
-Pillow==8.2.0
+Pillow==8.3.2
 psycopg2-binary==2.9.1
