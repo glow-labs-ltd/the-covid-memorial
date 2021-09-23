@@ -14,13 +14,13 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/proxy": "^2.1.0",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "core-js": "^3.6.5",
+    "@nuxtjs/style-resources": "^1.2.1",
+    "core-js": "^3.18.0",
     "d3": "^6.3.1",
-    "gsap": "^3.6.0",
+    "gsap": "^3.7.1",
     "i18n-iso-countries": "^6.4.0",
-    "nuxt": "^2.14.6",
-    "nuxt-helmet": "^2.0.0",
+    "nuxt": "^2.15.8",
+    "nuxt-helmet": "^2.0.1",
     "nuxt-vue-select": "^0.1.4",
     "vue-clickaway": "^2.2.2",
     "vue-cropperjs": "^4.2.0"
