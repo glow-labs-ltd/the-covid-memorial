@@ -85,8 +85,9 @@ jobs:
 
       - name: Get test GCS service account
         id: test_gcs_file
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
+          fileDir: "backend/memorial"
           fileName: "test_service_account.json"
           encodedString: ${{ secrets.TEST_GCS_SA }}
 
@@ -97,7 +98,6 @@ jobs:
       - name: Test with pytest 🧪
         working-directory: ./backend/memorial
         run: |
-          cp ${{ steps.test_gcs_file.outputs.filePath }} test_service_account.json
           pytest -vv -s -x --cov=.
 
   deploy:
@@ -126,15 +126,17 @@ jobs:
 
       - name: Store environment secret file
         id: env_file
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
+          fileDir: "backend"
           fileName: "env_variables.yaml"
           encodedString: ${{ steps.secrets.outputs.env_variables }}
 
       - name: Store service account secret file
         id: sa_file
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
+          fileDir: "backend/memorial"
           fileName: "gcs_service_account.json"
           encodedString: ${{ steps.secrets.outputs.gcs_service_account }}
 
@@ -191,12 +193,8 @@ jobs:
 
       - name: Run migrations
         run: |
-          cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
-          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
           python backend/run_migrations_on_cloud_sql.py
 
       - name: Deploy to App Engine
         run: |
-          cp ${{ steps.env_file.outputs.filePath }} backend/env_variables.yaml
-          cp ${{ steps.sa_file.outputs.filePath }} backend/memorial/gcs_service_account.json
           gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy frontend/app.yaml backend/backend.yaml dispatch.yaml
