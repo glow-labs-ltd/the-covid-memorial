@@ -183,7 +183,6 @@ export default {
             .attr('cy', (d, i) => d.y + dy)
             .attr('fill', '#DDDDDD')
             .attr('class', 'b-node')
-            .attr('style', 'will-change: transform;')
         }
       }
       return bG
