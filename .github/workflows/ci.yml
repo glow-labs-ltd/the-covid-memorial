@@ -119,7 +119,7 @@ jobs:
         id: secrets
         uses: google-github-actions/get-secretmanager-secrets@v1
         with:
-          credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
+          # credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
           secrets: |-
             env_variables:${{ secrets.GCP_PROJECT }}/env_variables
             gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
