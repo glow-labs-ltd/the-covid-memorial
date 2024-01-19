@@ -9,7 +9,7 @@
       <div class="info shadow">
         <h1>About The COVID Memorial</h1>
         <p>
-          COVID-19 has touched every corner of our world, with devastating
+          COVID-19 touched every corner of our world, with devastating
           consequences to human life. These tragic deaths should not be
           portrayed simply as a number.
         </p>
@@ -22,10 +22,6 @@
           If you have lost a loved one, please share their story as part of this
           global memorial and ensure future generations remember the people and
           not just the numbers.
-        </p>
-        <p>
-          The COVID Memorial is also a reminder that our actions can prevent
-          further deaths. Please be mindful, wear a mask and distance.
         </p>
       </div>
     </div>

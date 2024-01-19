@@ -26,12 +26,8 @@
               to the pandemic, either directly or indirectly.
             </p>
             <p>
-              The Memorial is a live graphical representation of the global
-              impact of Covid-19. The growing number of dots represents the
-              number of people around the world who have sadly died within the
-              last 24 hours, as a result of the pandemic. Please enter the
-              Memorial to celebrate their lives and discover their stories as
-              told by their loved ones.
+              Please enter the Memorial to celebrate their lives and discover
+              their stories as told by their loved ones.
             </p>
           </div>
         </div>
