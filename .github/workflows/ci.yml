@@ -109,7 +109,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Configure gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
@@ -117,9 +117,9 @@ jobs:
 
       - name: Get secrets
         id: secrets
-        uses: google-github-actions/get-secretmanager-secrets@v1
+        uses: google-github-actions/get-secretmanager-secrets@v0
         with:
-          # credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
+          credentials: ${{ secrets.DEPLOY_SERVICE_ACCOUNT }}
           secrets: |-
             env_variables:${{ secrets.GCP_PROJECT }}/env_variables
             gcs_service_account:${{ secrets.GCP_PROJECT }}/gcs_service_account
