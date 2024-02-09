@@ -9,7 +9,7 @@
 <script>
 export default {
   async fetch() {
-    await this.$store.dispatch('count/getDeathCount')
+    // await this.$store.dispatch('count/getDeathCount')
   },
   mounted() {
     this.start()
