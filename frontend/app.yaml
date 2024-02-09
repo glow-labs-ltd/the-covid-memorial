@@ -1,4 +1,4 @@
-runtime: nodejs16
+runtime: nodejs20
 service: default
 instance_class: F2
 
