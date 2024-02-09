@@ -43,7 +43,8 @@ export default {
   computed: {
     ...mapState(['overviewTransition']),
     difference() {
-      return this.$store.state.count.today - this.$store.state.count.yesterday
+      return 450
+      // return this.$store.state.count.today - this.$store.state.count.yesterday
     },
   },
   watch: {
