@@ -21,7 +21,7 @@ jobs:
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: 14
+          node-version: 16
 
       - name: Cache node_modules 📦
         uses: actions/cache@v2
@@ -197,4 +197,4 @@ jobs:
 
       - name: Deploy to App Engine
         run: |
-          gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy frontend/app.yaml backend/backend.yaml dispatch.yaml
+          gcloud --quiet --project ${{ secrets.GCP_PROJECT }} app deploy frontend/app.yaml backend/backend.yaml dispatch.yaml --no-cache
