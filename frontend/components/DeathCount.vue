@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="lost-count">
-      {{ format($store.state.count.count) }} <span>Sadly&nbsp;lost</span>
+      {{ format(7026465) }} <span>Sadly&nbsp;lost</span>
     </h2>
   </div>
 </template>
